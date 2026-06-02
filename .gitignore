@@ -13,4 +13,4 @@ node_modules/
 # Production Data
 database.sqlite
 database.sqlite-journal
-logs/*
+logs/
