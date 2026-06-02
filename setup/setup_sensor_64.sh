@@ -94,6 +94,23 @@ echo -e "${GREEN}${SETUP_SENSOR_DEPS}${NC}"
 apt-get update -y
 apt-get install -y ufw git curl rfkill tcpdump tshark unattended-upgrades apt-config-auto-update
 
+# Cargar .env para acceder a DNS_LAB antes de intentar descargar Docker
+if [ -f "$ENV_FILE" ]; then
+    source "$ENV_FILE"
+fi
+
+# Verificar conectividad DNS. Si falla, inyectar DNS desde .env para que curl funcione.
+if ! getent hosts get.docker.com > /dev/null 2>&1; then
+    echo -e "${YELLOW}[!] DNS no responde. Inyectando DNS desde .env temporalmente...${NC}"
+    if [ -n "$DNS_LAB" ]; then
+        echo -n "" > /etc/resolv.conf
+        IFS=',' read -ra DNS_ARRAY <<< "$DNS_LAB"
+        for DNS in "${DNS_ARRAY[@]}"; do
+            echo "nameserver $DNS" >> /etc/resolv.conf
+        done
+    fi
+fi
+
 echo -e "${GREEN}[+] Instalando Docker Engine oficial...${NC}"
 curl -sSL "https://get.docker.com/" | bash
 
