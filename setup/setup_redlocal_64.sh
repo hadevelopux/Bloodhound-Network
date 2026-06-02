@@ -127,7 +127,7 @@ echo -e "${GREEN}${SETUP_REDLOCAL_ROOT_OK}${NC}"
 # 2. ACTUALIZACIÓN, DEPENDENCIAS Y AUTO-PARCHEO (UNATTENDED-UPGRADES)
 echo -e "${GREEN}${SETUP_REDLOCAL_DEPS}${NC}"
 apt-get update -y
-apt-get install -y docker.io docker-compose ufw bridge-utils curl git unattended-upgrades apt-config-auto-update
+apt-get install -y docker.io docker-compose-v2 ufw bridge-utils ifupdown resolvconf curl git unattended-upgrades apt-config-auto-update
 
 echo -e "${GREEN}[+] Configurando actualizaciones de seguridad automáticas...${NC}"
 cat <<EOF > /etc/apt/apt.conf.d/20auto-upgrades
@@ -178,6 +178,18 @@ echo -e "${GREEN}${SETUP_REDLOCAL_NET_CREATING} ${IFACE1} & ${IFACE2}...${NC}"
 # Escribir la nueva topología de red en el archivo principal de Debian.
 # IMPORTANTE: Desactivamos STP y fijamos el retardo (Forward Delay - fd) en 0 
 # para que el puente sea instantáneo y no haya micro-cortes de internet.
+# Cargar variables de entorno para respetar la configuración de DNS
+if [ -f "$ENV_FILE" ]; then
+    source "$ENV_FILE"
+fi
+
+DNS_CONFIG=""
+if [ -n "$DNS_LAB" ]; then
+    # Reemplazar comas por espacios para ifupdown
+    DNS_SERVERS=$(echo "$DNS_LAB" | tr ',' ' ')
+    DNS_CONFIG="dns-nameservers $DNS_SERVERS"
+fi
+
 cat <<EOF > /etc/network/interfaces
 # This file describes the network interfaces available on your system
 # and how to activate them. For more information, see interfaces(5).
@@ -204,6 +216,7 @@ iface br0 inet dhcp
     bridge_stp off
     bridge_fd 0
     bridge_maxwait 0
+    $DNS_CONFIG
 EOF
 
 # ------------------------------------------------------------------------------
