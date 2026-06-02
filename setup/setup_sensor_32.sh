@@ -44,30 +44,34 @@ if [ ! -d "$LOCALES_DIR" ]; then
     exit 1
 fi
 
-clear
-echo -e "${BLUE}================================================================${NC}"
-echo " Available Languages / Idiomas Disponibles:"
-echo -e "${BLUE}================================================================${NC}"
-
-locale_files=("$LOCALES_DIR"/*.txt)
-if [ ${#locale_files[@]} -eq 0 ] || [ ! -f "${locale_files[0]}" ]; then
-    echo -e "${RED}[ERROR] No .txt files found in $LOCALES_DIR.${NC}"
-    exit 1
-fi
-
-for i in "${!locale_files[@]}"; do
-    filename=$(basename "${locale_files[$i]}" .txt)
-    echo " $((i+1))) $filename"
-done
-
-echo -e "${BLUE}================================================================${NC}"
-read -p " Option: " LANG_OPT
-
-if [[ "$LANG_OPT" =~ ^[0-9]+$ ]] && [ "$LANG_OPT" -gt 0 ] && [ "$LANG_OPT" -le "${#locale_files[@]}" ]; then
-    SELECTED_FILE="${locale_files[$((LANG_OPT-1))]}"
+if [ -n "$1" ] && [ -f "$1" ]; then
+    SELECTED_FILE="$1"
 else
-    echo " Invalid option, defaulting to the first available language."
-    SELECTED_FILE="${locale_files[0]}"
+    clear
+    echo -e "${BLUE}================================================================${NC}"
+    echo " Available Languages / Idiomas Disponibles:"
+    echo -e "${BLUE}================================================================${NC}"
+
+    locale_files=("$LOCALES_DIR"/*.txt)
+    if [ ${#locale_files[@]} -eq 0 ] || [ ! -f "${locale_files[0]}" ]; then
+        echo -e "${RED}[ERROR] No .txt files found in $LOCALES_DIR.${NC}"
+        exit 1
+    fi
+
+    for i in "${!locale_files[@]}"; do
+        filename=$(basename "${locale_files[$i]}" .txt)
+        echo " $((i+1))) $filename"
+    done
+
+    echo -e "${BLUE}================================================================${NC}"
+    read -p " Option: " LANG_OPT
+
+    if [[ "$LANG_OPT" =~ ^[0-9]+$ ]] && [ "$LANG_OPT" -gt 0 ] && [ "$LANG_OPT" -le "${#locale_files[@]}" ]; then
+        SELECTED_FILE="${locale_files[$((LANG_OPT-1))]}"
+    else
+        echo " Invalid option, defaulting to the first available language."
+        SELECTED_FILE="${locale_files[0]}"
+    fi
 fi
 
 source "$SELECTED_FILE"

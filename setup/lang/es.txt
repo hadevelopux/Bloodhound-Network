@@ -81,11 +81,15 @@ MENU_START_OPT_4="Volver al menú principal"
 
 MENU_STOP_TITLE="Selecciona el Entorno a Detener:"
 MENU_STOP_MSG="[+] Deteniendo todos los contenedores de forma segura..."
+MENU_PAUSE_PROMPT="[Presione Enter para volver al menú principal...] "
 
 # ------------------------------------------------------------------------------
 # MÓDULO: START SCRIPTS (Arranque de contenedores)
 # ------------------------------------------------------------------------------
-START_SCRIPT_INIT="[+] Iniciando entorno WiFi Server Forensics..."
+START_SCRIPT_TITLE="[+] Iniciando entorno WiFi Server Forensics"
 START_SCRIPT_STOPPING="[+] Deteniendo contenedores en ejecución..."
-START_SCRIPT_STARTING="[+] Levantando servicios..."
-START_SCRIPT_DONE="[+] Dashboard Forense seguro disponible en: https://localhost"
+START_SCRIPT_STARTING="[+] Levantando contenedores..."
+START_SCRIPT_DONE="[+] Servicio iniciado con éxito."
+START_SCRIPT_DASHBOARD="[+] Accede al Dashboard Forense seguro en: https://localhost o https://IP"
+START_SCRIPT_DOCKER_STATUS="[+] Estado de los contenedores Docker:"
+START_SCRIPT_DOCKER_STATS="[+] Consumo de Memoria y CPU actual:"

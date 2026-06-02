@@ -44,6 +44,12 @@ fi
 
 source "$SELECTED_FILE"
 
+pause_menu() {
+    echo ""
+    echo -e "${YELLOW}${MENU_PAUSE_PROMPT}${NC}"
+    read -p ""
+}
+
 # ------------------------------------------------------------------------------
 # 2. FUNCIONES DE SUB-MENÚS
 # ------------------------------------------------------------------------------
@@ -62,9 +68,9 @@ menu_install() {
         read -p "${MENU_PROMPT}" OPT
         
         case $OPT in
-            1) sudo bash "$DIR/setup/setup_redlocal_64.sh"; break ;;
-            2) sudo bash "$DIR/setup/setup_sensor_64.sh"; break ;;
-            3) sudo bash "$DIR/setup/setup_sensor_32.sh"; break ;;
+            1) sudo bash "$DIR/setup/setup_redlocal_64.sh" "$SELECTED_FILE"; pause_menu; break ;;
+            2) sudo bash "$DIR/setup/setup_sensor_64.sh" "$SELECTED_FILE"; pause_menu; break ;;
+            3) sudo bash "$DIR/setup/setup_sensor_32.sh" "$SELECTED_FILE"; pause_menu; break ;;
             4) break ;;
             *) echo -e "${RED}Invalid option.${NC}"; sleep 1 ;;
         esac
@@ -85,9 +91,9 @@ menu_start() {
         read -p "${MENU_PROMPT}" OPT
         
         case $OPT in
-            1) bash "$DIR/setup/start_redlocal_64.sh"; break ;;
-            2) bash "$DIR/setup/start_sensor_64.sh"; break ;;
-            3) bash "$DIR/setup/start_sensor_32.sh"; break ;;
+            1) bash "$DIR/setup/start_redlocal_64.sh" "$SELECTED_FILE"; pause_menu; break ;;
+            2) bash "$DIR/setup/start_sensor_64.sh" "$SELECTED_FILE"; pause_menu; break ;;
+            3) bash "$DIR/setup/start_sensor_32.sh" "$SELECTED_FILE"; pause_menu; break ;;
             4) break ;;
             *) echo -e "${RED}Invalid option.${NC}"; sleep 1 ;;
         esac
@@ -108,9 +114,9 @@ menu_stop() {
         read -p "${MENU_PROMPT}" OPT
         
         case $OPT in
-            1) echo -e "${YELLOW}${MENU_STOP_MSG}${NC}"; cd "$DIR/docker/redlocal-64" && docker-compose stop; sleep 2; break ;;
-            2) echo -e "${YELLOW}${MENU_STOP_MSG}${NC}"; cd "$DIR/docker/sensor-64" && docker-compose stop; sleep 2; break ;;
-            3) echo -e "${YELLOW}${MENU_STOP_MSG}${NC}"; cd "$DIR/docker/sensor-32" && docker-compose stop; sleep 2; break ;;
+            1) echo -e "${YELLOW}${MENU_STOP_MSG}${NC}"; cd "$DIR/docker/redlocal-64" && docker-compose stop; pause_menu; break ;;
+            2) echo -e "${YELLOW}${MENU_STOP_MSG}${NC}"; cd "$DIR/docker/sensor-64" && docker-compose stop; pause_menu; break ;;
+            3) echo -e "${YELLOW}${MENU_STOP_MSG}${NC}"; cd "$DIR/docker/sensor-32" && docker-compose stop; pause_menu; break ;;
             4) break ;;
             *) echo -e "${RED}Invalid option.${NC}"; sleep 1 ;;
         esac

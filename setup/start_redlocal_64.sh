@@ -1,19 +1,31 @@
 #!/bin/bash
 
-# Script de arranque para el Modo Red Local (Bridge Transparente) - 64 bits
-echo "[+] Iniciando entorno WiFi Server Forensics (Modo Red Local Pasivo 64-bit)..."
+# Cargar el archivo de idioma si se proporciona
+if [ -n "$1" ] && [ -f "$1" ]; then
+    source "$1"
+else
+    source "$(dirname "$0")/lang/en.txt"
+fi
+
+echo -e "${YELLOW}${START_SCRIPT_TITLE} (Red Local 64-bit)...${NC}"
 
 # Cambiar al directorio correspondiente sin importar desde dónde se llame el script
 cd "$(dirname "$0")/../docker/redlocal-64" || { echo "Error: No se encontró el directorio redlocal-64"; exit 1; }
 
-# Detener contenedores sin eliminarlos
-echo "[+] Deteniendo contenedores en ejecución..."
-docker-compose stop
+# Detener contenedores sin eliminarlos (para conservar logs)
+echo -e "${YELLOW}${START_SCRIPT_STOPPING}${NC}"
+docker-compose stop >/dev/null 2>&1
 
 # Levantar contenedores
-echo "[+] Levantando Modo Red Local..."
-docker-compose up -d --build
+echo -e "${YELLOW}${START_SCRIPT_STARTING}${NC}"
+docker-compose up -d --build >/dev/null 2>&1
 
 echo ""
-echo "[+] Sniffer Pasivo (64 bits) iniciado con éxito."
-echo "[+] Accede al Dashboard Forense seguro en: https://localhost"
+echo -e "${GREEN}${START_SCRIPT_DONE}${NC}"
+echo -e "${GREEN}${START_SCRIPT_DASHBOARD}${NC}"
+echo ""
+echo -e "${BLUE}${START_SCRIPT_DOCKER_STATUS}${NC}"
+docker-compose ps
+echo ""
+echo -e "${BLUE}${START_SCRIPT_DOCKER_STATS}${NC}"
+docker stats --no-stream --format "table {{.Name}}\t{{.MemUsage}}\t{{.CPUPerc}}"
