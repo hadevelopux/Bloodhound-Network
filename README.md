@@ -13,7 +13,7 @@ El sistema esta orquestada por Docker:
 
 ### 1. El Control Central (En la Raíz del Proyecto)
 - **`start_sensor_*.sh` y `start_redlocal_*.sh`**: Son los scripts de arranque rápido según la modalidad y arquitectura (32 o 64 bits) que necesites. Automáticamente navegarán a la carpeta correcta y encenderán los contenedores sin complicaciones.
-- **`setup_redlocal_64.sh`**: Script de aprovisionamiento automatizado (Bare-Metal). Instala Docker, detecta tus tarjetas físicas para armar un puente transparente (`br0`), y sella el firewall UFW permitiendo solo SSH y la web. ¡Ideal para despliegues limpios en tu hipervisor o servidores nuevos!
+- **`setup_redlocal_64.sh`**: Script de aprovisionamiento automatizado (Bare-Metal). Instala Docker, detecta tus tarjetas físicas para armar un puente transparente (`br0`), y sella el firewall UFW permitiendo solo SSH y la web. ¡Ideal para despliegues limpios en máquinas virtuales o servidores nuevos!
 - **El archivo `.env`**: Es el panel de control único. Si deseas cambiar el nombre del WiFi trampa, contraseñas, o la interfaz pasiva (`L_IFACE`), lo haces aquí. Todos los contenedores de ambas versiones leen esta configuración global.
 
 ### 2. Infraestructura Desacoplada (La Carpeta Docker)
@@ -49,6 +49,45 @@ Cuando estés observando el tráfico en el panel `Vulnerabilidades / Alertas`, e
 | `📦 EXFILTRACIÓN` | 🟠 **Advertencia (Naranja)** | Tráfico sospechosamente pesado hacia internet. Posible indicio de que se están robando bases de datos masivas hacia la nube. |
 | `SYN-SCAN` | 🟠 **Advertencia (Naranja)** | Escaneo de puertos ruidoso. Un programa está intentando conectarse a miles de puertos por segundo de forma agresiva. |
 | `CNN` / `HTTP-404` | ⚪ **Info / Debug (Gris)** | Monitoreo general de comportamiento. (Ej. Tráfico hacia la web CNN o errores de navegación normales). |
+
+---
+
+## 🖥️ Requisitos de Hardware para la Máquina Virtual
+
+> ⚠️ **CRÍTICO:** Sin cumplir estos requisitos el sistema no arrancará correctamente.
+
+### Especificaciones Mínimas y Recomendadas
+
+| Recurso | Mínimo | Recomendado |
+|---|---|---|
+| **vCPU** | 2 cores | 4 cores |
+| **RAM** | 2 GB | 4 GB |
+| **Disco** | 20 GB | 40 GB (para logs forenses acumulados) |
+| **Interfaces de Red (NICs)** | **2 (obligatorio)** | **2 (obligatorio)** |
+
+### ⚙️ Configuración Crítica en el Hipervisor
+
+Estas configuraciones deben aplicarse **antes de instalar**, directamente en la interfaz de configuración de tu hipervisor:
+
+| Parámetro | Valor requerido | Motivo |
+|---|---|---|
+| **Modo Promiscuo** | **Habilitado** en ambas NICs | Sin esto, el puente `br0` no puede interceptar tráfico y el Sniffer queda ciego |
+| **Tipo de NIC** | `VirtIO` o `VMXNET3` según tu hipervisor | Mejor rendimiento de red bajo carga forense |
+| **Bus de Disco** | `VirtIO` o `SCSI` | Nunca usar `IDE`, degrada el rendimiento |
+
+### 🌉 ¿Por qué son obligatorias 2 interfaces de red?
+
+El **Modo Red Local** opera en arquitectura **Bridge Transparente (Capa 2)**. El servidor se coloca físicamente *en el medio* del tráfico de red:
+
+```
+[Modem/ISP] ──── ens18 ──── [br0 (Sniffer)] ──── ens19 ──── [Router/Víctimas]
+```
+
+- **`ens18`** → Recibe el cable que viene del modem o proveedor de internet.
+- **`ens19`** → Envía el cable hacia el router o switch de las víctimas.
+- **`br0`** → Puente software que une ambas tarjetas e intercepta todo el tráfico que fluye entre ellas, de forma completamente invisible.
+
+Sin las 2 NICs, el puente no puede existir y el sistema falla en el arranque.
 
 ---
 
