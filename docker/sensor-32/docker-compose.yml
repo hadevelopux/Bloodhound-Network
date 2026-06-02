@@ -1,0 +1,42 @@
+version: '3.8'
+
+services:
+  sensor:
+    build: 
+      context: ../../app/sensor
+    container_name: wifi-sensor
+    network_mode: host
+    privileged: true
+    env_file:
+      - ../../.env
+    volumes:
+      - /lib/modules:/lib/modules:ro # Necesario para cargar módulos si hace falta (ej. mac80211)
+      - shared_pipes:/tmp_pipes
+    restart: unless-stopped
+
+  auditor-backend:
+    build:
+      context: ../../app/backend
+      dockerfile: ../../docker/sensor-32/auditor/backend.Dockerfile
+    container_name: wifi-auditor-backend
+    env_file:
+      - ../../.env
+    volumes:
+      - shared_pipes:/tmp_pipes
+      - ./logs:/logs
+    expose:
+      - "3000" # Proxy interno, no expuesto al host
+    restart: unless-stopped
+
+  auditor-frontend:
+    build:
+      context: ../../app/frontend
+      dockerfile: ../../docker/sensor-32/auditor/frontend.Dockerfile
+    container_name: wifi-auditor-frontend
+    ports:
+      - "80:80"
+      - "443:443"
+    restart: unless-stopped
+
+volumes:
+  shared_pipes:

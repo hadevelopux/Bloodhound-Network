@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard Bloodhound Forensics | Powered by HADEVELOPUX</title>
+</head>
+<body class="font-sans">
+    <div class="max-w-[1600px] mx-auto p-5 flex flex-col h-screen">
+        <header class="glass rounded-xl p-4 md:px-6 flex justify-between items-center mb-5">
+            <div class="flex items-center gap-3">
+                <span class="pulse-dot w-3 h-3 bg-neon-red rounded-full shadow-[0_0_10px_var(--tw-shadow-color)] shadow-neon-red animate-pulse"></span>
+                <h1 class="text-xl md:text-2xl font-extrabold tracking-tight"><span class="neon-text-cyan">Bloodhound</span> Forensics</h1>
+            </div>
+            <div class="flex items-center gap-5">
+                <input type="text" id="searchInput" placeholder="Filtro BPF en vivo (ej. tcp.port == 80)" autocomplete="off"
+                    class="bg-black/40 border border-white/10 text-slate-200 px-4 py-2.5 rounded-md font-mono w-64 md:w-[350px] outline-none focus:border-neon-cyan focus:shadow-[0_0_8px_rgba(0,240,255,0.2)] transition-all">
+                <div class="flex gap-4 text-sm font-mono">
+                    <span id="connStatus" class="text-neon-red">Desconectado</span>
+                    <span>Pkts: <span id="pktCounter">0</span></span>
+                </div>
+            </div>
+        </header>
+
+        <section class="flex gap-5 mb-5 h-[220px]">
+            <div class="glass rounded-xl flex-1 flex flex-col overflow-hidden">
+                <div class="bg-[#0a0f19]/95 px-4 py-3 font-semibold text-sm neon-text-cyan border-b border-white/10">Vulnerabilidades / Alertas</div>
+                <div class="flex justify-between px-4 py-1.5 text-xs text-slate-400 border-b border-white/5 bg-[#0a0f19]/50 font-mono">
+                    <span>Tipo de Alerta / Contexto</span>
+                    <span>Incidencias</span>
+                </div>
+                <ul id="alertsList" class="flex-1 overflow-y-auto p-2.5 font-mono text-sm"></ul>
+            </div>
+            <div class="glass rounded-xl flex-1 flex flex-col overflow-hidden">
+                <div class="bg-[#0a0f19]/95 px-4 py-3 font-semibold text-sm neon-text-cyan border-b border-white/10">Conexiones Recurrentes (IP:Port)</div>
+                <div class="flex justify-between px-4 py-1.5 text-xs text-slate-400 border-b border-white/5 bg-[#0a0f19]/50 font-mono">
+                    <span>IP Origen -> IP Destino : Puerto</span>
+                    <span>Paquetes Enviados</span>
+                </div>
+                <ul id="connsList" class="flex-1 overflow-y-auto p-2.5 font-mono text-sm"></ul>
+            </div>
+        </section>
+
+        <main class="glass rounded-xl flex-1 overflow-y-auto">
+            <table class="w-full text-left font-mono text-sm border-collapse">
+                <thead class="sticky top-0 bg-[#0a0f19]/95 text-slate-400 border-b border-white/10 z-10">
+                    <tr>
+                        <th class="py-3 px-4 font-semibold whitespace-nowrap">Time</th>
+                        <th class="py-3 px-4 font-semibold whitespace-nowrap">Source</th>
+                        <th class="py-3 px-4 font-semibold whitespace-nowrap">Sport</th>
+                        <th class="py-3 px-4 font-semibold whitespace-nowrap">Destination</th>
+                        <th class="py-3 px-4 font-semibold whitespace-nowrap">Dport</th>
+                        <th class="py-3 px-4 font-semibold whitespace-nowrap">Proto</th>
+                        <th class="py-3 px-4 font-semibold whitespace-nowrap">Size</th>
+                        <th class="py-3 px-4 font-semibold whitespace-nowrap">Info / Alerts</th>
+                    </tr>
+                </thead>
+                <tbody id="packetBody" class="divide-y divide-white/5">
+                    <!-- Filas dinámicas -->
+                </tbody>
+            </table>
+        </main>
+    </div>
+    <script type="module" src="./app.js"></script>
+</body>
+</html>
