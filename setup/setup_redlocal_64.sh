@@ -173,6 +173,14 @@ echo -e "${GREEN}${SETUP_REDLOCAL_NET_BACKUP}${NC}"
 # Respaldamos la configuración actual de la red de Debian por seguridad
 cp /etc/network/interfaces /etc/network/interfaces.backup_$(date +%s)
 
+echo -e "${GREEN}[+] Configurando NetworkManager para ignorar las interfaces del puente...${NC}"
+mkdir -p /etc/NetworkManager/conf.d
+cat <<EOF > /etc/NetworkManager/conf.d/10-ignore-interfaces.conf
+[keyfile]
+unmanaged-devices=interface-name:$IFACE1;interface-name:$IFACE2
+EOF
+systemctl restart NetworkManager 2>/dev/null || true
+
 echo -e "${GREEN}${SETUP_REDLOCAL_NET_CREATING} ${IFACE1} & ${IFACE2}...${NC}"
 
 # Escribir la nueva topología de red en el archivo principal de Debian.
