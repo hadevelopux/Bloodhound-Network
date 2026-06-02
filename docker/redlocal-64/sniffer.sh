@@ -26,4 +26,4 @@ fi
 echo "[+] Iniciando TShark en modo pasivo sobre $L_IFACE..."
 # Ejecutamos tshark en modo promiscuo (-p no es necesario ya que es por defecto, pero podemos forzar)
 # Usamos stdbuf para evitar buffering y enviamos el JSON (ek) a la tubería
-stdbuf -oL tshark -i "$L_IFACE" -T ek -l > "$PIPE" 2>&1
+exec tshark -i "$L_IFACE" -w - > "$PIPE" 2>/dev/null
