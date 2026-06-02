@@ -1,24 +1,23 @@
 version: '3.8'
 
 services:
-  sensor:
+  redlocal-sniffer:
     build: 
       context: .
-      dockerfile: sensor.Dockerfile
-    container_name: wifi-sensor
+      dockerfile: redlocal.Dockerfile
+    container_name: wifi-redlocal-sniffer
     network_mode: host
     privileged: true
     env_file:
       - ../../.env
     volumes:
-      - /lib/modules:/lib/modules:ro # Necesario para cargar módulos si hace falta (ej. mac80211)
       - shared_pipes:/tmp_pipes
     restart: unless-stopped
 
   auditor-backend:
     build:
       context: ../../app/backend
-      dockerfile: ../../docker/sensor-32/auditor/backend.Dockerfile
+      dockerfile: ../../docker/sensor-64/auditor/backend.Dockerfile
     container_name: wifi-auditor-backend
     env_file:
       - ../../.env
@@ -32,7 +31,7 @@ services:
   auditor-frontend:
     build:
       context: ../../app/frontend
-      dockerfile: ../../docker/sensor-32/auditor/frontend.Dockerfile
+      dockerfile: ../../docker/sensor-64/auditor/frontend.Dockerfile
     container_name: wifi-auditor-frontend
     ports:
       - "80:80"

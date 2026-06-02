@@ -3,7 +3,8 @@ version: '3.8'
 services:
   sensor:
     build: 
-      context: ../../app/sensor
+      context: .
+      dockerfile: sensor.Dockerfile
     container_name: wifi-sensor
     network_mode: host
     privileged: true

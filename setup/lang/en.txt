@@ -1,0 +1,91 @@
+# ==============================================================================
+# LANGUAGE FILE: ENGLISH (EN)
+# ==============================================================================
+# Centralizes all texts for the Bloodhound Network suite to maintain
+# a clean and scalable architecture. Each module has its prefix.
+# ==============================================================================
+
+# ------------------------------------------------------------------------------
+# MODULE: SETUP REDLOCAL (Transparent Bridge)
+# ------------------------------------------------------------------------------
+SETUP_REDLOCAL_TITLE="INSTALLATION WIZARD: LOCAL NETWORK NODE (BRIDGE)"
+SETUP_REDLOCAL_ROOT_ERR="[ERROR] Please run this script as root (sudo ./setup_redlocal_64.sh)"
+SETUP_REDLOCAL_ROOT_OK="[+] Administrator privileges verified."
+SETUP_REDLOCAL_DEPS="[+] Updating repositories and installing core dependencies..."
+SETUP_REDLOCAL_NET_TITLE="Transparent Bridge Configuration"
+SETUP_REDLOCAL_NET_INFO="The two physical network cards of this server are required."
+SETUP_REDLOCAL_NET_DETECT="Currently detected network cards:"
+SETUP_REDLOCAL_PROMPT_IF1="Enter the name of your FIRST card (e.g. ens18) [Default: ens18]: "
+SETUP_REDLOCAL_PROMPT_IF2="Enter the name of your SECOND card (e.g. ens19) [Default: ens19]: "
+SETUP_REDLOCAL_NET_BACKUP="[+] Backing up current network configuration..."
+SETUP_REDLOCAL_NET_CREATING="[+] Creating network bridge (br0) linking"
+SETUP_REDLOCAL_FW_TITLE="Sealing the server (Firewall Configuration)..."
+SETUP_REDLOCAL_FW_SSH="Administrative SSH"
+SETUP_REDLOCAL_FW_HTTP="Forensic Dashboard HTTP"
+SETUP_REDLOCAL_FW_HTTPS="Forensic Dashboard HTTPS"
+SETUP_REDLOCAL_FW_OK="[+] Firewall successfully sealed. Only ports 22, 80 and 443 are exposed."
+SETUP_REDLOCAL_DONE_TITLE="INSTALLATION COMPLETED!"
+SETUP_REDLOCAL_DONE_1="The server has been hardened and the bridge has been configured."
+SETUP_REDLOCAL_DONE_2="IMPORTANT: Upon reboot, the machine will request a new IP via DHCP for the 'br0' bridge."
+SETUP_REDLOCAL_DONE_3="Check your router or Hypervisor to discover the new IP if you lose SSH connection."
+SETUP_REDLOCAL_PROMPT_REBOOT="Do you want to reboot the server NOW to apply network changes? (y/n): "
+SETUP_REDLOCAL_REBOOTING="Rebooting in 3 seconds..."
+SETUP_REDLOCAL_NO_REBOOT="Remember to manually reboot with 'sudo reboot' before starting the Docker environment."
+
+# ------------------------------------------------------------------------------
+# MODULE: SETUP SENSOR (Rogue AP)
+# ------------------------------------------------------------------------------
+SETUP_SENSOR_TITLE="INSTALLATION WIZARD: SENSOR NODE (ROGUE AP)"
+SETUP_SENSOR_ROOT_ERR="[ERROR] Please run this script as root (sudo ./setup_sensor_64.sh)"
+SETUP_SENSOR_ROOT_OK="[+] Administrator privileges verified."
+SETUP_SENSOR_DEPS="[+] Updating and installing dependencies (Docker, UFW, RFKill)..."
+SETUP_SENSOR_NET_TITLE="Network Interface Detection"
+SETUP_SENSOR_NET_INFO="We need to identify the Internet source and the WiFi antenna."
+SETUP_SENSOR_NET_DETECT="Currently detected network cards:"
+SETUP_SENSOR_PROMPT_CABLE="Enter the INTERNET card name (e.g. enp0s10): "
+SETUP_SENSOR_PROMPT_WIFI="Enter the WIFI antenna name (e.g. wlp3s0b1): "
+SETUP_SENSOR_SYS_TITLE="[+] Configuring the System Core (Sysctl & RFKill)..."
+SETUP_SENSOR_RFKILL="[+] Unblocking WiFi antenna at hardware level..."
+SETUP_SENSOR_NWMGR="[+] Evading NetworkManager to prevent WiFi antenna collisions..."
+SETUP_SENSOR_ENV_SYNC="[+] Automatically synchronizing the .env file with your cards..."
+SETUP_SENSOR_FW_TITLE="Configuring Routing and Firewall (UFW)..."
+SETUP_SENSOR_FW_OK="[+] Firewall sealed with routing enabled (FORWARD_POLICY=ACCEPT)."
+SETUP_SENSOR_DONE_TITLE="INSTALLATION COMPLETED!"
+SETUP_SENSOR_DONE_1="The machine is ready to act as a Malicious Router."
+SETUP_SENSOR_DONE_2="RECOMMENDATION: Reboot the server before starting Docker to ensure NetworkManager releases the WiFi antenna."
+SETUP_SENSOR_PROMPT_REBOOT="Do you want to reboot the server NOW? (y/n): "
+SETUP_SENSOR_REBOOTING="Rebooting in 3 seconds..."
+SETUP_SENSOR_NO_REBOOT="Remember to manually reboot."
+
+# ------------------------------------------------------------------------------
+# MODULE: MASTER ORCHESTRATOR (Main Menu)
+# ------------------------------------------------------------------------------
+MENU_TITLE="BLOODHOUND NETWORK - MASTER ORCHESTRATOR"
+MENU_OPTION_1="Install Suite (Bare-Metal Provisioning)"
+MENU_OPTION_2="Start Suite"
+MENU_OPTION_3="Stop Suite"
+MENU_OPTION_4="Exit"
+MENU_PROMPT="Select an option: "
+
+MENU_INSTALL_TITLE="Select the Modality to Install:"
+MENU_INSTALL_OPT_1="Local Network Mode (Transparent Bridge - 64 bit)"
+MENU_INSTALL_OPT_2="Sensor Mode (Rogue AP with WiFi - 64 bit)"
+MENU_INSTALL_OPT_3="Sensor Mode (Rogue AP with WiFi - 32 bit / Legacy)"
+MENU_INSTALL_OPT_4="Return to main menu"
+
+MENU_START_TITLE="Select the Environment to Start/Restart:"
+MENU_START_OPT_1="Local Network Mode (64-bit)"
+MENU_START_OPT_2="Sensor Mode (64-bit)"
+MENU_START_OPT_3="Sensor Mode (32-bit)"
+MENU_START_OPT_4="Return to main menu"
+
+MENU_STOP_TITLE="Select the Environment to Stop:"
+MENU_STOP_MSG="[+] Safely stopping all containers..."
+
+# ------------------------------------------------------------------------------
+# MODULE: START SCRIPTS (Container startup)
+# ------------------------------------------------------------------------------
+START_SCRIPT_INIT="[+] Starting WiFi Server Forensics environment..."
+START_SCRIPT_STOPPING="[+] Stopping running containers..."
+START_SCRIPT_STARTING="[+] Starting services..."
+START_SCRIPT_DONE="[+] Secure Forensic Dashboard available at: https://localhost"
