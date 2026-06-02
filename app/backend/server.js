@@ -128,7 +128,7 @@ const io = new Server(server, {
   }
 });
 
-const PIPE_PATH = '/tmp_pipes/wifi_pipe';
+const PIPE_PATH = process.env.TARGET_PIPE || '/tmp_pipes/wifi_pipe';
 
 app.get('/health', (req, res) => {
   res.send({ status: 'ok' });

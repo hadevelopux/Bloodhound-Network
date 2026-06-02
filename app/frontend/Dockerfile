@@ -1,5 +1,5 @@
 # Stage 1: Build
-FROM node:20-bookworm-slim AS builder
+FROM node:20-trixie-slim AS builder
 WORKDIR /app
 COPY package*.json ./
 RUN npm install
@@ -7,7 +7,7 @@ COPY . ./
 RUN npm run build
 
 # Stage 2: Serve
-FROM debian:bookworm-slim
+FROM debian:trixie-slim
 RUN apt-get update && apt-get install -y nginx openssl && rm -rf /var/lib/apt/lists/*
 RUN rm -f /etc/nginx/sites-enabled/default
 

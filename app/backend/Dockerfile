@@ -1,8 +1,6 @@
-FROM debian:bookworm-slim
+FROM node:20-trixie-slim
 
 RUN apt-get update && apt-get install -y \
-    nodejs \
-    npm \
     tshark \
     build-essential \
     python3 \
@@ -14,4 +12,7 @@ RUN npm install
 
 COPY . .
 
-CMD ["node", "server.js"]
+COPY start_auditor.sh /start_auditor.sh
+RUN chmod +x /start_auditor.sh
+
+CMD ["/start_auditor.sh"]

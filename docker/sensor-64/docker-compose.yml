@@ -16,9 +16,7 @@ services:
     restart: unless-stopped
 
   auditor-backend:
-    build:
-      context: ../../app/backend
-      dockerfile: ../../docker/sensor-64/auditor/backend.Dockerfile
+    build: ../../app/backend
     container_name: wifi-auditor-backend
     env_file:
       - ../../.env
@@ -30,9 +28,7 @@ services:
     restart: unless-stopped
 
   auditor-frontend:
-    build:
-      context: ../../app/frontend
-      dockerfile: ../../docker/sensor-64/auditor/frontend.Dockerfile
+    build: ../../app/frontend
     container_name: wifi-auditor-frontend
     ports:
       - "80:80"

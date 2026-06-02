@@ -20,7 +20,7 @@ PIPE="/tmp_pipes/wifi_pipe"
 if [ ! -p "$PIPE" ]; then
     echo "[*] Creando tubería en $PIPE..."
     mkfifo "$PIPE"
-    chmod 666 "$PIPE"
+    chmod 600 "$PIPE"
 fi
 
 echo "[+] Iniciando TShark en modo pasivo sobre $L_IFACE..."
