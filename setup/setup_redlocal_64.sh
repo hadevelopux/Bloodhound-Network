@@ -127,7 +127,7 @@ echo -e "${GREEN}${SETUP_REDLOCAL_ROOT_OK}${NC}"
 # 2. ACTUALIZACIÓN, DEPENDENCIAS Y AUTO-PARCHEO (UNATTENDED-UPGRADES)
 echo -e "${GREEN}${SETUP_REDLOCAL_DEPS}${NC}"
 apt-get update -y
-apt-get install -y docker.io docker-compose ufw bridge-utils curl git unattended-upgrades update-notifier-common
+apt-get install -y docker.io docker-compose-v2 ufw bridge-utils curl git unattended-upgrades apt-config-auto-update
 
 echo -e "${GREEN}[+] Configurando actualizaciones de seguridad automáticas...${NC}"
 cat <<EOF > /etc/apt/apt.conf.d/20auto-upgrades
@@ -249,7 +249,7 @@ Type=oneshot
 RemainAfterExit=yes
 WorkingDirectory=$DIR/..
 ExecStart=/bin/bash $DIR/setup/start_redlocal_64.sh
-ExecStop=/usr/local/bin/docker-compose -f $DIR/../docker/redlocal-64/docker-compose.yml stop
+ExecStop=/usr/bin/docker compose -f $DIR/../docker/redlocal-64/docker-compose.yml stop
 
 [Install]
 WantedBy=multi-user.target

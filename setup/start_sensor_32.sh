@@ -17,18 +17,18 @@ cd "$(dirname "$0")/../docker/sensor-32" || { echo "Error: No se encontró el di
 
 # Detener contenedores sin eliminarlos (para conservar logs)
 echo -e "${YELLOW}${START_SCRIPT_STOPPING}${NC}"
-docker-compose stop
+docker compose stop
 
 # Levantar contenedores
 echo -e "${YELLOW}${START_SCRIPT_STARTING}${NC}"
-docker-compose up -d --build
+docker compose up -d --build
 
 echo ""
 echo -e "${GREEN}${START_SCRIPT_DONE}${NC}"
 echo -e "${GREEN}${START_SCRIPT_DASHBOARD}${NC}"
 echo ""
 echo -e "${BLUE}${START_SCRIPT_DOCKER_STATUS}${NC}"
-docker-compose ps
+docker compose ps
 echo ""
 echo -e "${BLUE}${START_SCRIPT_DOCKER_STATS}${NC}"
 docker stats --no-stream --format "table {{.Name}}\t{{.MemUsage}}\t{{.CPUPerc}}"
