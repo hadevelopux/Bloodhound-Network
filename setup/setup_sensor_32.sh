@@ -92,7 +92,7 @@ echo -e "${GREEN}${SETUP_SENSOR_ROOT_OK}${NC}"
 # 2. ACTUALIZACIÓN E INSTALACIÓN DE DEPENDENCIAS Y AUTO-PARCHEO
 echo -e "${GREEN}${SETUP_SENSOR_DEPS}${NC}"
 apt-get update -y
-apt-get install -y ufw docker.io docker-compose-v2 git curl rfkill tcpdump tshark unattended-upgrades apt-config-auto-update
+apt-get install -y ufw docker.io docker-compose git curl rfkill tcpdump tshark unattended-upgrades apt-config-auto-update
 
 echo -e "${GREEN}[+] Configurando actualizaciones de seguridad automáticas...${NC}"
 cat <<EOF > /etc/apt/apt.conf.d/20auto-upgrades
