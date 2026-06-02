@@ -114,9 +114,9 @@ menu_stop() {
         read -p "${MENU_PROMPT}" OPT
         
         case $OPT in
-            1) echo -e "${YELLOW}${MENU_STOP_MSG}${NC}"; cd "$DIR/docker/redlocal-64" && docker-compose stop; pause_menu; break ;;
-            2) echo -e "${YELLOW}${MENU_STOP_MSG}${NC}"; cd "$DIR/docker/sensor-64" && docker-compose stop; pause_menu; break ;;
-            3) echo -e "${YELLOW}${MENU_STOP_MSG}${NC}"; cd "$DIR/docker/sensor-32" && docker-compose stop; pause_menu; break ;;
+            1) echo -e "${YELLOW}${MENU_STOP_MSG}${NC}"; cd "$DIR/docker/redlocal-64" && docker compose stop; pause_menu; break ;;
+            2) echo -e "${YELLOW}${MENU_STOP_MSG}${NC}"; cd "$DIR/docker/sensor-64" && docker compose stop; pause_menu; break ;;
+            3) echo -e "${YELLOW}${MENU_STOP_MSG}${NC}"; cd "$DIR/docker/sensor-32" && docker compose stop; pause_menu; break ;;
             4) break ;;
             *) echo -e "${RED}Invalid option.${NC}"; sleep 1 ;;
         esac
