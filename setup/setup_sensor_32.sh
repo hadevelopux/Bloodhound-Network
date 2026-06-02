@@ -216,7 +216,7 @@ read -p "${SETUP_SENSOR_PROMPT_REBOOT}" REBOOT_CONFIRM
 if [[ "$REBOOT_CONFIRM" =~ ^[sSyY]$ ]]; then
     echo -e "${YELLOW}${SETUP_SENSOR_REBOOTING}${NC}"
     sleep 3
-    reboot
+    /sbin/reboot
 else
     echo -e "${YELLOW}${SETUP_SENSOR_NO_REBOOT}${NC}"
 fi

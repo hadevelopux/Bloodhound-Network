@@ -275,7 +275,7 @@ read -p "${SETUP_REDLOCAL_PROMPT_REBOOT}" REBOOT_CONFIRM
 if [[ "$REBOOT_CONFIRM" =~ ^[sSyY]$ ]]; then
     echo -e "${YELLOW}${SETUP_REDLOCAL_REBOOTING}${NC}"
     sleep 3
-    reboot
+    /sbin/reboot
 else
     echo -e "${YELLOW}${SETUP_REDLOCAL_NO_REBOOT}${NC}"
 fi
