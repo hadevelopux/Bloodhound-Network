@@ -69,17 +69,8 @@ socket.on('connect_error', (err) => {
  * @param {Object} pkt - Objeto JSON con la información del paquete (src, dst, proto, alerts, etc.)
  */
 socket.on('packet', (pkt) => {
-    // 1. Filtrado por texto libre (Buscador superior)
-    const filterText = searchInput.value.toLowerCase();
-    const rawData = Object.values(pkt).join(' ').toLowerCase();
-    
-    // Si hay texto en el buscador y el paquete no lo contiene, lo ignoramos por completo
-    if (filterText && !rawData.includes(filterText)) {
-        return; 
-    }
-
-    // 2. El paquete se agrega al DOM siempre, pero addPacketRow se encargará
-    // de ocultarlo visualmente si no coincide con 'currentCategoryFilter'.
+    // El paquete se agrega al DOM SIEMPRE. addPacketRow se encargará
+    // de ocultarlo visualmente si no coincide con los filtros activos.
     addPacketRow(pkt);
 });
 
@@ -185,13 +176,26 @@ function addPacketRow(pkt) {
     // Esto nos permite iterar sobre las filas existentes más adelante y saber qué alertas tienen sin consultar el backend.
     tr.dataset.alerts = pkt.alerts ? pkt.alerts.join('||') : '';
     
-    // Si hay un filtro de categoría activo y este paquete NUEVO no lo contiene,
+    // Si hay filtros activos (texto o categoría) y el paquete no coincide,
     // lo ocultamos inmediatamente (display: none) en lugar de no agregarlo.
     // Así no perdemos el historial si el usuario luego quita el filtro.
+    let shouldHide = false;
+    
     if (currentCategoryFilter && !tr.dataset.alerts.includes(currentCategoryFilter)) {
+        shouldHide = true;
+    }
+    
+    const filterText = searchInput.value.toLowerCase();
+    if (filterText) {
+        const rawData = Object.values(pkt).join(' ').toLowerCase();
+        if (!rawData.includes(filterText)) {
+            shouldHide = true;
+        }
+    }
+    
+    if (shouldHide) {
         tr.style.display = 'none';
     }
-
     let domainHtml = pkt.domain ? `<span class="font-bold text-core-900 dark:text-core-100">[${escapeHTML(pkt.domain)}]</span> ` : '';
 
     const tdClasses = "py-2 px-4 whitespace-nowrap overflow-hidden text-ellipsis max-w-[300px]";
