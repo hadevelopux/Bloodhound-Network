@@ -2,6 +2,8 @@ import './style.css';
 import '@fontsource/inter';
 import '@fontsource/fira-code';
 import { io } from "socket.io-client";
+import { OverlayScrollbars } from 'overlayscrollbars';
+import 'overlayscrollbars/styles/overlayscrollbars.css';
 
 function escapeHTML(str) {
     if (typeof str !== 'string') return str;
@@ -24,6 +26,31 @@ const packetBody = document.getElementById('packetBody'); // <tbody> de la tabla
 const pktCounter = document.getElementById('pktCounter'); // <span> contador de paquetes
 const connStatus = document.getElementById('connStatus'); // <span> estado de la conexión WebSocket
 const searchInput = document.getElementById('searchInput'); // <input> de texto para el filtro BPF/texto libre
+
+// ==========================================
+// OVERLAYSCROLLBARS INIT
+// ==========================================
+document.addEventListener('DOMContentLoaded', () => {
+    const scrollOptions = {
+        scrollbars: {
+            theme: 'os-theme-dark',
+            autoHide: 'leave',
+            autoHideDelay: 500
+        }
+    };
+    
+    // Selectores para paneles con scroll
+    const scrollElements = [
+        document.querySelector('.overflow-y-auto.flex-1'), // Main table container
+        document.getElementById('alertsList')?.parentElement, // Alerts widget
+        document.getElementById('connsList')?.parentElement, // Connections widget
+        document.getElementById('legendContent') // Legend sidebar content
+    ];
+
+    scrollElements.forEach(el => {
+        if (el) OverlayScrollbars(el, scrollOptions);
+    });
+});
 
 // ==========================================
 // ESTADO GLOBAL DE LA APLICACIÓN
@@ -325,3 +352,21 @@ themeToggleBtn?.addEventListener('click', () => {
         setCookie('theme', 'dark');
     }
 });
+
+// ==========================================
+// LÓGICA DEL PANEL DE LEYENDA (PUSH EFFECT)
+// ==========================================
+const toggleLegendBtn = document.getElementById('toggleLegendBtn');
+const closeLegendBtn = document.getElementById('closeLegendBtn');
+const legendSidebar = document.getElementById('legendSidebar');
+
+function toggleLegend() {
+    if (legendSidebar.classList.contains('-ml-80')) {
+        legendSidebar.classList.remove('-ml-80');
+    } else {
+        legendSidebar.classList.add('-ml-80');
+    }
+}
+
+toggleLegendBtn?.addEventListener('click', toggleLegend);
+closeLegendBtn?.addEventListener('click', toggleLegend);

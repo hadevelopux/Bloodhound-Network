@@ -5,8 +5,30 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Dashboard Bloodhound Forensics | Powered by HADEVELOPUX</title>
 </head>
-<body class="font-sans bg-core-100 dark:bg-core-950 text-core-800 dark:text-core-200 h-screen w-full overflow-hidden">
-    <div class="w-full h-full flex flex-col">
+<body class="font-sans bg-core-100 dark:bg-core-950 text-core-800 dark:text-core-200 h-screen w-full overflow-hidden flex">
+    <!-- Legend Sidebar -->
+    <aside id="legendSidebar" class="w-80 h-full shrink-0 bg-white dark:bg-core-950 border-r border-core-300 dark:border-core-800 transition-all duration-300 -ml-80 flex flex-col z-20 relative">
+        <div class="p-4 border-b border-core-300 dark:border-core-800 flex justify-between items-center shrink-0">
+            <h2 class="font-bold text-lg">Heuristics Legend</h2>
+            <button id="closeLegendBtn" class="text-core-500 hover:text-core-900 dark:hover:text-core-100 text-2xl font-bold cursor-pointer transition-colors">&times;</button>
+        </div>
+        <div id="legendContent" class="p-4 flex-1 overflow-auto text-sm space-y-4">
+            <div><strong class="text-red-500 block">BOTNET IoT</strong>Devices infected with malware (e.g. Mirai) communicating with C2 or conducting DDoS.</div>
+            <div><strong class="text-orange-500 block">Trojan/C2</strong>Malicious communication patterns over known Command and Control ports.</div>
+            <div><strong class="text-orange-500 block">Nmap Scan</strong>Network reconnaissance activity searching for open ports.</div>
+            <div><strong class="text-orange-500 block">Plaintext</strong>Unencrypted protocols (HTTP, FTP, Telnet) susceptible to sniffing.</div>
+            <div><strong class="text-orange-500 block">DNS Hijacked</strong>DNS requests routed to unauthorized external resolvers.</div>
+            <div><strong class="text-orange-500 block">Crypto</strong>Hidden cryptocurrency mining traffic.</div>
+            <div><strong class="text-orange-500 block">Exfiltration</strong>Abnormally large outbound data transfers indicating data theft.</div>
+            <div><strong class="text-red-500 block">Phishing</strong>Traffic bound to known malicious or suspicious domains.</div>
+            <div><strong class="text-orange-500 block">Tracking/Adware</strong>Connections to telemetry or aggressive ad networks.</div>
+            <div><strong class="text-orange-500 block">SYN-Scan</strong>Stealthy TCP SYN scans indicative of active reconnaissance.</div>
+            <div><strong class="text-orange-500 block">Local Scan</strong>Internal scanning behavior within the private network.</div>
+            <div><strong class="text-core-600 dark:text-core-400 block">HTTP-404</strong>Excessive 'Not Found' errors, potentially indicating web directory brute-forcing.</div>
+        </div>
+    </aside>
+
+    <div id="mainAppWrapper" class="flex-1 h-full flex flex-col overflow-hidden min-w-0">
         <header class="bg-white dark:bg-core-900 border-b border-core-300 dark:border-core-800 p-3 md:px-6 flex justify-between items-center shrink-0">
             <div class="flex items-center gap-3">
                 <span class="pulse-dot w-3 h-3 bg-red-500 rounded-full shadow-[0_0_10px_var(--tw-shadow-color)] shadow-red-500 animate-pulse"></span>
@@ -18,6 +40,7 @@
                 <div class="flex gap-4 text-sm font-mono items-center">
                     <span id="connStatus" class="text-red-500 font-bold">Disconnected</span>
                     <span>Pkts: <span id="pktCounter">0</span></span>
+                    <button id="toggleLegendBtn" class="px-3 py-1.5 bg-core-200 hover:bg-core-300 dark:bg-core-800 dark:hover:bg-core-700 rounded-md transition-colors font-bold text-xs uppercase tracking-wider ml-2 cursor-pointer">Legend</button>
                     <button id="themeToggleBtn" class="p-1.5 rounded-md hover:bg-core-200 dark:hover:bg-core-800 transition-colors cursor-pointer text-core-600 dark:text-core-400 ml-2">
                         <svg id="themeIconDark" class="w-5 h-5 hidden dark:block" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z"></path></svg>
                         <svg id="themeIconLight" class="w-5 h-5 block dark:hidden" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z"></path></svg>
