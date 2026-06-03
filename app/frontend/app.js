@@ -23,7 +23,6 @@ function escapeHTML(str) {
 const socket = io();
 const packetBody = document.getElementById('packetBody'); // <tbody> de la tabla de paquetes principal
 const pktCounter = document.getElementById('pktCounter'); // <span> contador de paquetes
-const visibleCounter = document.getElementById('visibleCounter');
 const dataCounter = document.getElementById('dataCounter');
 const connStatus = document.getElementById('connStatus'); // <span> estado de la conexión WebSocket
 const searchInput = document.getElementById('searchInput'); // <input> de texto para el filtro BPF/texto libre
@@ -68,10 +67,26 @@ function formatTimeRemaining(ms) {
     }
 }
 
-function updateVisibleCounter() {
-    if (visibleCounter) {
-        const visibleRows = packetBody.querySelectorAll('tr:not([style*="display: none"])').length;
-        visibleCounter.textContent = visibleRows;
+function updateCounters() {
+    if (pktCounter) {
+        const visibleRows = packetBody.querySelectorAll('tr:not([style*="display: none"])');
+        
+        let visibleBytes = 0;
+        visibleRows.forEach(row => {
+            const lenStr = row.dataset.len;
+            if (lenStr) visibleBytes += parseInt(lenStr, 10) || 0;
+        });
+
+        if (currentCategoryFilter || searchInput.value) {
+            // We are filtering! Show visible vs total
+            pktCounter.textContent = `${visibleRows.length} / ${totalPackets}`;
+        } else {
+            pktCounter.textContent = totalPackets;
+        }
+
+        if (dataCounter) {
+            dataCounter.textContent = formatBytes(visibleBytes);
+        }
     }
 }
 
@@ -156,10 +171,8 @@ socket.on('stats_update', (stats) => {
         });
     }
 
-    // 3. Global Data Consumption
-    if (data.totalBytes !== undefined && dataCounter) {
-        dataCounter.textContent = formatBytes(data.totalBytes);
-    }
+    // 3. Global Data Consumption is now calculated by updateCounters based on visible rows
+    // to reflect the data consumed during the review/filter.
     
     // 4. Lifecycle Countdown
     const countdownContainer = document.getElementById('countdownContainer');
@@ -184,7 +197,7 @@ socket.on('stats_update', (stats) => {
 socket.on('historical_logs', (packets) => {
     packetBody.innerHTML = ''; 
     packets.forEach(pkt => addPacketToUI(pkt));
-    updateVisibleCounter();
+    updateCounters();
 });
 
 // ==========================================
@@ -257,6 +270,7 @@ function addPacketRow(pkt) {
     // Guardamos las alertas del paquete como un atributo "data-alerts" en la fila HTML.
     // Esto nos permite iterar sobre las filas existentes más adelante y saber qué alertas tienen sin consultar el backend.
     tr.dataset.alerts = pkt.alerts ? pkt.alerts.join('||') : '';
+    tr.dataset.len = pkt.len || 0;
     
     // Si hay filtros activos (texto o categoría) y el paquete no coincide,
     // lo ocultamos inmediatamente (display: none) en lugar de no agregarlo.
@@ -298,7 +312,6 @@ function addPacketRow(pkt) {
 
     packetBody.prepend(tr);
     totalPackets++;
-    pktCounter.textContent = totalPackets;
 
     // Mantenimiento de memoria (MAX_ROWS)
     if (packetBody.children.length > MAX_ROWS) {
@@ -348,7 +361,7 @@ searchInput.addEventListener('keyup', () => {
                 }
             }
         });
-        updateVisibleCounter();
+        updateCounters();
     }, 300);
 });
 
@@ -370,7 +383,7 @@ document.getElementById('factoryResetBtn')?.addEventListener('click', () => {
         totalPackets = 0;
         pktCounter.textContent = '0';
         packetBody.innerHTML = '';
-        updateVisibleCounter();
+        updateCounters();
     }
 });
 

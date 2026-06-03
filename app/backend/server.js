@@ -265,10 +265,15 @@ function startTshark() {
              }
              
              // Update Global Data Consumption
-             if (pkt.len && !isNaN(pkt.len)) {
+             let packetLen = 0;
+             if (pkt.len !== undefined && !isNaN(pkt.len)) {
+                 packetLen = parseInt(pkt.len, 10);
+             }
+             
+             if (packetLen > 0) {
                  dbQueue.push({
                      query: `INSERT INTO stats_agg (id, type, count) VALUES ('TOTAL_BYTES', 'GLOBAL', ?) ON CONFLICT(id) DO UPDATE SET count = count + ?`,
-                     params: [parseInt(pkt.len, 10), parseInt(pkt.len, 10)]
+                     params: [packetLen, packetLen]
                  });
              }
              
@@ -312,7 +317,7 @@ function processPacket(layers) {
 
     const sport = getVal('tcp_srcport') || getVal('tcp_tcp_srcport') || getVal('udp_srcport') || getVal('udp_udp_srcport') || '-';
     const dport = getVal('tcp_dstport') || getVal('tcp_tcp_dstport') || getVal('udp_dstport') || getVal('udp_udp_dstport') || '-';
-    const len = getVal('frame_len') || getVal('frame_frame_len');
+    const len = getVal('frame_len') || getVal('frame_frame_len') || 0;
     const time = getVal('frame_time_epoch') || getVal('frame_frame_time_epoch');
     const protoCol = getVal('_ws_col_Protocol') || getVal('_ws_col__ws_col_Protocol');
     const info = getVal('_ws_col_Info') || getVal('_ws_col__ws_col_Info');

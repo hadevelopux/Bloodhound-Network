@@ -22,7 +22,6 @@
                     </span>
                     <span><span data-i18n="pkts">Pkts:</span> <span id="pktCounter">0</span></span>
                     <span><span data-i18n="data_used">Data:</span> <span id="dataCounter">0 B</span></span>
-                    <span><span data-i18n="visible_rows">Visible:</span> <span id="visibleCounter">0</span></span>
                     <button id="toggleLegendBtn" class="px-3 py-1.5 bg-core-200 hover:bg-core-300 dark:bg-core-800 dark:hover:bg-core-700 rounded-md transition-colors font-bold text-xs uppercase tracking-wider ml-2 cursor-pointer" data-i18n="legend_btn">Legend</button>
                     <button id="toggleLangBtn" class="px-3 py-1.5 bg-core-200 hover:bg-core-300 dark:bg-core-800 dark:hover:bg-core-700 rounded-md transition-colors font-bold text-xs uppercase tracking-wider ml-2 cursor-pointer" data-i18n="lang_btn">ES</button>
                     <button id="themeToggleBtn" class="p-1.5 rounded-md hover:bg-core-200 dark:hover:bg-core-800 transition-colors cursor-pointer text-core-600 dark:text-core-400 ml-2">
@@ -117,24 +116,48 @@
         </div>
         <div id="legendContent" class="p-4 flex-1 overflow-auto text-sm space-y-6">
             <div>
-                <span class="inline-block px-1.5 py-0.5 rounded text-xs font-bold border border-red-500 text-red-600 dark:text-red-400 bg-red-100 dark:bg-red-900/30 shadow-[0_0_8px_rgba(239,68,68,0.3)] mb-2" data-i18n="leg_red_title">Filas Rojas (Alertas Críticas)</span>
-                <p class="text-core-600 dark:text-core-400 leading-relaxed" data-i18n="leg_red_desc">Paquetes marcados por el motor heurístico como amenazas críticas (ej. Troyanos C2, Botnets, Dark Web).</p>
+                <span class="inline-block px-1.5 py-0.5 rounded text-xs font-bold border border-red-500 text-red-600 dark:text-red-400 bg-red-100 dark:bg-red-900/30 shadow-[0_0_8px_rgba(239,68,68,0.3)] mb-2" data-i18n="leg_c2_title">⚠️ TROYANO/C2</span>
+                <p class="text-core-600 dark:text-core-400 leading-relaxed" data-i18n="leg_c2_desc">Alguien en la red está ejecutando un troyano de acceso remoto o un backdoor. El dispositivo está llamando a puertos de comando de Metasploit, Cobalt Strike o similares (ej. 4444, 4433, 1337).</p>
             </div>
             <div>
-                <span class="inline-block px-1.5 py-0.5 rounded text-xs font-bold border border-orange-500 text-orange-600 dark:text-orange-400 bg-orange-100 dark:bg-orange-900/30 mb-2" data-i18n="leg_filter_title">Filtros de Contexto</span>
-                <p class="text-core-600 dark:text-core-400 leading-relaxed" data-i18n="leg_filter_desc">Haz clic en los botones superiores (ej. Botnet, Nmap) para aislar instantáneamente el tráfico que coincida con esas firmas.</p>
+                <span class="inline-block px-1.5 py-0.5 rounded text-xs font-bold border border-red-500 text-red-600 dark:text-red-400 bg-red-100 dark:bg-red-900/30 shadow-[0_0_8px_rgba(239,68,68,0.3)] mb-2" data-i18n="leg_botnet_title">🧟 BOTNET IoT</span>
+                <p class="text-core-600 dark:text-core-400 leading-relaxed" data-i18n="leg_botnet_desc">Una Cámara, Smart TV o Foco Inteligente de la casa ha sido infectado (Ej. Mirai Botnet) y está enviando ataques masivos hacia internet usando puertos vulnerables (2323, 1900).</p>
             </div>
             <div>
-                <span class="inline-block px-1.5 py-0.5 rounded text-xs font-bold border border-orange-500 text-orange-600 dark:text-orange-400 bg-orange-100 dark:bg-orange-900/30 mb-2" data-i18n="leg_bpf_title">Buscador BPF en Vivo</span>
-                <p class="text-core-600 dark:text-core-400 leading-relaxed" data-i18n="leg_bpf_desc">Escribe texto libre (ej. una IP, 'HTTP', '4444') para filtrar el historial visible en tiempo real sin perder datos.</p>
+                <span class="inline-block px-1.5 py-0.5 rounded text-xs font-bold border border-red-500 text-red-600 dark:text-red-400 bg-red-100 dark:bg-red-900/30 shadow-[0_0_8px_rgba(239,68,68,0.3)] mb-2" data-i18n="leg_crypto_title">⛏️ CRYPTOMINERO</span>
+                <p class="text-core-600 dark:text-core-400 leading-relaxed" data-i18n="leg_crypto_desc">Malware oculto robando la energía y procesador de una computadora o celular para minar criptomonedas.</p>
             </div>
             <div>
-                <span class="inline-block px-1.5 py-0.5 rounded text-xs font-bold border border-orange-500 text-orange-600 dark:text-orange-400 bg-orange-100 dark:bg-orange-900/30 mb-2" data-i18n="leg_stats_title">Estadísticas en Tiempo Real</span>
-                <p class="text-core-600 dark:text-core-400 leading-relaxed" data-i18n="leg_stats_desc">El panel izquierdo agrupa las alertas y conexiones más frecuentes. Usa 'Limpiar' para borrar el historial de SQLite.</p>
+                <span class="inline-block px-1.5 py-0.5 rounded text-xs font-bold border border-red-500 text-red-600 dark:text-red-400 bg-red-100 dark:bg-red-900/30 shadow-[0_0_8px_rgba(239,68,68,0.3)] mb-2" data-i18n="leg_dns_title">⚠️ DNS SECUESTRADO</span>
+                <p class="text-core-600 dark:text-core-400 leading-relaxed" data-i18n="leg_dns_desc">Un dispositivo tiene un virus que cambió sus configuraciones DNS. Si la víctima entra a la web de su banco, será redirigida silenciosamente a una página clonada falsa para robarle la contraseña.</p>
             </div>
             <div>
-                <span class="inline-block px-1.5 py-0.5 rounded text-xs font-bold border border-core-300 dark:border-core-600 text-core-500 dark:text-core-400 bg-core-100 dark:bg-core-800 mb-2">HTTP-404</span>
-                <p class="text-core-600 dark:text-core-400 leading-relaxed mt-1.5">Excessive 'Not Found' errors, potentially indicating web directory brute-forcing.</p>
+                <span class="inline-block px-1.5 py-0.5 rounded text-xs font-bold border border-red-500 text-red-600 dark:text-red-400 bg-red-100 dark:bg-red-900/30 shadow-[0_0_8px_rgba(239,68,68,0.3)] mb-2" data-i18n="leg_phishing_title">🎣 PHISHING/DARKWEB</span>
+                <p class="text-core-600 dark:text-core-400 leading-relaxed" data-i18n="leg_phishing_desc">Un dispositivo intentó resolver un dominio .onion (Tor/DarkWeb) o una URL falsa conocida por robar credenciales.</p>
+            </div>
+            <div>
+                <span class="inline-block px-1.5 py-0.5 rounded text-xs font-bold border border-red-500 text-red-600 dark:text-red-400 bg-red-100 dark:bg-red-900/30 shadow-[0_0_8px_rgba(239,68,68,0.3)] mb-2" data-i18n="leg_nmap_title">🕵️ ESCANEO NMAP</span>
+                <p class="text-core-600 dark:text-core-400 leading-relaxed" data-i18n="leg_nmap_desc">Un atacante silencioso está enviando paquetes malformados (XMAS/NULL) para escanear y descubrir qué dispositivos y puertos están abiertos en tu red sin ser detectado.</p>
+            </div>
+            <div>
+                <span class="inline-block px-1.5 py-0.5 rounded text-xs font-bold border border-orange-500 text-orange-600 dark:text-orange-400 bg-orange-100 dark:bg-orange-900/30 mb-2" data-i18n="leg_plaintext_title">🔓 TEXTO PLANO</span>
+                <p class="text-core-600 dark:text-core-400 leading-relaxed" data-i18n="leg_plaintext_desc">Alguien está usando FTP, Telnet o HTTP sin cifrar. Sus contraseñas, correos o sesiones acaban de viajar totalmente visibles por el aire.</p>
+            </div>
+            <div>
+                <span class="inline-block px-1.5 py-0.5 rounded text-xs font-bold border border-orange-500 text-orange-600 dark:text-orange-400 bg-orange-100 dark:bg-orange-900/30 mb-2" data-i18n="leg_adware_title">👁️ RASTREO/ADWARE</span>
+                <p class="text-core-600 dark:text-core-400 leading-relaxed" data-i18n="leg_adware_desc">Un televisor o celular está enviando telemetría abusiva a servidores de publicidad o rastreo silencioso en segundo plano.</p>
+            </div>
+            <div>
+                <span class="inline-block px-1.5 py-0.5 rounded text-xs font-bold border border-orange-500 text-orange-600 dark:text-orange-400 bg-orange-100 dark:bg-orange-900/30 mb-2" data-i18n="leg_arp_title">🔎 ESCANEO LOCAL (ARP)</span>
+                <p class="text-core-600 dark:text-core-400 leading-relaxed" data-i18n="leg_arp_desc">Un equipo infectado en tu red doméstica está usando ráfagas ARP para buscar a qué otras computadoras y celulares de tu casa puede propagarse.</p>
+            </div>
+            <div>
+                <span class="inline-block px-1.5 py-0.5 rounded text-xs font-bold border border-orange-500 text-orange-600 dark:text-orange-400 bg-orange-100 dark:bg-orange-900/30 mb-2" data-i18n="leg_exfil_title">📦 EXFILTRACIÓN</span>
+                <p class="text-core-600 dark:text-core-400 leading-relaxed" data-i18n="leg_exfil_desc">Tráfico sospechosamente pesado hacia internet. Posible indicio de que se están robando bases de datos masivas hacia la nube.</p>
+            </div>
+            <div>
+                <span class="inline-block px-1.5 py-0.5 rounded text-xs font-bold border border-orange-500 text-orange-600 dark:text-orange-400 bg-orange-100 dark:bg-orange-900/30 mb-2" data-i18n="leg_syn_title">SYN-SCAN</span>
+                <p class="text-core-600 dark:text-core-400 leading-relaxed" data-i18n="leg_syn_desc">Escaneo de puertos ruidoso. Un programa está intentando conectarse a miles de puertos por segundo de forma agresiva.</p>
             </div>
         </div>
     </aside>
