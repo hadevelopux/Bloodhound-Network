@@ -218,7 +218,25 @@ function addPacketRow(pkt) {
     pktCounter.textContent = totalPackets;
 
     if (packetBody.children.length > MAX_ROWS) {
-        packetBody.removeChild(packetBody.lastChild);
+        let nodeToRemove = packetBody.lastElementChild;
+        
+        // Si hay algún filtro activo, buscamos desde el final (el más viejo)
+        // el primer paquete que esté OCULTO para borrarlo, preservando así
+        // los paquetes visibles que el usuario está analizando.
+        if (currentCategoryFilter || searchInput.value) {
+            let tempNode = packetBody.lastElementChild;
+            while (tempNode) {
+                if (tempNode.style.display === 'none') {
+                    nodeToRemove = tempNode;
+                    break;
+                }
+                tempNode = tempNode.previousElementSibling;
+            }
+        }
+        
+        if (nodeToRemove) {
+            nodeToRemove.remove();
+        }
     }
 }
 
