@@ -23,6 +23,8 @@ function escapeHTML(str) {
 const socket = io();
 const packetBody = document.getElementById('packetBody'); // <tbody> de la tabla de paquetes principal
 const pktCounter = document.getElementById('pktCounter'); // <span> contador de paquetes
+const visibleCounter = document.getElementById('visibleCounter');
+const dataCounter = document.getElementById('dataCounter');
 const connStatus = document.getElementById('connStatus'); // <span> estado de la conexión WebSocket
 const searchInput = document.getElementById('searchInput'); // <input> de texto para el filtro BPF/texto libre
 
@@ -36,6 +38,42 @@ const MAX_ROWS = 1000;
 // Almacena el filtro de categoría activo (ej. "BOTNET", "NMAP", etc.)
 // Si está vacío (''), significa que se muestran todos los paquetes.
 let currentCategoryFilter = '';
+
+function formatBytes(bytes, decimals = 2) {
+    if (!+bytes) return '0 B';
+    const k = 1024;
+    const dm = decimals < 0 ? 0 : decimals;
+    const sizes = ['B', 'KB', 'MB', 'GB', 'TB'];
+    const i = Math.floor(Math.log(bytes) / Math.log(k));
+    return `${parseFloat((bytes / Math.pow(k, i)).toFixed(dm))} ${sizes[i]}`;
+}
+
+function formatTimeRemaining(ms) {
+    if (ms <= 0) return '0';
+    const dict = translations[currentLang] || translations['en'];
+    
+    const secs = Math.floor(ms / 1000);
+    const mins = Math.floor(secs / 60);
+    const hours = Math.floor(mins / 60);
+    const days = Math.floor(hours / 24);
+
+    if (hours > 48) {
+        return `${days} ${dict.days || 'd'}`;
+    } else if (mins > 120) {
+        return `${hours} ${dict.hours || 'h'}`;
+    } else if (secs > 60) {
+        return `${mins} ${dict.mins || 'm'}`;
+    } else {
+        return `${secs} ${dict.secs || 's'}`;
+    }
+}
+
+function updateVisibleCounter() {
+    if (visibleCounter) {
+        const visibleRows = packetBody.querySelectorAll('tr:not([style*="display: none"])').length;
+        visibleCounter.textContent = visibleRows;
+    }
+}
 
 // ==========================================
 // EVENTOS DE WEBSOCKET (CONEXIÓN Y ESTADO)
@@ -94,7 +132,7 @@ socket.on('stats_update', (stats) => {
     
     if (alertsList && stats.alerts) {
         alertsList.innerHTML = '';
-        stats.alerts.forEach(item => {
+        data.alerts.forEach(item => {
             const style = getAlertStyle(item.id);
             const li = document.createElement('li');
             li.className = 'flex justify-between py-2 px-3 border-b border-core-300 dark:border-core-800 hover:bg-core-200 dark:hover:bg-core-800/50 transition-colors text-core-800 dark:text-core-300';
@@ -103,15 +141,50 @@ socket.on('stats_update', (stats) => {
         });
     }
 
-    if (connsList && stats.connections) {
-        connsList.innerHTML = '';
-        stats.connections.forEach(item => {
-            const li = document.createElement('li');
-            li.className = 'flex justify-between py-2 px-3 border-b border-core-300 dark:border-core-800 hover:bg-core-200 dark:hover:bg-core-800/50 transition-colors text-core-800 dark:text-core-300';
-            li.innerHTML = `<span>${escapeHTML(item.id)}</span> <span class="font-bold text-core-600 dark:text-core-400">${item.count}</span>`;
-            connsList.appendChild(li);
+    // 2. Connection Stats
+    const connsBody = document.getElementById('connsBody');
+    if (connsBody && data.connections) {
+        connsBody.innerHTML = '';
+        data.connections.forEach(c => {
+            const row = document.createElement('tr');
+            row.className = 'hover:bg-core-200 dark:hover:bg-core-800/50 transition-colors';
+            row.innerHTML = `
+                <td class="px-3 py-2 font-mono text-xs border-b border-core-300 dark:border-core-800 text-core-700 dark:text-core-300">${escapeHTML(c.id)}</td>
+                <td class="px-3 py-2 font-mono text-xs border-b border-core-300 dark:border-core-800 text-right font-bold">${c.count}</td>
+            `;
+            connsBody.appendChild(row);
         });
     }
+
+    // 3. Global Data Consumption
+    if (data.totalBytes !== undefined && dataCounter) {
+        dataCounter.textContent = formatBytes(data.totalBytes);
+    }
+    
+    // 4. Lifecycle Countdown
+    const countdownContainer = document.getElementById('countdownContainer');
+    const countdownTimer = document.getElementById('countdownTimer');
+    
+    if (data.timeRemaining !== undefined && countdownContainer) {
+        countdownContainer.style.display = 'inline';
+        countdownTimer.textContent = formatTimeRemaining(data.timeRemaining);
+        
+        // Critical visual alert (Red pulse if < 1 minute)
+        const isCritical = data.timeRemaining < 60000; 
+        if (isCritical) {
+            countdownContainer.classList.add('text-red-500', 'animate-pulse');
+            countdownContainer.classList.remove('text-orange-500');
+        } else {
+            countdownContainer.classList.add('text-orange-500');
+            countdownContainer.classList.remove('text-red-500', 'animate-pulse');
+        }
+    }
+});
+
+socket.on('historical_logs', (packets) => {
+    packetBody.innerHTML = ''; 
+    packets.forEach(pkt => addPacketToUI(pkt));
+    updateVisibleCounter();
 });
 
 // ==========================================
@@ -227,6 +300,7 @@ function addPacketRow(pkt) {
     totalPackets++;
     pktCounter.textContent = totalPackets;
 
+    // Mantenimiento de memoria (MAX_ROWS)
     if (packetBody.children.length > MAX_ROWS) {
         let nodeToRemove = packetBody.lastElementChild;
         
@@ -274,6 +348,7 @@ searchInput.addEventListener('keyup', () => {
                 }
             }
         });
+        updateVisibleCounter();
     }, 300);
 });
 
@@ -285,6 +360,18 @@ document.getElementById('resetAlertsBtn')?.addEventListener('click', () => {
 
 document.getElementById('resetConnsBtn')?.addEventListener('click', () => {
     socket.emit('clear_stats', 'connections');
+});
+
+document.getElementById('factoryResetBtn')?.addEventListener('click', () => {
+    const dict = translations[currentLang];
+    const msg = dict['factory_reset_confirm'] || '¡ATENCIÓN! Esto eliminará permanentemente TODA la evidencia. ¿Estás seguro?';
+    if (confirm(msg)) {
+        socket.emit('factory_reset');
+        totalPackets = 0;
+        pktCounter.textContent = '0';
+        packetBody.innerHTML = '';
+        updateVisibleCounter();
+    }
 });
 
 // Elementos del DOM para los botones de filtrado de categorías (ej. Botnet, Trojan)
@@ -309,32 +396,7 @@ function applyCategoryFilter(filterValue) {
         }
     });
 
-    // 2. Iterar sobre TODAS las filas de la tabla actual y ocultar/mostrar
-    // En lugar de borrar la tabla (innerHTML = ''), alteramos el display de CSS
-    // para mantener el historial intacto al cambiar de filtros.
-    const filterText = searchInput.value.toLowerCase();
-    const rows = packetBody.querySelectorAll('tr');
-    rows.forEach(row => {
-        const rawData = row.textContent.toLowerCase();
-        
-        // 1. Check search text filter
-        if (filterText && !rawData.includes(filterText)) {
-            row.style.display = 'none';
-            return; // Skip category check, it's already hidden
-        }
-        
-        // 2. Check category filter
-        if (!filterValue) {
-            row.style.display = '';
-        } else {
-            const rowAlerts = row.dataset.alerts || '';
-            if (rowAlerts.includes(filterValue)) {
-                row.style.display = ''; 
-            } else {
-                row.style.display = 'none'; 
-            }
-        }
-    });
+    socket.emit('request_filter_history', filterValue);
 }
 
 filterBtns.forEach(btn => {

@@ -88,6 +88,19 @@ setInterval(() => {
     });
 }, 1000);
 
+const LIFECYCLE_MS = 30 * 24 * 60 * 60 * 1000; // 30 days
+let cycleStartMs = Date.now();
+
+// Load or Initialize CYCLE_START
+db.get(`SELECT count FROM stats_agg WHERE id = 'CYCLE_START'`, [], (err, row) => {
+    if (row) {
+        cycleStartMs = row.count;
+    } else {
+        cycleStartMs = Date.now();
+        db.run(`INSERT INTO stats_agg (id, type, count) VALUES ('CYCLE_START', 'GLOBAL', ?)`, [cycleStartMs]);
+    }
+});
+
 // Periodic cleanup of logs older than 7 days
 setInterval(() => {
     db.run(`DELETE FROM raw_logs WHERE created_at <= datetime('now', '-7 days')`, function(err) {
@@ -111,10 +124,32 @@ setInterval(() => {
                 logger.error('Error fetching connections:', err.message);
                 return;
             }
-            if (connections.length > 0 || alerts.length > 0) {
-                logger.debug(`Broadcasting stats: ${connections.length} connections, ${alerts.length} alerts`);
-            }
-            io.emit('stats_update', { connections, alerts });
+            db.get(`SELECT count FROM stats_agg WHERE id = 'TOTAL_BYTES'`, [], (err, row) => {
+                const totalBytes = row ? row.count : 0;
+                
+                const timeRemaining = (cycleStartMs + LIFECYCLE_MS) - Date.now();
+
+                // Auto-Destruct if 30 days have passed
+                if (timeRemaining <= 0) {
+                    logger.warn('LIFECYCLE EXPIRED! Auto-resetting database...');
+                    dbQueue.length = 0;
+                    cycleStartMs = Date.now();
+                    db.serialize(() => {
+                        db.run("DELETE FROM stats_agg");
+                        db.run("DELETE FROM raw_logs");
+                        db.run(`INSERT INTO stats_agg (id, type, count) VALUES ('CYCLE_START', 'GLOBAL', ?)`, [cycleStartMs]);
+                        db.run("VACUUM");
+                    });
+                    io.emit('historical_logs', []);
+                    io.emit('stats_update', { connections: [], alerts: [], totalBytes: 0, timeRemaining: LIFECYCLE_MS });
+                    return; 
+                }
+                
+                if (connections.length > 0 || alerts.length > 0 || totalBytes > 0) {
+                    logger.debug(`Broadcasting stats: ${connections.length} connections, ${alerts.length} alerts, ${totalBytes} bytes`);
+                }
+                io.emit('stats_update', { connections, alerts, totalBytes, timeRemaining });
+            });
         });
     });
 }, 2000);
@@ -227,6 +262,14 @@ function startTshark() {
                         params: [alert]
                     });
                 });
+             }
+             
+             // Update Global Data Consumption
+             if (pkt.len && !isNaN(pkt.len)) {
+                 dbQueue.push({
+                     query: `INSERT INTO stats_agg (id, type, count) VALUES ('TOTAL_BYTES', 'GLOBAL', ?) ON CONFLICT(id) DO UPDATE SET count = count + ?`,
+                     params: [parseInt(pkt.len, 10), parseInt(pkt.len, 10)]
+                 });
              }
              
              // Prevenir desbordamiento absoluto (Drop packets if disk is too slow)
@@ -397,6 +440,40 @@ function processPacket(layers) {
 io.on('connection', (socket) => {
   logger.info('Cliente Web conectado vía WebSocket.');
   
+  // Send the last 500 packets immediately on connect
+  db.all(`SELECT * FROM raw_logs ORDER BY time DESC LIMIT 500`, [], (err, rows) => {
+      if (!err && rows && rows.length > 0) {
+          // The data is stored with alerts as JSON strings, we should parse them
+          const parsedRows = rows.map(r => {
+              try { r.alerts = JSON.parse(r.alerts); } catch(e) { r.alerts = []; }
+              return r;
+          });
+          socket.emit('historical_logs', parsedRows.reverse()); // Reverse to chronological
+      }
+  });
+
+  socket.on('request_filter_history', (filterText) => {
+      // Si el filtro es vacío o ALL, trae los últimos 1000
+      let query = `SELECT * FROM raw_logs ORDER BY time DESC LIMIT 1000`;
+      let params = [];
+
+      if (filterText && filterText.trim() !== '') {
+          // Usa LIKE para buscar dentro del JSON stringificado de alertas o info
+          query = `SELECT * FROM raw_logs WHERE alerts LIKE ? OR info LIKE ? ORDER BY time DESC LIMIT 1000`;
+          params = [`%${filterText}%`, `%${filterText}%`];
+      }
+
+      db.all(query, params, (err, rows) => {
+          if (!err && rows) {
+              const parsedRows = rows.map(r => {
+                  try { r.alerts = JSON.parse(r.alerts); } catch(e) { r.alerts = []; }
+                  return r;
+              });
+              socket.emit('historical_logs', parsedRows.reverse());
+          }
+      });
+  });
+  
   socket.on('clear_stats', (type) => {
     if (type === 'alerts') {
       db.run("DELETE FROM stats_agg WHERE type = 'ALERT'");
@@ -411,8 +488,23 @@ io.on('connection', (socket) => {
         }
     }
     // Broadcast immediate empty update so clients clear out
-    if (type === 'alerts') io.emit('stats_update', { alerts: [] });
-    if (type === 'connections') io.emit('stats_update', { connections: [] });
+    if (type === 'alerts') io.emit('stats_update', { alerts: [], totalBytes: 0 }); // Note: totalBytes not cleared here
+    if (type === 'connections') io.emit('stats_update', { connections: [], totalBytes: 0 });
+  });
+
+  socket.on('factory_reset', () => {
+      logger.warn('Ejecutando FACTORY RESET de la base de datos completa!');
+      dbQueue.length = 0; // Purge memory queue
+      cycleStartMs = Date.now(); // Reset lifecycle variable
+      db.serialize(() => {
+          db.run("DELETE FROM stats_agg");
+          db.run("DELETE FROM raw_logs");
+          db.run(`INSERT INTO stats_agg (id, type, count) VALUES ('CYCLE_START', 'GLOBAL', ?)`, [cycleStartMs]);
+          db.run("VACUUM"); // Reclaim space
+      });
+      // Broadcast to ALL clients to reset their UI
+      io.emit('historical_logs', []);
+      io.emit('stats_update', { connections: [], alerts: [], totalBytes: 0, timeRemaining: LIFECYCLE_MS });
   });
 });
 

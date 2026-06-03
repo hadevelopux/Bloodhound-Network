@@ -17,7 +17,12 @@
                     class="bg-core-200 dark:bg-core-800 border border-core-300 dark:border-core-700 text-core-800 dark:text-core-200 px-4 py-2 rounded-md font-mono w-64 md:w-[350px] outline-none focus:border-core-400 dark:focus:border-core-500 transition-all">
                 <div class="flex gap-4 text-sm font-mono items-center">
                     <span id="connStatus" class="text-red-500 font-bold">Disconnected</span>
+                    <span class="text-orange-500 font-bold" id="countdownContainer" style="display: none;">
+                        <span data-i18n="reset_in">Reset:</span> <span id="countdownTimer">-</span>
+                    </span>
                     <span><span data-i18n="pkts">Pkts:</span> <span id="pktCounter">0</span></span>
+                    <span><span data-i18n="data_used">Data:</span> <span id="dataCounter">0 B</span></span>
+                    <span><span data-i18n="visible_rows">Visible:</span> <span id="visibleCounter">0</span></span>
                     <button id="toggleLegendBtn" class="px-3 py-1.5 bg-core-200 hover:bg-core-300 dark:bg-core-800 dark:hover:bg-core-700 rounded-md transition-colors font-bold text-xs uppercase tracking-wider ml-2 cursor-pointer" data-i18n="legend_btn">Legend</button>
                     <button id="toggleLangBtn" class="px-3 py-1.5 bg-core-200 hover:bg-core-300 dark:bg-core-800 dark:hover:bg-core-700 rounded-md transition-colors font-bold text-xs uppercase tracking-wider ml-2 cursor-pointer" data-i18n="lang_btn">ES</button>
                     <button id="themeToggleBtn" class="p-1.5 rounded-md hover:bg-core-200 dark:hover:bg-core-800 transition-colors cursor-pointer text-core-600 dark:text-core-400 ml-2">
@@ -61,7 +66,8 @@
                 <div class="bg-core-100 dark:bg-core-900 px-4 py-3 border-b border-core-300 dark:border-core-800 flex flex-col gap-2 shrink-0">
                     <div class="font-semibold text-sm text-core-800 dark:text-core-300 flex justify-between items-center">
                         <span data-i18n="realtime_filters">Real-Time Context Filters</span>
-                        <button id="clearFiltersBtn" class="text-xs bg-core-300 dark:bg-core-800 hover:bg-core-400 dark:hover:bg-core-700 px-2 py-1 rounded transition-colors cursor-pointer" data-i18n="clear_filter">Clear Filter</button>
+                        <button id="clearFiltersBtn" class="ml-auto px-3 py-1.5 bg-core-200 hover:bg-core-300 dark:bg-core-800 dark:hover:bg-core-700 rounded-md transition-colors font-bold text-xs uppercase" data-i18n="clear_filter">Clear Filter</button>
+                        <button id="factoryResetBtn" class="px-3 py-1.5 bg-red-600 hover:bg-red-700 text-white rounded-md transition-colors font-bold text-xs uppercase shadow-[0_0_8px_rgba(220,38,38,0.5)]" data-i18n="factory_reset_btn">FACTORY RESET</button>
                     </div>
                     <div class="flex flex-wrap gap-2 text-xs font-mono" id="filterButtonsContainer">
                         <button class="filter-btn active bg-core-300 dark:bg-core-700 text-core-900 dark:text-core-100 px-2 py-1 rounded border border-core-400 dark:border-core-600 transition-all cursor-pointer" data-filter="">All</button>
