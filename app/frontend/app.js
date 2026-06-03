@@ -41,20 +41,28 @@ let currentCategoryFilter = '';
 // EVENTOS DE WEBSOCKET (CONEXIÓN Y ESTADO)
 // ==========================================
 
+function updateConnStatusText() {
+    if (socket.connected) {
+        connStatus.textContent = translations[currentLang]?.['live'] || 'Live';
+    } else {
+        connStatus.textContent = translations[currentLang]?.['disconnected'] || 'Disconnected';
+    }
+}
+
 socket.on('connect', () => {
-    connStatus.textContent = 'Live';
+    updateConnStatusText();
     connStatus.className = 'text-neon-green drop-shadow-[0_0_5px_rgba(57,255,20,0.4)]';
     document.querySelector('.pulse-dot').style.animationPlayState = 'running';
 });
 
 socket.on('disconnect', () => {
-    connStatus.textContent = 'Disconnected';
+    updateConnStatusText();
     connStatus.className = 'text-neon-red';
     document.querySelector('.pulse-dot').style.animationPlayState = 'paused';
 });
 
 socket.on('connect_error', (err) => {
-    connStatus.textContent = 'Connection Error';
+    connStatus.textContent = 'Error';
     connStatus.className = 'text-neon-red font-bold animate-pulse';
     document.querySelector('.pulse-dot').style.animationPlayState = 'paused';
     console.error('WebSocket Error:', err);
@@ -392,6 +400,11 @@ function setLanguage(lang) {
     const toggleLangBtn = document.getElementById('toggleLangBtn');
     if (toggleLangBtn) {
         toggleLangBtn.textContent = lang === 'es' ? 'EN' : 'ES';
+    }
+
+    // Actualizar estado de conexión dinámico
+    if (typeof updateConnStatusText === 'function') {
+        updateConnStatusText();
     }
 }
 
