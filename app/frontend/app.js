@@ -24,6 +24,7 @@ const searchInput = document.getElementById('searchInput');
 
 let totalPackets = 0;
 const MAX_ROWS = 1000;
+let currentCategoryFilter = '';
 
 socket.on('connect', () => {
     connStatus.textContent = 'Live';
@@ -50,6 +51,19 @@ socket.on('packet', (pkt) => {
     
     if (filterText && !rawData.includes(filterText)) {
         return; 
+    }
+
+    if (currentCategoryFilter) {
+        let hasCategory = false;
+        if (pkt.alerts && pkt.alerts.length > 0) {
+            for (const alert of pkt.alerts) {
+                if (alert.includes(currentCategoryFilter)) {
+                    hasCategory = true;
+                    break;
+                }
+            }
+        }
+        if (!hasCategory) return;
     }
 
     addPacketRow(pkt);
@@ -169,4 +183,35 @@ document.getElementById('resetAlertsBtn')?.addEventListener('click', () => {
 
 document.getElementById('resetConnsBtn')?.addEventListener('click', () => {
     socket.emit('clear_stats', 'connections');
+});
+
+const filterBtns = document.querySelectorAll('.filter-btn');
+const clearFiltersBtn = document.getElementById('clearFiltersBtn');
+
+function applyCategoryFilter(filterValue) {
+    currentCategoryFilter = filterValue;
+    
+    filterBtns.forEach(btn => {
+        if (btn.dataset.filter === filterValue) {
+            btn.classList.add('active', 'bg-neon-cyan/20', 'text-neon-cyan', 'border-neon-cyan/50', 'shadow-[0_0_8px_rgba(0,240,255,0.2)]');
+            btn.classList.remove('bg-white/5', 'text-slate-300', 'border-white/10');
+        } else {
+            btn.classList.remove('active', 'bg-neon-cyan/20', 'text-neon-cyan', 'border-neon-cyan/50', 'shadow-[0_0_8px_rgba(0,240,255,0.2)]');
+            btn.classList.add('bg-white/5', 'text-slate-300', 'border-white/10');
+        }
+    });
+
+    packetBody.innerHTML = '';
+    totalPackets = 0;
+    pktCounter.textContent = '0';
+}
+
+filterBtns.forEach(btn => {
+    btn.addEventListener('click', () => {
+        applyCategoryFilter(btn.dataset.filter);
+    });
+});
+
+clearFiltersBtn?.addEventListener('click', () => {
+    applyCategoryFilter('');
 });

@@ -51,6 +51,28 @@
 
             <!-- Right Column (Table) -->
             <main class="glass rounded-xl flex-1 flex flex-col overflow-hidden min-w-0">
+                <!-- Tabs/Filters Header -->
+                <div class="bg-[#0a0f19]/95 px-4 py-3 border-b border-white/10 flex flex-col gap-2 shrink-0">
+                    <div class="font-semibold text-sm neon-text-cyan flex justify-between items-center">
+                        <span>Real-Time Context Filters</span>
+                        <button id="clearFiltersBtn" class="text-xs bg-white/10 hover:bg-white/20 text-white px-2 py-1 rounded transition-colors cursor-pointer">Clear Filter</button>
+                    </div>
+                    <div class="flex flex-wrap gap-2 text-xs font-mono" id="filterButtonsContainer">
+                        <button class="filter-btn active bg-neon-cyan/20 text-neon-cyan px-2 py-1 rounded border border-neon-cyan/50 transition-all cursor-pointer shadow-[0_0_8px_rgba(0,240,255,0.2)]" data-filter="">All</button>
+                        <button class="filter-btn bg-white/5 hover:bg-white/10 text-slate-300 px-2 py-1 rounded border border-white/10 transition-all cursor-pointer" data-filter="BOTNET">Botnet</button>
+                        <button class="filter-btn bg-white/5 hover:bg-white/10 text-slate-300 px-2 py-1 rounded border border-white/10 transition-all cursor-pointer" data-filter="TROJAN">Trojan/C2</button>
+                        <button class="filter-btn bg-white/5 hover:bg-white/10 text-slate-300 px-2 py-1 rounded border border-white/10 transition-all cursor-pointer" data-filter="NMAP">Nmap Scan</button>
+                        <button class="filter-btn bg-white/5 hover:bg-white/10 text-slate-300 px-2 py-1 rounded border border-white/10 transition-all cursor-pointer" data-filter="PLAINTEXT">Plaintext</button>
+                        <button class="filter-btn bg-white/5 hover:bg-white/10 text-slate-300 px-2 py-1 rounded border border-white/10 transition-all cursor-pointer" data-filter="DNS HIJACKED">DNS Hijacked</button>
+                        <button class="filter-btn bg-white/5 hover:bg-white/10 text-slate-300 px-2 py-1 rounded border border-white/10 transition-all cursor-pointer" data-filter="CRYPTOMINER">Crypto</button>
+                        <button class="filter-btn bg-white/5 hover:bg-white/10 text-slate-300 px-2 py-1 rounded border border-white/10 transition-all cursor-pointer" data-filter="EXFILTRATION">Exfiltration</button>
+                        <button class="filter-btn bg-white/5 hover:bg-white/10 text-slate-300 px-2 py-1 rounded border border-white/10 transition-all cursor-pointer" data-filter="PHISHING">Phishing</button>
+                        <button class="filter-btn bg-white/5 hover:bg-white/10 text-slate-300 px-2 py-1 rounded border border-white/10 transition-all cursor-pointer" data-filter="TRACKING">Tracking/Adware</button>
+                        <button class="filter-btn bg-white/5 hover:bg-white/10 text-slate-300 px-2 py-1 rounded border border-white/10 transition-all cursor-pointer" data-filter="SYN-SCAN">SYN-Scan</button>
+                        <button class="filter-btn bg-white/5 hover:bg-white/10 text-slate-300 px-2 py-1 rounded border border-white/10 transition-all cursor-pointer" data-filter="LOCAL SCAN">Local Scan</button>
+                        <button class="filter-btn bg-white/5 hover:bg-white/10 text-slate-300 px-2 py-1 rounded border border-white/10 transition-all cursor-pointer" data-filter="HTTP-404">HTTP-404</button>
+                    </div>
+                </div>
                 <div class="overflow-y-auto flex-1">
                     <table class="w-full text-left font-mono text-sm border-collapse">
                         <thead class="sticky top-0 bg-[#0a0f19]/95 text-slate-400 border-b border-white/10 z-10">
