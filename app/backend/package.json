@@ -1,6 +1,5 @@
 {
   "name": "wifi-auditor-backend",
-  "version": "1.0.0",
   "description": "Backend para leer tráfico de TShark y exponer WebSockets",
   "main": "server.js",
   "scripts": {

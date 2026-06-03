@@ -1,13 +1,17 @@
 # Bloodhound Network
 Análisis forense de su red en tiempo real.
 
+<div align="right">
+  <a href="README.md">Español</a> | <a href="README.en.md">English</a>
+</div>
+
 ---
 
 ## 📡 ¿Qué es esto?
 
 Suite de auditoría forense avanzada que opera bajo dos modalidades:
 
-1. **Modo Sensor (Rogue AP)**: Levanta un Punto de Acceso WiFi falso para atraer dispositivos y analizar su tráfico en tiempo real.
+1. **Modo Sensor (Rogue AP)**: Levanta un Punto de Acceso WiFi emulado para atraer dispositivos y analizar su tráfico en tiempo real.
 2. **Modo Red Local (Bridge Transparente)**: Se sitúa de forma invisible (Capa 2) entre dos redes para capturar absolutamente todo el tráfico sin alterar la red original.
 
 En ambos modos, el sistema extrae telemetría y muestra un análisis pericial detallado en tiempo real mediante un Dashboard Web.
