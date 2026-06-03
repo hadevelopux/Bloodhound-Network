@@ -96,8 +96,8 @@ socket.on('stats_update', (stats) => {
         stats.alerts.forEach(item => {
             const style = getAlertStyle(item.id);
             const li = document.createElement('li');
-            li.className = 'flex justify-between py-2 px-3 border-b border-white/5 hover:bg-white/5 transition-colors';
-            li.innerHTML = `<span><span class="px-1.5 py-0.5 rounded text-xs font-bold mr-1.5 border ${style.badgeClass}">${item.id}</span></span> <span class="text-neon-yellow font-bold">${item.count}</span>`;
+            li.className = 'flex justify-between py-2 px-3 border-b border-core-300 dark:border-core-800 hover:bg-core-200 dark:hover:bg-core-800/50 transition-colors text-core-800 dark:text-core-300';
+            li.innerHTML = `<span><span class="px-1.5 py-0.5 rounded text-xs font-bold mr-1.5 border ${style.badgeClass}">${item.id}</span></span> <span class="font-bold text-core-600 dark:text-core-400">${item.count}</span>`;
             alertsList.appendChild(li);
         });
     }
@@ -106,8 +106,8 @@ socket.on('stats_update', (stats) => {
         connsList.innerHTML = '';
         stats.connections.forEach(item => {
             const li = document.createElement('li');
-            li.className = 'flex justify-between py-2 px-3 border-b border-white/5 hover:bg-white/5 transition-colors';
-            li.innerHTML = `<span>${escapeHTML(item.id)}</span> <span class="text-neon-yellow font-bold">${item.count}</span>`;
+            li.className = 'flex justify-between py-2 px-3 border-b border-core-300 dark:border-core-800 hover:bg-core-200 dark:hover:bg-core-800/50 transition-colors text-core-800 dark:text-core-300';
+            li.innerHTML = `<span>${escapeHTML(item.id)}</span> <span class="font-bold text-core-600 dark:text-core-400">${item.count}</span>`;
             connsList.appendChild(li);
         });
     }
@@ -123,13 +123,13 @@ socket.on('stats_update', (stats) => {
  * @returns {string} Clase CSS de Tailwind para dar color al texto.
  */
 function getProtoClass(proto) {
-    if (proto.includes('HTTP')) return 'text-neon-green';
-    if (proto.includes('DNS')) return 'text-neon-cyan';
-    if (proto.includes('TCP')) return 'text-neon-yellow';
-    if (proto.includes('UDP')) return 'text-neon-cyan';
-    if (proto.includes('TLS') || proto.includes('SSL')) return 'text-neon-purple';
-    if (proto.includes('ICMP')) return 'text-neon-red';
-    return '';
+    if (proto.includes('HTTP')) return 'text-core-600 dark:text-core-300 font-bold';
+    if (proto.includes('DNS')) return 'text-core-500 dark:text-core-400 font-bold';
+    if (proto.includes('TCP')) return 'text-core-700 dark:text-core-200 font-bold';
+    if (proto.includes('UDP')) return 'text-core-500 dark:text-core-400 font-bold';
+    if (proto.includes('TLS') || proto.includes('SSL')) return 'text-core-600 dark:text-core-300 font-bold';
+    if (proto.includes('ICMP')) return 'text-core-800 dark:text-core-100 font-bold';
+    return 'text-core-800 dark:text-core-400';
 }
 
 /**
@@ -139,20 +139,20 @@ function getProtoClass(proto) {
  * @returns {Object} Objeto con 'badgeClass' (clases CSS) y 'isCritical' (booleano).
  */
 function getAlertStyle(alertName) {
-    // Críticos (Rojo Parpadeante)
+    // Críticos (Rojo Parpadeante) - Mantenemos colores vivos según requerimiento
     if (alertName.includes('⚠️') || alertName.includes('🎣') || alertName.includes('XMAS') || alertName.includes('NULL') || alertName.includes('🧟') || alertName.includes('⛏️')) {
-        return { badgeClass: 'border-neon-red text-neon-red bg-[#ff003c]/30 animate-pulse shadow-[0_0_8px_rgba(255,0,60,0.6)]', isCritical: true };
+        return { badgeClass: 'border-red-500 text-red-600 dark:text-red-400 bg-red-100 dark:bg-red-900/30 animate-pulse shadow-[0_0_8px_rgba(239,68,68,0.3)]', isCritical: true };
     }
-    // Medios / Advertencias (Naranja)
+    // Medios / Advertencias (Naranja) - Mantenemos colores vivos según requerimiento
     if (alertName.includes('🔓') || alertName.includes('SYN-SCAN') || alertName.includes('EXFILTRACIÓN') || alertName.includes('👁️') || alertName.includes('🔎')) {
-        return { badgeClass: 'border-orange-500 text-orange-400 bg-orange-500/20', isCritical: false };
+        return { badgeClass: 'border-orange-500 text-orange-600 dark:text-orange-400 bg-orange-100 dark:bg-orange-900/30', isCritical: false };
     }
-    // Baja severidad o debug
-    if (alertName === 'CNN') return { badgeClass: 'border-neon-cyan text-neon-cyan bg-[#00f0ff]/10', isCritical: false };
-    if (alertName === 'SYN') return { badgeClass: 'border-neon-yellow text-neon-yellow bg-[#fcee0a]/10', isCritical: false };
+    // Baja severidad o debug (Paleta Stone)
+    if (alertName === 'CNN') return { badgeClass: 'border-core-400 text-core-600 dark:text-core-300 bg-core-200 dark:bg-core-800', isCritical: false };
+    if (alertName === 'SYN') return { badgeClass: 'border-core-500 text-core-700 dark:text-core-200 bg-core-200 dark:bg-core-800', isCritical: false };
     
     // Por defecto (SIZE, HTTP-404, etc)
-    return { badgeClass: 'border-slate-500 text-slate-300 bg-slate-500/20', isCritical: false };
+    return { badgeClass: 'border-core-300 dark:border-core-600 text-core-500 dark:text-core-400 bg-core-100 dark:bg-core-800', isCritical: false };
 }
 
 /**
@@ -178,7 +178,7 @@ function addPacketRow(pkt) {
 
     const tr = document.createElement('tr');
     // Si hay alerta crítica, pintamos todo el fondo de la fila de rojo translúcido
-    tr.className = `transition-colors ${hasCritical ? 'bg-red-900/30 hover:bg-red-900/50' : 'hover:bg-white/5'}`;
+    tr.className = `transition-colors ${hasCritical ? 'bg-red-50 dark:bg-red-900/20 hover:bg-red-100 dark:hover:bg-red-900/40 text-core-900 dark:text-core-100' : 'hover:bg-core-100 dark:hover:bg-core-800/50 text-core-700 dark:text-core-300'}`;
     
     // Guardamos las alertas del paquete como un atributo "data-alerts" en la fila HTML.
     // Esto nos permite iterar sobre las filas existentes más adelante y saber qué alertas tienen sin consultar el backend.
@@ -191,9 +191,9 @@ function addPacketRow(pkt) {
         tr.style.display = 'none';
     }
 
-    let domainHtml = pkt.domain ? `<span class="neon-text-cyan">[${escapeHTML(pkt.domain)}]</span> ` : '';
+    let domainHtml = pkt.domain ? `<span class="font-bold text-core-900 dark:text-core-100">[${escapeHTML(pkt.domain)}]</span> ` : '';
 
-    const tdClasses = "py-2 px-4 border-b border-white/5 whitespace-nowrap overflow-hidden text-ellipsis max-w-[300px]";
+    const tdClasses = "py-2 px-4 whitespace-nowrap overflow-hidden text-ellipsis max-w-[300px]";
 
     const safeInfo = escapeHTML(pkt.info || '');
 
@@ -248,14 +248,14 @@ const clearFiltersBtn = document.getElementById('clearFiltersBtn');
 function applyCategoryFilter(filterValue) {
     currentCategoryFilter = filterValue;
     
-    // 1. Actualizar el estilo visual de los botones (efecto Neón para el activo)
+    // 1. Actualizar el estilo visual de los botones (efecto Stone para el activo)
     filterBtns.forEach(btn => {
         if (btn.dataset.filter === filterValue) {
-            btn.classList.add('active', 'bg-neon-cyan/20', 'text-neon-cyan', 'border-neon-cyan/50', 'shadow-[0_0_8px_rgba(0,240,255,0.2)]');
-            btn.classList.remove('bg-white/5', 'text-slate-300', 'border-white/10');
+            btn.classList.add('active', 'bg-core-300', 'dark:bg-core-700', 'text-core-900', 'dark:text-core-100', 'border-core-400', 'dark:border-core-600');
+            btn.classList.remove('bg-core-200', 'dark:bg-core-800', 'text-core-600', 'dark:text-core-400', 'border-core-300', 'dark:border-core-700', 'hover:bg-core-300', 'dark:hover:bg-core-700');
         } else {
-            btn.classList.remove('active', 'bg-neon-cyan/20', 'text-neon-cyan', 'border-neon-cyan/50', 'shadow-[0_0_8px_rgba(0,240,255,0.2)]');
-            btn.classList.add('bg-white/5', 'text-slate-300', 'border-white/10');
+            btn.classList.remove('active', 'bg-core-300', 'dark:bg-core-700', 'text-core-900', 'dark:text-core-100', 'border-core-400', 'dark:border-core-600');
+            btn.classList.add('bg-core-200', 'dark:bg-core-800', 'text-core-600', 'dark:text-core-400', 'border-core-300', 'dark:border-core-700', 'hover:bg-core-300', 'dark:hover:bg-core-700');
         }
     });
 
@@ -287,4 +287,41 @@ filterBtns.forEach(btn => {
 
 clearFiltersBtn?.addEventListener('click', () => {
     applyCategoryFilter('');
+});
+
+// ==========================================
+// TEMA CLARO / OSCURO (DARK MODE TOGGLE)
+// ==========================================
+const themeToggleBtn = document.getElementById('themeToggleBtn');
+const htmlEl = document.documentElement;
+
+// Función auxiliar para leer cookies
+function getCookie(name) {
+    const value = `; ${document.cookie}`;
+    const parts = value.split(`; ${name}=`);
+    if (parts.length === 2) return parts.pop().split(';').shift();
+    return null;
+}
+
+// Función auxiliar para guardar cookies (expira en 1 año)
+function setCookie(name, value) {
+    document.cookie = `${name}=${value}; path=/; max-age=31536000`;
+}
+
+// Leer preferencia inicial de las cookies (o usar oscuro por defecto)
+const currentTheme = getCookie('theme') || 'dark';
+if (currentTheme === 'dark') {
+    htmlEl.classList.add('dark');
+} else {
+    htmlEl.classList.remove('dark');
+}
+
+themeToggleBtn?.addEventListener('click', () => {
+    if (htmlEl.classList.contains('dark')) {
+        htmlEl.classList.remove('dark');
+        setCookie('theme', 'light');
+    } else {
+        htmlEl.classList.add('dark');
+        setCookie('theme', 'dark');
+    }
 });

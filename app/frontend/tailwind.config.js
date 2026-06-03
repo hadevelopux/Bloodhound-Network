@@ -1,9 +1,12 @@
+import colors from 'tailwindcss/colors';
+
 /** @type {import('tailwindcss').Config} */
 export default {
   content: [
     "./index.html",
     "./*.js",
   ],
+  darkMode: 'class',
   theme: {
     extend: {
       fontFamily: {
@@ -11,6 +14,7 @@ export default {
         mono: ['Fira Code', 'monospace'],
       },
       colors: {
+        core: colors.stone,
         neon: {
           cyan: '#00f0ff',
           green: '#39ff14',
