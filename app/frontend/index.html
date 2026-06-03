@@ -13,12 +13,13 @@
                 <h1 class="text-xl md:text-2xl font-extrabold tracking-tight"><span class="text-core-600 dark:text-core-400">Bloodhound</span> Forensics</h1>
             </div>
             <div class="flex items-center gap-5">
-                <input type="text" id="searchInput" placeholder="Live BPF Filter (e.g. tcp.port == 80)" autocomplete="off"
+                <input type="text" id="searchInput" placeholder="Live BPF Filter (e.g. tcp.port == 80)" data-i18n-placeholder="live_filter_placeholder" autocomplete="off"
                     class="bg-core-200 dark:bg-core-800 border border-core-300 dark:border-core-700 text-core-800 dark:text-core-200 px-4 py-2 rounded-md font-mono w-64 md:w-[350px] outline-none focus:border-core-400 dark:focus:border-core-500 transition-all">
                 <div class="flex gap-4 text-sm font-mono items-center">
-                    <span id="connStatus" class="text-red-500 font-bold">Disconnected</span>
-                    <span>Pkts: <span id="pktCounter">0</span></span>
-                    <button id="toggleLegendBtn" class="px-3 py-1.5 bg-core-200 hover:bg-core-300 dark:bg-core-800 dark:hover:bg-core-700 rounded-md transition-colors font-bold text-xs uppercase tracking-wider ml-2 cursor-pointer">Legend</button>
+                    <span id="connStatus" class="text-red-500 font-bold" data-i18n="disconnected">Disconnected</span>
+                    <span><span data-i18n="pkts">Pkts:</span> <span id="pktCounter">0</span></span>
+                    <button id="toggleLegendBtn" class="px-3 py-1.5 bg-core-200 hover:bg-core-300 dark:bg-core-800 dark:hover:bg-core-700 rounded-md transition-colors font-bold text-xs uppercase tracking-wider ml-2 cursor-pointer" data-i18n="legend_btn">Legend</button>
+                    <button id="toggleLangBtn" class="px-3 py-1.5 bg-core-200 hover:bg-core-300 dark:bg-core-800 dark:hover:bg-core-700 rounded-md transition-colors font-bold text-xs uppercase tracking-wider ml-2 cursor-pointer" data-i18n="lang_btn">ES</button>
                     <button id="themeToggleBtn" class="p-1.5 rounded-md hover:bg-core-200 dark:hover:bg-core-800 transition-colors cursor-pointer text-core-600 dark:text-core-400 ml-2">
                         <svg id="themeIconDark" class="w-5 h-5 hidden dark:block" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z"></path></svg>
                         <svg id="themeIconLight" class="w-5 h-5 block dark:hidden" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z"></path></svg>
@@ -32,23 +33,23 @@
             <aside class="flex flex-col lg:w-[400px] xl:w-[450px] h-full shrink-0 border-r border-core-300 dark:border-core-800 bg-core-50 dark:bg-core-900/50">
                 <div class="flex-1 flex flex-col overflow-hidden min-h-0 border-b border-core-300 dark:border-core-800">
                     <div class="bg-core-200 dark:bg-core-900 px-4 py-3 font-semibold text-sm text-core-800 dark:text-core-300 border-b border-core-300 dark:border-core-800 flex justify-between items-center">
-                        <span>Vulnerabilities / Alerts</span>
-                        <button id="resetAlertsBtn" class="text-xs bg-core-300 dark:bg-core-800 hover:bg-core-400 dark:hover:bg-core-700 px-2 py-1 rounded transition-colors cursor-pointer">Reset</button>
+                        <span data-i18n="vuln_alerts">Vulnerabilities / Alerts</span>
+                        <button id="resetAlertsBtn" class="text-xs bg-core-300 dark:bg-core-800 hover:bg-core-400 dark:hover:bg-core-700 px-2 py-1 rounded transition-colors cursor-pointer" data-i18n="reset_btn">Reset</button>
                     </div>
                     <div class="flex justify-between px-4 py-1.5 text-xs text-core-500 dark:text-core-400 border-b border-core-300 dark:border-core-800 bg-core-100 dark:bg-core-900/80 font-mono">
-                        <span>Alert Type / Context</span>
-                        <span>Occurrences</span>
+                        <span data-i18n="alert_type">Alert Type / Context</span>
+                        <span data-i18n="occurrences">Occurrences</span>
                     </div>
                     <ul id="alertsList" class="flex-1 overflow-y-auto p-2.5 font-mono text-sm"></ul>
                 </div>
                 <div class="flex-1 flex flex-col overflow-hidden min-h-0">
                     <div class="bg-core-200 dark:bg-core-900 px-4 py-3 font-semibold text-sm text-core-800 dark:text-core-300 border-b border-core-300 dark:border-core-800 flex justify-between items-center">
-                        <span>Recurring Connections (IP:Port)</span>
-                        <button id="resetConnsBtn" class="text-xs bg-core-300 dark:bg-core-800 hover:bg-core-400 dark:hover:bg-core-700 px-2 py-1 rounded transition-colors cursor-pointer">Reset</button>
+                        <span data-i18n="recurring_conns">Recurring Connections (IP:Port)</span>
+                        <button id="resetConnsBtn" class="text-xs bg-core-300 dark:bg-core-800 hover:bg-core-400 dark:hover:bg-core-700 px-2 py-1 rounded transition-colors cursor-pointer" data-i18n="reset_btn">Reset</button>
                     </div>
                     <div class="flex justify-between px-4 py-1.5 text-xs text-core-500 dark:text-core-400 border-b border-core-300 dark:border-core-800 bg-core-100 dark:bg-core-900/80 font-mono">
-                        <span>Source IP -> Dest IP : Port</span>
-                        <span>Packets Sent</span>
+                        <span data-i18n="source_dest">Source IP -> Dest IP : Port</span>
+                        <span data-i18n="packets_sent">Packets Sent</span>
                     </div>
                     <ul id="connsList" class="flex-1 overflow-y-auto p-2.5 font-mono text-sm"></ul>
                 </div>
@@ -59,8 +60,8 @@
                 <!-- Tabs/Filters Header -->
                 <div class="bg-core-100 dark:bg-core-900 px-4 py-3 border-b border-core-300 dark:border-core-800 flex flex-col gap-2 shrink-0">
                     <div class="font-semibold text-sm text-core-800 dark:text-core-300 flex justify-between items-center">
-                        <span>Real-Time Context Filters</span>
-                        <button id="clearFiltersBtn" class="text-xs bg-core-300 dark:bg-core-800 hover:bg-core-400 dark:hover:bg-core-700 px-2 py-1 rounded transition-colors cursor-pointer">Clear Filter</button>
+                        <span data-i18n="realtime_filters">Real-Time Context Filters</span>
+                        <button id="clearFiltersBtn" class="text-xs bg-core-300 dark:bg-core-800 hover:bg-core-400 dark:hover:bg-core-700 px-2 py-1 rounded transition-colors cursor-pointer" data-i18n="clear_filter">Clear Filter</button>
                     </div>
                     <div class="flex flex-wrap gap-2 text-xs font-mono" id="filterButtonsContainer">
                         <button class="filter-btn active bg-core-300 dark:bg-core-700 text-core-900 dark:text-core-100 px-2 py-1 rounded border border-core-400 dark:border-core-600 transition-all cursor-pointer" data-filter="">All</button>
@@ -82,15 +83,15 @@
                     <table class="w-full text-left font-mono text-sm border-collapse">
                         <thead class="sticky top-0 bg-core-100 dark:bg-core-900 text-core-500 dark:text-core-400 border-b border-core-300 dark:border-core-800 z-10">
                             <tr>
-                                <th class="py-3 px-4 font-semibold whitespace-nowrap border-r border-core-300/50 dark:border-core-800/50">Time</th>
-                                <th class="py-3 px-4 font-semibold whitespace-nowrap border-r border-core-300/50 dark:border-core-800/50">Source</th>
-                                <th class="py-3 px-4 font-semibold whitespace-nowrap border-r border-core-300/50 dark:border-core-800/50">Sport</th>
-                                <th class="py-3 px-4 font-semibold whitespace-nowrap border-r border-core-300/50 dark:border-core-800/50">Destination</th>
-                                <th class="py-3 px-4 font-semibold whitespace-nowrap border-r border-core-300/50 dark:border-core-800/50">Dport</th>
-                                <th class="py-3 px-4 font-semibold whitespace-nowrap border-r border-core-300/50 dark:border-core-800/50">Proto</th>
-                                <th class="py-3 px-4 font-semibold whitespace-nowrap border-r border-core-300/50 dark:border-core-800/50">Size</th>
-                                <th class="py-3 px-4 font-semibold whitespace-nowrap border-r border-core-300/50 dark:border-core-800/50">Domain</th>
-                                <th class="py-3 px-4 font-semibold whitespace-nowrap">Info / Alerts</th>
+                                <th class="py-3 px-4 font-semibold whitespace-nowrap border-r border-core-300/50 dark:border-core-800/50" data-i18n="th_time">Time</th>
+                                <th class="py-3 px-4 font-semibold whitespace-nowrap border-r border-core-300/50 dark:border-core-800/50" data-i18n="th_source">Source</th>
+                                <th class="py-3 px-4 font-semibold whitespace-nowrap border-r border-core-300/50 dark:border-core-800/50" data-i18n="th_sport">Sport</th>
+                                <th class="py-3 px-4 font-semibold whitespace-nowrap border-r border-core-300/50 dark:border-core-800/50" data-i18n="th_destination">Destination</th>
+                                <th class="py-3 px-4 font-semibold whitespace-nowrap border-r border-core-300/50 dark:border-core-800/50" data-i18n="th_dport">Dport</th>
+                                <th class="py-3 px-4 font-semibold whitespace-nowrap border-r border-core-300/50 dark:border-core-800/50" data-i18n="th_proto">Proto</th>
+                                <th class="py-3 px-4 font-semibold whitespace-nowrap border-r border-core-300/50 dark:border-core-800/50" data-i18n="th_size">Size</th>
+                                <th class="py-3 px-4 font-semibold whitespace-nowrap border-r border-core-300/50 dark:border-core-800/50" data-i18n="th_domain">Domain</th>
+                                <th class="py-3 px-4 font-semibold whitespace-nowrap" data-i18n="th_info">Info / Alerts</th>
                             </tr>
                         </thead>
                         <tbody id="packetBody" class="divide-y divide-core-200 dark:divide-core-800/50">
@@ -105,53 +106,25 @@
     <!-- Legend Sidebar -->
     <aside id="legendSidebar" class="w-80 h-full shrink-0 bg-white dark:bg-core-950 border-l border-core-300 dark:border-core-800 transition-all duration-300 -mr-80 flex flex-col z-20 relative">
         <div class="p-4 border-b border-core-300 dark:border-core-800 flex justify-between items-center shrink-0">
-            <h2 class="font-bold text-lg">Heuristics Legend</h2>
-            <button id="closeLegendBtn" class="text-core-500 hover:text-core-900 dark:hover:text-core-100 text-2xl font-bold cursor-pointer transition-colors">&times;</button>
+            <h2 class="font-bold text-lg" data-i18n="legend_title">Heuristics Legend</h2>
+            <button id="closeLegendBtn" class="text-core-500 hover:text-core-900 dark:hover:text-core-100 text-2xl font-bold cursor-pointer transition-colors" data-i18n="legend_close">&times;</button>
         </div>
         <div id="legendContent" class="p-4 flex-1 overflow-auto text-sm space-y-6">
             <div>
-                <span class="inline-block px-1.5 py-0.5 rounded text-xs font-bold border border-red-500 text-red-600 dark:text-red-400 bg-red-100 dark:bg-red-900/30 shadow-[0_0_8px_rgba(239,68,68,0.3)] mb-2">🧟 BOTNET IoT</span>
-                <p class="text-core-600 dark:text-core-400 leading-relaxed">Devices infected with malware (e.g. Mirai) communicating with C2 or conducting DDoS.</p>
+                <span class="inline-block px-1.5 py-0.5 rounded text-xs font-bold border border-red-500 text-red-600 dark:text-red-400 bg-red-100 dark:bg-red-900/30 shadow-[0_0_8px_rgba(239,68,68,0.3)] mb-2" data-i18n="leg_red_title">Filas Rojas (Alertas Críticas)</span>
+                <p class="text-core-600 dark:text-core-400 leading-relaxed" data-i18n="leg_red_desc">Paquetes marcados por el motor heurístico como amenazas críticas (ej. Troyanos C2, Botnets, Dark Web).</p>
             </div>
             <div>
-                <span class="inline-block px-1.5 py-0.5 rounded text-xs font-bold border border-orange-500 text-orange-600 dark:text-orange-400 bg-orange-100 dark:bg-orange-900/30 mb-2">🔓 Trojan/C2</span>
-                <p class="text-core-600 dark:text-core-400 leading-relaxed">Malicious communication patterns over known Command and Control ports.</p>
+                <span class="inline-block px-1.5 py-0.5 rounded text-xs font-bold border border-orange-500 text-orange-600 dark:text-orange-400 bg-orange-100 dark:bg-orange-900/30 mb-2" data-i18n="leg_filter_title">Filtros de Contexto</span>
+                <p class="text-core-600 dark:text-core-400 leading-relaxed" data-i18n="leg_filter_desc">Haz clic en los botones superiores (ej. Botnet, Nmap) para aislar instantáneamente el tráfico que coincida con esas firmas.</p>
             </div>
             <div>
-                <span class="inline-block px-1.5 py-0.5 rounded text-xs font-bold border border-orange-500 text-orange-600 dark:text-orange-400 bg-orange-100 dark:bg-orange-900/30 mb-2">🔎 Nmap Scan</span>
-                <p class="text-core-600 dark:text-core-400 leading-relaxed">Network reconnaissance activity searching for open ports.</p>
+                <span class="inline-block px-1.5 py-0.5 rounded text-xs font-bold border border-orange-500 text-orange-600 dark:text-orange-400 bg-orange-100 dark:bg-orange-900/30 mb-2" data-i18n="leg_bpf_title">Buscador BPF en Vivo</span>
+                <p class="text-core-600 dark:text-core-400 leading-relaxed" data-i18n="leg_bpf_desc">Escribe texto libre (ej. una IP, 'HTTP', '4444') para filtrar el historial visible en tiempo real sin perder datos.</p>
             </div>
             <div>
-                <span class="inline-block px-1.5 py-0.5 rounded text-xs font-bold border border-orange-500 text-orange-600 dark:text-orange-400 bg-orange-100 dark:bg-orange-900/30 mb-2">🔓 Plaintext</span>
-                <p class="text-core-600 dark:text-core-400 leading-relaxed">Unencrypted protocols (HTTP, FTP, Telnet) susceptible to sniffing.</p>
-            </div>
-            <div>
-                <span class="inline-block px-1.5 py-0.5 rounded text-xs font-bold border border-orange-500 text-orange-600 dark:text-orange-400 bg-orange-100 dark:bg-orange-900/30 mb-2">👁️ DNS Hijacked</span>
-                <p class="text-core-600 dark:text-core-400 leading-relaxed mt-1.5">DNS requests routed to unauthorized external resolvers.</p>
-            </div>
-            <div>
-                <span class="inline-block px-1.5 py-0.5 rounded text-xs font-bold border border-red-500 text-red-600 dark:text-red-400 bg-red-100 dark:bg-red-900/30 shadow-[0_0_8px_rgba(239,68,68,0.3)] mb-2">⛏️ Crypto</span>
-                <p class="text-core-600 dark:text-core-400 leading-relaxed mt-1.5">Hidden cryptocurrency mining traffic.</p>
-            </div>
-            <div>
-                <span class="inline-block px-1.5 py-0.5 rounded text-xs font-bold border border-orange-500 text-orange-600 dark:text-orange-400 bg-orange-100 dark:bg-orange-900/30 mb-2">EXFILTRACIÓN</span>
-                <p class="text-core-600 dark:text-core-400 leading-relaxed mt-1.5">Abnormally large outbound data transfers indicating data theft.</p>
-            </div>
-            <div>
-                <span class="inline-block px-1.5 py-0.5 rounded text-xs font-bold border border-red-500 text-red-600 dark:text-red-400 bg-red-100 dark:bg-red-900/30 shadow-[0_0_8px_rgba(239,68,68,0.3)] mb-2">🎣 Phishing</span>
-                <p class="text-core-600 dark:text-core-400 leading-relaxed mt-1.5">Traffic bound to known malicious or suspicious domains.</p>
-            </div>
-            <div>
-                <span class="inline-block px-1.5 py-0.5 rounded text-xs font-bold border border-orange-500 text-orange-600 dark:text-orange-400 bg-orange-100 dark:bg-orange-900/30 mb-2">👁️ Tracking/Adware</span>
-                <p class="text-core-600 dark:text-core-400 leading-relaxed mt-1.5">Connections to telemetry or aggressive ad networks.</p>
-            </div>
-            <div>
-                <span class="inline-block px-1.5 py-0.5 rounded text-xs font-bold border border-orange-500 text-orange-600 dark:text-orange-400 bg-orange-100 dark:bg-orange-900/30 mb-2">SYN-Scan</span>
-                <p class="text-core-600 dark:text-core-400 leading-relaxed mt-1.5">Stealthy TCP SYN scans indicative of active reconnaissance.</p>
-            </div>
-            <div>
-                <span class="inline-block px-1.5 py-0.5 rounded text-xs font-bold border border-orange-500 text-orange-600 dark:text-orange-400 bg-orange-100 dark:bg-orange-900/30 mb-2">🔎 Local Scan</span>
-                <p class="text-core-600 dark:text-core-400 leading-relaxed mt-1.5">Internal scanning behavior within the private network.</p>
+                <span class="inline-block px-1.5 py-0.5 rounded text-xs font-bold border border-orange-500 text-orange-600 dark:text-orange-400 bg-orange-100 dark:bg-orange-900/30 mb-2" data-i18n="leg_stats_title">Estadísticas en Tiempo Real</span>
+                <p class="text-core-600 dark:text-core-400 leading-relaxed" data-i18n="leg_stats_desc">El panel izquierdo agrupa las alertas y conexiones más frecuentes. Usa 'Limpiar' para borrar el historial de SQLite.</p>
             </div>
             <div>
                 <span class="inline-block px-1.5 py-0.5 rounded text-xs font-bold border border-core-300 dark:border-core-600 text-core-500 dark:text-core-400 bg-core-100 dark:bg-core-800 mb-2">HTTP-404</span>

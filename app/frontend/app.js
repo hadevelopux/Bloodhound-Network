@@ -2,6 +2,7 @@ import './style.css';
 import '@fontsource/inter';
 import '@fontsource/fira-code';
 import { io } from "socket.io-client";
+import { translations } from './lang.js';
 
 function escapeHTML(str) {
     if (typeof str !== 'string') return str;
@@ -344,36 +345,65 @@ clearFiltersBtn?.addEventListener('click', () => {
 const themeToggleBtn = document.getElementById('themeToggleBtn');
 const htmlEl = document.documentElement;
 
-// Función auxiliar para leer cookies
-function getCookie(name) {
-    const value = `; ${document.cookie}`;
-    const parts = value.split(`; ${name}=`);
-    if (parts.length === 2) return parts.pop().split(';').shift();
-    return null;
-}
+// Las preferencias de UI (Tema e Idioma) se guardan en localStorage para no sobrecargar las peticiones HTTP.
 
-// Función auxiliar para guardar cookies (expira en 1 año)
-function setCookie(name, value) {
-    document.cookie = `${name}=${value}; path=/; max-age=31536000`;
-}
-
-// Leer preferencia inicial de las cookies (o usar oscuro por defecto)
-const currentTheme = getCookie('theme') || 'dark';
-if (currentTheme === 'dark') {
-    htmlEl.classList.add('dark');
-} else {
-    htmlEl.classList.remove('dark');
+function setTheme(isDark) {
+    if (isDark) {
+        document.documentElement.classList.add('dark');
+        localStorage.setItem('theme', 'dark');
+    } else {
+        document.documentElement.classList.remove('dark');
+        localStorage.setItem('theme', 'light');
+    }
 }
 
 themeToggleBtn?.addEventListener('click', () => {
-    if (htmlEl.classList.contains('dark')) {
-        htmlEl.classList.remove('dark');
-        setCookie('theme', 'light');
-    } else {
-        htmlEl.classList.add('dark');
-        setCookie('theme', 'dark');
-    }
+    setTheme(!document.documentElement.classList.contains('dark'));
 });
+
+// Inicializar tema y barra de búsqueda
+setTheme(localStorage.getItem('theme') !== 'light');
+searchInput.value = ''; // Limpiar barra al recargar
+
+// ==========================================
+// INTERNACIONALIZACIÓN (I18N)
+// ==========================================
+let currentLang = localStorage.getItem('appLang') || 'es';
+
+function setLanguage(lang) {
+    currentLang = lang;
+    localStorage.setItem('appLang', lang);
+    const dict = translations[lang];
+    
+    document.querySelectorAll('[data-i18n]').forEach(el => {
+        const key = el.getAttribute('data-i18n');
+        if (dict[key]) {
+            el.textContent = dict[key];
+        }
+    });
+    
+    document.querySelectorAll('[data-i18n-placeholder]').forEach(el => {
+        const key = el.getAttribute('data-i18n-placeholder');
+        if (dict[key]) {
+            el.placeholder = dict[key];
+        }
+    });
+
+    const toggleLangBtn = document.getElementById('toggleLangBtn');
+    if (toggleLangBtn) {
+        toggleLangBtn.textContent = lang === 'es' ? 'EN' : 'ES';
+    }
+}
+
+const toggleLangBtn = document.getElementById('toggleLangBtn');
+if (toggleLangBtn) {
+    toggleLangBtn.addEventListener('click', () => {
+        setLanguage(currentLang === 'es' ? 'en' : 'es');
+    });
+}
+
+// Inicializar idioma
+setLanguage(currentLang);
 
 // ==========================================
 // LÓGICA DEL PANEL DE LEYENDA (PUSH EFFECT)
