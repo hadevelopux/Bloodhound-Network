@@ -42,8 +42,8 @@ document.addEventListener('DOMContentLoaded', () => {
     // Selectores para paneles con scroll
     const scrollElements = [
         document.querySelector('.overflow-y-auto.flex-1'), // Main table container
-        document.getElementById('alertsList')?.parentElement, // Alerts widget
-        document.getElementById('connsList')?.parentElement, // Connections widget
+        document.getElementById('alertsList'), // Alerts widget (directamente el ul)
+        document.getElementById('connsList'), // Connections widget (directamente el ul)
         document.getElementById('legendContent') // Legend sidebar content
     ];
 
@@ -361,10 +361,10 @@ const closeLegendBtn = document.getElementById('closeLegendBtn');
 const legendSidebar = document.getElementById('legendSidebar');
 
 function toggleLegend() {
-    if (legendSidebar.classList.contains('-ml-80')) {
-        legendSidebar.classList.remove('-ml-80');
+    if (legendSidebar.classList.contains('-mr-80')) {
+        legendSidebar.classList.remove('-mr-80');
     } else {
-        legendSidebar.classList.add('-ml-80');
+        legendSidebar.classList.add('-mr-80');
     }
 }
 

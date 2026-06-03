@@ -6,28 +6,6 @@
     <title>Dashboard Bloodhound Forensics | Powered by HADEVELOPUX</title>
 </head>
 <body class="font-sans bg-core-100 dark:bg-core-950 text-core-800 dark:text-core-200 h-screen w-full overflow-hidden flex">
-    <!-- Legend Sidebar -->
-    <aside id="legendSidebar" class="w-80 h-full shrink-0 bg-white dark:bg-core-950 border-r border-core-300 dark:border-core-800 transition-all duration-300 -ml-80 flex flex-col z-20 relative">
-        <div class="p-4 border-b border-core-300 dark:border-core-800 flex justify-between items-center shrink-0">
-            <h2 class="font-bold text-lg">Heuristics Legend</h2>
-            <button id="closeLegendBtn" class="text-core-500 hover:text-core-900 dark:hover:text-core-100 text-2xl font-bold cursor-pointer transition-colors">&times;</button>
-        </div>
-        <div id="legendContent" class="p-4 flex-1 overflow-auto text-sm space-y-4">
-            <div><strong class="text-red-500 block">BOTNET IoT</strong>Devices infected with malware (e.g. Mirai) communicating with C2 or conducting DDoS.</div>
-            <div><strong class="text-orange-500 block">Trojan/C2</strong>Malicious communication patterns over known Command and Control ports.</div>
-            <div><strong class="text-orange-500 block">Nmap Scan</strong>Network reconnaissance activity searching for open ports.</div>
-            <div><strong class="text-orange-500 block">Plaintext</strong>Unencrypted protocols (HTTP, FTP, Telnet) susceptible to sniffing.</div>
-            <div><strong class="text-orange-500 block">DNS Hijacked</strong>DNS requests routed to unauthorized external resolvers.</div>
-            <div><strong class="text-orange-500 block">Crypto</strong>Hidden cryptocurrency mining traffic.</div>
-            <div><strong class="text-orange-500 block">Exfiltration</strong>Abnormally large outbound data transfers indicating data theft.</div>
-            <div><strong class="text-red-500 block">Phishing</strong>Traffic bound to known malicious or suspicious domains.</div>
-            <div><strong class="text-orange-500 block">Tracking/Adware</strong>Connections to telemetry or aggressive ad networks.</div>
-            <div><strong class="text-orange-500 block">SYN-Scan</strong>Stealthy TCP SYN scans indicative of active reconnaissance.</div>
-            <div><strong class="text-orange-500 block">Local Scan</strong>Internal scanning behavior within the private network.</div>
-            <div><strong class="text-core-600 dark:text-core-400 block">HTTP-404</strong>Excessive 'Not Found' errors, potentially indicating web directory brute-forcing.</div>
-        </div>
-    </aside>
-
     <div id="mainAppWrapper" class="flex-1 h-full flex flex-col overflow-hidden min-w-0">
         <header class="bg-white dark:bg-core-900 border-b border-core-300 dark:border-core-800 p-3 md:px-6 flex justify-between items-center shrink-0">
             <div class="flex items-center gap-3">
@@ -122,6 +100,65 @@
             </main>
         </div>
     </div>
+
+    <!-- Legend Sidebar -->
+    <aside id="legendSidebar" class="w-80 h-full shrink-0 bg-white dark:bg-core-950 border-l border-core-300 dark:border-core-800 transition-all duration-300 -mr-80 flex flex-col z-20 relative">
+        <div class="p-4 border-b border-core-300 dark:border-core-800 flex justify-between items-center shrink-0">
+            <h2 class="font-bold text-lg">Heuristics Legend</h2>
+            <button id="closeLegendBtn" class="text-core-500 hover:text-core-900 dark:hover:text-core-100 text-2xl font-bold cursor-pointer transition-colors">&times;</button>
+        </div>
+        <div id="legendContent" class="p-4 flex-1 overflow-auto text-sm space-y-6">
+            <div>
+                <span class="inline-block px-1.5 py-0.5 rounded text-xs font-bold border border-red-500 text-red-600 dark:text-red-400 bg-red-100 dark:bg-red-900/30 shadow-[0_0_8px_rgba(239,68,68,0.3)] mb-2">🧟 BOTNET IoT</span>
+                <p class="text-core-600 dark:text-core-400 leading-relaxed">Devices infected with malware (e.g. Mirai) communicating with C2 or conducting DDoS.</p>
+            </div>
+            <div>
+                <span class="inline-block px-1.5 py-0.5 rounded text-xs font-bold border border-orange-500 text-orange-600 dark:text-orange-400 bg-orange-100 dark:bg-orange-900/30 mb-2">🔓 Trojan/C2</span>
+                <p class="text-core-600 dark:text-core-400 leading-relaxed">Malicious communication patterns over known Command and Control ports.</p>
+            </div>
+            <div>
+                <span class="inline-block px-1.5 py-0.5 rounded text-xs font-bold border border-orange-500 text-orange-600 dark:text-orange-400 bg-orange-100 dark:bg-orange-900/30 mb-2">🔎 Nmap Scan</span>
+                <p class="text-core-600 dark:text-core-400 leading-relaxed">Network reconnaissance activity searching for open ports.</p>
+            </div>
+            <div>
+                <span class="inline-block px-1.5 py-0.5 rounded text-xs font-bold border border-orange-500 text-orange-600 dark:text-orange-400 bg-orange-100 dark:bg-orange-900/30 mb-2">🔓 Plaintext</span>
+                <p class="text-core-600 dark:text-core-400 leading-relaxed">Unencrypted protocols (HTTP, FTP, Telnet) susceptible to sniffing.</p>
+            </div>
+            <div>
+                <span class="inline-block px-1.5 py-0.5 rounded text-xs font-bold border border-orange-500 text-orange-600 dark:text-orange-400 bg-orange-100 dark:bg-orange-900/30 mb-2">👁️ DNS Hijacked</span>
+                <p class="text-core-600 dark:text-core-400 leading-relaxed">DNS requests routed to unauthorized external resolvers.</p>
+            </div>
+            <div>
+                <span class="inline-block px-1.5 py-0.5 rounded text-xs font-bold border border-red-500 text-red-600 dark:text-red-400 bg-red-100 dark:bg-red-900/30 shadow-[0_0_8px_rgba(239,68,68,0.3)] mb-2">⛏️ Crypto</span>
+                <p class="text-core-600 dark:text-core-400 leading-relaxed">Hidden cryptocurrency mining traffic.</p>
+            </div>
+            <div>
+                <span class="inline-block px-1.5 py-0.5 rounded text-xs font-bold border border-orange-500 text-orange-600 dark:text-orange-400 bg-orange-100 dark:bg-orange-900/30 mb-2">EXFILTRACIÓN</span>
+                <p class="text-core-600 dark:text-core-400 leading-relaxed">Abnormally large outbound data transfers indicating data theft.</p>
+            </div>
+            <div>
+                <span class="inline-block px-1.5 py-0.5 rounded text-xs font-bold border border-red-500 text-red-600 dark:text-red-400 bg-red-100 dark:bg-red-900/30 shadow-[0_0_8px_rgba(239,68,68,0.3)] mb-2">🎣 Phishing</span>
+                <p class="text-core-600 dark:text-core-400 leading-relaxed">Traffic bound to known malicious or suspicious domains.</p>
+            </div>
+            <div>
+                <span class="inline-block px-1.5 py-0.5 rounded text-xs font-bold border border-orange-500 text-orange-600 dark:text-orange-400 bg-orange-100 dark:bg-orange-900/30 mb-2">👁️ Tracking/Adware</span>
+                <p class="text-core-600 dark:text-core-400 leading-relaxed">Connections to telemetry or aggressive ad networks.</p>
+            </div>
+            <div>
+                <span class="inline-block px-1.5 py-0.5 rounded text-xs font-bold border border-orange-500 text-orange-600 dark:text-orange-400 bg-orange-100 dark:bg-orange-900/30 mb-2">SYN-Scan</span>
+                <p class="text-core-600 dark:text-core-400 leading-relaxed">Stealthy TCP SYN scans indicative of active reconnaissance.</p>
+            </div>
+            <div>
+                <span class="inline-block px-1.5 py-0.5 rounded text-xs font-bold border border-orange-500 text-orange-600 dark:text-orange-400 bg-orange-100 dark:bg-orange-900/30 mb-2">🔎 Local Scan</span>
+                <p class="text-core-600 dark:text-core-400 leading-relaxed">Internal scanning behavior within the private network.</p>
+            </div>
+            <div>
+                <span class="inline-block px-1.5 py-0.5 rounded text-xs font-bold border border-core-300 dark:border-core-600 text-core-500 dark:text-core-400 bg-core-100 dark:bg-core-800 mb-2">HTTP-404</span>
+                <p class="text-core-600 dark:text-core-400 leading-relaxed">Excessive 'Not Found' errors, potentially indicating web directory brute-forcing.</p>
+            </div>
+        </div>
+    </aside>
+
     <script type="module" src="./app.js"></script>
 </body>
 </html>
