@@ -298,7 +298,11 @@ function processPacket(layers) {
         alerts.push(`🧟 BOTNET IoT (MIRAI) [Port: 2323]`);
     }
     if (dport === '1900' || sport === '1900') {
-        alerts.push(`🧟 BOTNET IoT (SSDP) [Port: 1900]`);
+        // Ignorar tráfico local típico de UPnP/SSDP (Broadcast, Multicast o LAN local)
+        // Solo alertar si el tráfico SSDP está intentando salir hacia un servidor en Internet (posible DDoS)
+        if (dst && dst !== '239.255.255.250' && dst !== '255.255.255.255' && !dst.startsWith('192.168.') && !dst.startsWith('10.') && !dst.startsWith('172.16.')) {
+            alerts.push(`🧟 BOTNET IoT (SSDP) [Port: 1900]`);
+        }
     }
 
     // 3. Minería de Criptomonedas Oculta (CRÍTICO)
