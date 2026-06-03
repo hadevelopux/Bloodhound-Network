@@ -288,20 +288,19 @@ function processPacket(layers) {
     // 1. Detección de Troyanos C2 y Backdoors (CRÍTICO)
     const c2Ports = ['4444', '4433', '8443', '1337', '31337'];
     if (c2Ports.includes(dport) || c2Ports.includes(sport)) {
-        const p = c2Ports.includes(dport) ? dport : sport;
-        alerts.push(`⚠️ TROJAN/C2 [Port: ${p}]`);
+        alerts.push(`⚠️ TROJAN/C2`);
     }
 
     // 2. Infección IoT y Botnets (Mirai / UPnP) (CRÍTICO)
     const miraiPorts = ['2323']; 
     if (miraiPorts.includes(dport) || miraiPorts.includes(sport)) {
-        alerts.push(`🧟 BOTNET IoT (MIRAI) [Port: 2323]`);
+        alerts.push(`🧟 BOTNET IoT (MIRAI)`);
     }
     if (dport === '1900' || sport === '1900') {
         // Ignorar tráfico local típico de UPnP/SSDP (Broadcast, Multicast o LAN local)
         // Solo alertar si el tráfico SSDP está intentando salir hacia un servidor en Internet (posible DDoS)
         if (dst && dst !== '239.255.255.250' && dst !== '255.255.255.255' && !dst.startsWith('192.168.') && !dst.startsWith('10.') && !dst.startsWith('172.16.')) {
-            alerts.push(`🧟 BOTNET IoT (SSDP) [Port: 1900]`);
+            alerts.push(`🧟 BOTNET IoT (SSDP)`);
         }
     }
 
@@ -326,14 +325,14 @@ function processPacket(layers) {
     } else if (dport === '23' || sport === '23') {
         alerts.push(`🔓 PLAINTEXT [Telnet]`);
     } else if (method && dport !== '443' && sport !== '443') {
-        alerts.push(`🔓 PLAINTEXT [HTTP: ${domain || dst}]`);
+        alerts.push(`🔓 PLAINTEXT [HTTP]`);
     }
 
     // 6. Phishing y Dark Web (CRÍTICO)
     const darkDomains = ['.onion', 'free-gift', 'login-update', 'paypal-secure-verify'];
     if (domain) {
         if (darkDomains.some(d => domain.includes(d))) {
-            alerts.push(`🎣 PHISHING/DARKWEB [Dest: ${domain}]`);
+            alerts.push(`🎣 PHISHING/DARKWEB`);
         }
     }
 
@@ -341,7 +340,7 @@ function processPacket(layers) {
     const adwareDomains = ['adservice', 'analytics', 'metrics', 'telemetry', 'doubleclick', 'track'];
     if (domain) {
         if (adwareDomains.some(d => domain.includes(d))) {
-            alerts.push(`👁️ TRACKING/ADWARE [Dest: ${domain}]`);
+            alerts.push(`👁️ TRACKING/ADWARE`);
         }
     }
 
@@ -354,30 +353,29 @@ function processPacket(layers) {
 
     // XMAS Scan (FIN + PUSH + URG)
     if (finFlag === '1' && pushFlag === '1' && urgFlag === '1') {
-        alerts.push(`🕵️ NMAP SCAN (XMAS) [Port: ${dport}]`);
+        alerts.push(`🕵️ NMAP SCAN (XMAS)`);
     }
     // NULL Scan (Todos los flags en 0 pero es TCP)
     else if (protoCol === 'TCP' && synFlag === '0' && ackFlag === '0' && finFlag === '0' && pushFlag === '0' && urgFlag === '0') {
-        alerts.push(`🕵️ NMAP SCAN (NULL) [Port: ${dport}]`);
+        alerts.push(`🕵️ NMAP SCAN (NULL)`);
     }
     // SYN Scan ruidoso (Medio)
     else if (synFlag === '1' && ackFlag === '0') {
-        alerts.push(`SYN-SCAN [Port: ${dport}]`);
+        alerts.push(`SYN-SCAN`);
     }
 
     // 9. Escaneo Local de ARP (Infección cruzada) (MEDIO)
     if (protoCol === 'ARP' && info && info.includes('Who has')) {
-        const targetIp = getVal('arp_dst_proto_ipv4') || getVal('arp_arp_dst_proto_ipv4') || 'Unknown';
-        alerts.push(`🔎 LOCAL SCAN (ARP) [Looking for IP: ${targetIp}]`);
+        alerts.push(`🔎 LOCAL SCAN (ARP)`);
     }
 
     // 10. Exfiltración de Datos (Data Leak)
     if (len > 5000) {
-        alerts.push(`📦 EXFILTRATION (SIZE) [${len} bytes]`);
+        alerts.push(`📦 EXFILTRATION`);
     }
     
     // Alertas Legadas
-    if (info && info.includes('404 Not Found')) alerts.push(`HTTP-404 [Dom: ${domain}]`);
+    if (info && info.includes('404 Not Found')) alerts.push(`HTTP-404`);
 
     return {
       time: parseFloat(time) * 1000, // ms
