@@ -22,44 +22,50 @@
             </div>
         </header>
 
-        <section class="flex gap-5 mb-5 h-[220px]">
-            <div class="glass rounded-xl flex-1 flex flex-col overflow-hidden">
-                <div class="bg-[#0a0f19]/95 px-4 py-3 font-semibold text-sm neon-text-cyan border-b border-white/10">Vulnerabilidades / Alertas</div>
-                <div class="flex justify-between px-4 py-1.5 text-xs text-slate-400 border-b border-white/5 bg-[#0a0f19]/50 font-mono">
-                    <span>Tipo de Alerta / Contexto</span>
-                    <span>Incidencias</span>
+        <div class="flex flex-col lg:flex-row gap-5 flex-1 overflow-hidden">
+            <!-- Left Column (Widgets) -->
+            <aside class="flex flex-col gap-5 lg:w-[400px] xl:w-[450px] h-full shrink-0">
+                <div class="glass rounded-xl flex-1 flex flex-col overflow-hidden min-h-0">
+                    <div class="bg-[#0a0f19]/95 px-4 py-3 font-semibold text-sm neon-text-cyan border-b border-white/10">Vulnerabilidades / Alertas</div>
+                    <div class="flex justify-between px-4 py-1.5 text-xs text-slate-400 border-b border-white/5 bg-[#0a0f19]/50 font-mono">
+                        <span>Tipo de Alerta / Contexto</span>
+                        <span>Incidencias</span>
+                    </div>
+                    <ul id="alertsList" class="flex-1 overflow-y-auto p-2.5 font-mono text-sm"></ul>
                 </div>
-                <ul id="alertsList" class="flex-1 overflow-y-auto p-2.5 font-mono text-sm"></ul>
-            </div>
-            <div class="glass rounded-xl flex-1 flex flex-col overflow-hidden">
-                <div class="bg-[#0a0f19]/95 px-4 py-3 font-semibold text-sm neon-text-cyan border-b border-white/10">Conexiones Recurrentes (IP:Port)</div>
-                <div class="flex justify-between px-4 py-1.5 text-xs text-slate-400 border-b border-white/5 bg-[#0a0f19]/50 font-mono">
-                    <span>IP Origen -> IP Destino : Puerto</span>
-                    <span>Paquetes Enviados</span>
+                <div class="glass rounded-xl flex-1 flex flex-col overflow-hidden min-h-0">
+                    <div class="bg-[#0a0f19]/95 px-4 py-3 font-semibold text-sm neon-text-cyan border-b border-white/10">Conexiones Recurrentes (IP:Port)</div>
+                    <div class="flex justify-between px-4 py-1.5 text-xs text-slate-400 border-b border-white/5 bg-[#0a0f19]/50 font-mono">
+                        <span>IP Origen -> IP Destino : Puerto</span>
+                        <span>Paquetes Enviados</span>
+                    </div>
+                    <ul id="connsList" class="flex-1 overflow-y-auto p-2.5 font-mono text-sm"></ul>
                 </div>
-                <ul id="connsList" class="flex-1 overflow-y-auto p-2.5 font-mono text-sm"></ul>
-            </div>
-        </section>
+            </aside>
 
-        <main class="glass rounded-xl flex-1 overflow-y-auto">
-            <table class="w-full text-left font-mono text-sm border-collapse">
-                <thead class="sticky top-0 bg-[#0a0f19]/95 text-slate-400 border-b border-white/10 z-10">
-                    <tr>
-                        <th class="py-3 px-4 font-semibold whitespace-nowrap">Time</th>
-                        <th class="py-3 px-4 font-semibold whitespace-nowrap">Source</th>
-                        <th class="py-3 px-4 font-semibold whitespace-nowrap">Sport</th>
-                        <th class="py-3 px-4 font-semibold whitespace-nowrap">Destination</th>
-                        <th class="py-3 px-4 font-semibold whitespace-nowrap">Dport</th>
-                        <th class="py-3 px-4 font-semibold whitespace-nowrap">Proto</th>
-                        <th class="py-3 px-4 font-semibold whitespace-nowrap">Size</th>
-                        <th class="py-3 px-4 font-semibold whitespace-nowrap">Info / Alerts</th>
-                    </tr>
-                </thead>
-                <tbody id="packetBody" class="divide-y divide-white/5">
-                    <!-- Filas dinámicas -->
-                </tbody>
-            </table>
-        </main>
+            <!-- Right Column (Table) -->
+            <main class="glass rounded-xl flex-1 flex flex-col overflow-hidden min-w-0">
+                <div class="overflow-y-auto flex-1">
+                    <table class="w-full text-left font-mono text-sm border-collapse">
+                        <thead class="sticky top-0 bg-[#0a0f19]/95 text-slate-400 border-b border-white/10 z-10">
+                            <tr>
+                                <th class="py-3 px-4 font-semibold whitespace-nowrap">Time</th>
+                                <th class="py-3 px-4 font-semibold whitespace-nowrap">Source</th>
+                                <th class="py-3 px-4 font-semibold whitespace-nowrap">Sport</th>
+                                <th class="py-3 px-4 font-semibold whitespace-nowrap">Destination</th>
+                                <th class="py-3 px-4 font-semibold whitespace-nowrap">Dport</th>
+                                <th class="py-3 px-4 font-semibold whitespace-nowrap">Proto</th>
+                                <th class="py-3 px-4 font-semibold whitespace-nowrap">Size</th>
+                                <th class="py-3 px-4 font-semibold whitespace-nowrap">Info / Alerts</th>
+                            </tr>
+                        </thead>
+                        <tbody id="packetBody" class="divide-y divide-white/5">
+                            <!-- Filas dinámicas -->
+                        </tbody>
+                    </table>
+                </div>
+            </main>
+        </div>
     </div>
     <script type="module" src="./app.js"></script>
 </body>
