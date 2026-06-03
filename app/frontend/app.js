@@ -37,6 +37,7 @@ const MAX_ROWS = 1000;
 // Almacena el filtro de categoría activo (ej. "BOTNET", "NMAP", etc.)
 // Si está vacío (''), significa que se muestran todos los paquetes.
 let currentCategoryFilter = '';
+let globalTotalBytes = 0;
 
 function formatBytes(bytes, decimals = 2) {
     if (!+bytes) return '0 B';
@@ -80,12 +81,14 @@ function updateCounters() {
         if (currentCategoryFilter || searchInput.value) {
             // We are filtering! Show visible vs total
             pktCounter.textContent = `${visibleRows.length} / ${totalPackets}`;
+            if (dataCounter) {
+                dataCounter.textContent = formatBytes(visibleBytes);
+            }
         } else {
             pktCounter.textContent = totalPackets;
-        }
-
-        if (dataCounter) {
-            dataCounter.textContent = formatBytes(visibleBytes);
+            if (dataCounter) {
+                dataCounter.textContent = formatBytes(globalTotalBytes);
+            }
         }
     }
 }
@@ -134,6 +137,7 @@ socket.on('packet', (pkt) => {
     // El paquete se agrega al DOM SIEMPRE. addPacketRow se encargará
     // de ocultarlo visualmente si no coincide con los filtros activos.
     addPacketRow(pkt);
+    updateCounters();
 });
 
 /**
@@ -141,11 +145,11 @@ socket.on('packet', (pkt) => {
  * Re-renderiza los widgets del lado izquierdo: "Vulnerabilidades/Alertas" y "Conexiones Recurrentes".
  * @param {Object} stats - Objeto con arreglos 'alerts' y 'connections' conteniendo objetos {id, count}.
  */
-socket.on('stats_update', (stats) => {
+socket.on('stats_update', (data) => {
     const alertsList = document.getElementById('alertsList');
     const connsList = document.getElementById('connsList');
     
-    if (alertsList && stats.alerts) {
+    if (alertsList && data.alerts) {
         alertsList.innerHTML = '';
         data.alerts.forEach(item => {
             const style = getAlertStyle(item.id);
@@ -171,8 +175,11 @@ socket.on('stats_update', (stats) => {
         });
     }
 
-    // 3. Global Data Consumption is now calculated by updateCounters based on visible rows
-    // to reflect the data consumed during the review/filter.
+    // 3. Global Data Consumption
+    if (data.totalBytes !== undefined) {
+        globalTotalBytes = data.totalBytes;
+        updateCounters();
+    }
     
     // 4. Lifecycle Countdown
     const countdownContainer = document.getElementById('countdownContainer');
@@ -196,7 +203,7 @@ socket.on('stats_update', (stats) => {
 
 socket.on('historical_logs', (packets) => {
     packetBody.innerHTML = ''; 
-    packets.forEach(pkt => addPacketToUI(pkt));
+    packets.forEach(pkt => addPacketRow(pkt, true));
     updateCounters();
 });
 
@@ -248,7 +255,7 @@ function getAlertStyle(alertName) {
  * y gestiona el límite de filas en el DOM (MAX_ROWS).
  * @param {Object} pkt - El paquete de red procesado.
  */
-function addPacketRow(pkt) {
+function addPacketRow(pkt, isHistorical = false) {
     const d = new Date(pkt.time);
     const timeStr = `${d.getHours().toString().padStart(2,'0')}:${d.getMinutes().toString().padStart(2,'0')}:${d.getSeconds().toString().padStart(2,'0')}.${d.getMilliseconds().toString().padStart(3,'0')}`;
 
@@ -311,7 +318,9 @@ function addPacketRow(pkt) {
     `;
 
     packetBody.prepend(tr);
-    totalPackets++;
+    if (!isHistorical) {
+        totalPackets++;
+    }
 
     // Mantenimiento de memoria (MAX_ROWS)
     if (packetBody.children.length > MAX_ROWS) {
@@ -410,6 +419,16 @@ function applyCategoryFilter(filterValue) {
     });
 
     socket.emit('request_filter_history', filterValue);
+    
+    if (connStatus) {
+        if (filterValue) {
+            connStatus.textContent = 'SQLite';
+            connStatus.className = 'text-orange-500 drop-shadow-[0_0_5px_rgba(249,115,22,0.4)] font-bold';
+        } else {
+            connStatus.textContent = translations[currentLang]?.['live'] || 'Live';
+            connStatus.className = 'text-neon-green drop-shadow-[0_0_5px_rgba(57,255,20,0.4)]';
+        }
+    }
 }
 
 filterBtns.forEach(btn => {
