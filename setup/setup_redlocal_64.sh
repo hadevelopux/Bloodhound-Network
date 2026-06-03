@@ -127,7 +127,7 @@ echo -e "${GREEN}${SETUP_REDLOCAL_ROOT_OK}${NC}"
 # 2. ACTUALIZACIÓN, DEPENDENCIAS Y AUTO-PARCHEO (UNATTENDED-UPGRADES)
 echo -e "${GREEN}${SETUP_REDLOCAL_DEPS}${NC}"
 apt-get update -y
-apt-get install -y ufw bridge-utils ifupdown resolvconf curl git tcpdump tshark unattended-upgrades apt-config-auto-update
+apt-get install -y ufw bridge-utils ifupdown dhcpcd resolvconf curl git tcpdump tshark unattended-upgrades apt-config-auto-update
 
 # Cargar .env para acceder a DNS_LAB antes de intentar descargar Docker
 if [ -f "$ENV_FILE" ]; then
@@ -200,7 +200,16 @@ unmanaged-devices=interface-name:$IFACE1;interface-name:$IFACE2
 EOF
 systemctl restart NetworkManager 2>/dev/null || true
 
+if [ -f /etc/dhcpcd.conf ]; then
+    echo -e "${GREEN}[+] Configurando dhcpcd para ignorar las interfaces físicas...${NC}"
+    # Remove existing denyinterfaces to avoid duplicates
+    sed -i '/denyinterfaces/d' /etc/dhcpcd.conf
+    echo "denyinterfaces $IFACE1 $IFACE2" >> /etc/dhcpcd.conf
+    systemctl restart dhcpcd 2>/dev/null || true
+fi
+
 echo -e "${GREEN}${SETUP_REDLOCAL_NET_CREATING} ${IFACE1} & ${IFACE2}...${NC}"
+
 
 # Escribir la nueva topología de red en el archivo principal de Debian.
 # IMPORTANTE: Desactivamos STP y fijamos el retardo (Forward Delay - fd) en 0 
@@ -261,6 +270,13 @@ ufw --force reset >/dev/null
 # Políticas estrictas: Todo lo que entra (IN) se bloquea. Todo lo que sale (OUT) se permite.
 ufw default deny incoming
 ufw default allow outgoing
+ufw default allow route
+
+# Asegurar DEFAULT_FORWARD_POLICY="ACCEPT" en el archivo de configuración de UFW
+if [ -f /etc/default/ufw ]; then
+    sed -i 's/DEFAULT_FORWARD_POLICY="DROP"/DEFAULT_FORWARD_POLICY="ACCEPT"/g' /etc/default/ufw
+fi
+
 
 # Abrir exclusivamente puertos requeridos:
 # - Puerto 22: Esencial para conectar por SSH y administrar el servidor anfitrión.
