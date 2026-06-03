@@ -289,40 +289,40 @@ function processPacket(layers) {
     const c2Ports = ['4444', '4433', '8443', '1337', '31337'];
     if (c2Ports.includes(dport) || c2Ports.includes(sport)) {
         const p = c2Ports.includes(dport) ? dport : sport;
-        alerts.push(`⚠️ TROYANO/C2 [Puerto: ${p}]`);
+        alerts.push(`⚠️ TROJAN/C2 [Port: ${p}]`);
     }
 
     // 2. Infección IoT y Botnets (Mirai / UPnP) (CRÍTICO)
     const miraiPorts = ['2323']; 
     if (miraiPorts.includes(dport) || miraiPorts.includes(sport)) {
-        alerts.push(`🧟 BOTNET IoT (MIRAI) [Puerto: 2323]`);
+        alerts.push(`🧟 BOTNET IoT (MIRAI) [Port: 2323]`);
     }
     if (dport === '1900' || sport === '1900') {
-        alerts.push(`🧟 BOTNET IoT (SSDP) [Puerto: 1900]`);
+        alerts.push(`🧟 BOTNET IoT (SSDP) [Port: 1900]`);
     }
 
     // 3. Minería de Criptomonedas Oculta (CRÍTICO)
     const cryptoPorts = ['3333', '14433', '14444'];
     if (cryptoPorts.includes(dport) || cryptoPorts.includes(sport)) {
         const p = cryptoPorts.includes(dport) ? dport : sport;
-        alerts.push(`⛏️ CRYPTOMINERO [Puerto: ${p}]`);
+        alerts.push(`⛏️ CRYPTOMINER [Port: ${p}]`);
     }
 
     // 4. Secuestro de DNS (DNS Hijacking) (CRÍTICO)
     if (dport === '53' || sport === '53') {
         const trustedDns = ['8.8.8.8', '8.8.4.4', '1.1.1.1', '1.0.0.1'];
         if (dst && !dst.startsWith('192.168.') && !trustedDns.includes(dst)) {
-            alerts.push(`⚠️ DNS SECUESTRADO [Hacia IP: ${dst}]`);
+            alerts.push(`⚠️ DNS HIJACKED [To IP: ${dst}]`);
         }
     }
 
     // 5. Detección de Fugas de Texto Plano (MEDIO/ALTO)
     if (dport === '21' || sport === '21') {
-        alerts.push(`🔓 TEXTO PLANO [FTP]`);
+        alerts.push(`🔓 PLAINTEXT [FTP]`);
     } else if (dport === '23' || sport === '23') {
-        alerts.push(`🔓 TEXTO PLANO [Telnet]`);
+        alerts.push(`🔓 PLAINTEXT [Telnet]`);
     } else if (method && dport !== '443' && sport !== '443') {
-        alerts.push(`🔓 TEXTO PLANO [HTTP: ${domain || dst}]`);
+        alerts.push(`🔓 PLAINTEXT [HTTP: ${domain || dst}]`);
     }
 
     // 6. Phishing y Dark Web (CRÍTICO)
@@ -337,7 +337,7 @@ function processPacket(layers) {
     const adwareDomains = ['adservice', 'analytics', 'metrics', 'telemetry', 'doubleclick', 'track'];
     if (domain) {
         if (adwareDomains.some(d => domain.includes(d))) {
-            alerts.push(`👁️ RASTREO/ADWARE [Dest: ${domain}]`);
+            alerts.push(`👁️ TRACKING/ADWARE [Dest: ${domain}]`);
         }
     }
 
@@ -350,26 +350,26 @@ function processPacket(layers) {
 
     // XMAS Scan (FIN + PUSH + URG)
     if (finFlag === '1' && pushFlag === '1' && urgFlag === '1') {
-        alerts.push(`🕵️ ESCANEO NMAP (XMAS) [Puerto: ${dport}]`);
+        alerts.push(`🕵️ NMAP SCAN (XMAS) [Port: ${dport}]`);
     }
     // NULL Scan (Todos los flags en 0 pero es TCP)
     else if (protoCol === 'TCP' && synFlag === '0' && ackFlag === '0' && finFlag === '0' && pushFlag === '0' && urgFlag === '0') {
-        alerts.push(`🕵️ ESCANEO NMAP (NULL) [Puerto: ${dport}]`);
+        alerts.push(`🕵️ NMAP SCAN (NULL) [Port: ${dport}]`);
     }
     // SYN Scan ruidoso (Medio)
     else if (synFlag === '1' && ackFlag === '0') {
-        alerts.push(`SYN-SCAN [Puerto: ${dport}]`);
+        alerts.push(`SYN-SCAN [Port: ${dport}]`);
     }
 
     // 9. Escaneo Local de ARP (Infección cruzada) (MEDIO)
     if (protoCol === 'ARP' && info && info.includes('Who has')) {
-        const targetIp = getVal('arp_dst_proto_ipv4') || getVal('arp_arp_dst_proto_ipv4') || 'Desconocido';
-        alerts.push(`🔎 ESCANEO LOCAL (ARP) [Buscando IP: ${targetIp}]`);
+        const targetIp = getVal('arp_dst_proto_ipv4') || getVal('arp_arp_dst_proto_ipv4') || 'Unknown';
+        alerts.push(`🔎 LOCAL SCAN (ARP) [Looking for IP: ${targetIp}]`);
     }
 
     // 10. Exfiltración de Datos (Data Leak)
     if (len > 5000) {
-        alerts.push(`📦 EXFILTRACIÓN (SIZE) [${len} bytes]`);
+        alerts.push(`📦 EXFILTRATION (SIZE) [${len} bytes]`);
     }
     
     // Alertas Legadas
@@ -394,6 +394,24 @@ function processPacket(layers) {
 
 io.on('connection', (socket) => {
   logger.info('Cliente Web conectado vía WebSocket.');
+  
+  socket.on('clear_stats', (type) => {
+    if (type === 'alerts') {
+      db.run("DELETE FROM stats_agg WHERE type = 'ALERT'");
+    } else if (type === 'connections') {
+      db.run("DELETE FROM stats_agg WHERE type = 'CONNECTION'");
+    }
+    logger.info(`Stats cleared for type: ${type}`);
+    // Clear in queue as well just in case
+    for (let i = dbQueue.length - 1; i >= 0; i--) {
+        if (dbQueue[i].query.includes(type === 'alerts' ? "'ALERT'" : "'CONNECTION'")) {
+            dbQueue.splice(i, 1);
+        }
+    }
+    // Broadcast immediate empty update so clients clear out
+    if (type === 'alerts') io.emit('stats_update', { alerts: [] });
+    if (type === 'connections') io.emit('stats_update', { connections: [] });
+  });
 });
 
 server.listen(3000, () => {

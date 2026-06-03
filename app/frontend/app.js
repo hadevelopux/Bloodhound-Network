@@ -26,19 +26,19 @@ let totalPackets = 0;
 const MAX_ROWS = 1000;
 
 socket.on('connect', () => {
-    connStatus.textContent = 'En Vivo';
+    connStatus.textContent = 'Live';
     connStatus.className = 'text-neon-green drop-shadow-[0_0_5px_rgba(57,255,20,0.4)]';
     document.querySelector('.pulse-dot').style.animationPlayState = 'running';
 });
 
 socket.on('disconnect', () => {
-    connStatus.textContent = 'Desconectado';
+    connStatus.textContent = 'Disconnected';
     connStatus.className = 'text-neon-red';
     document.querySelector('.pulse-dot').style.animationPlayState = 'paused';
 });
 
 socket.on('connect_error', (err) => {
-    connStatus.textContent = 'Error de Conexión';
+    connStatus.textContent = 'Connection Error';
     connStatus.className = 'text-neon-red font-bold animate-pulse';
     document.querySelector('.pulse-dot').style.animationPlayState = 'paused';
     console.error('WebSocket Error:', err);
@@ -161,4 +161,12 @@ searchInput.addEventListener('keyup', () => {
         totalPackets = 0;
         pktCounter.textContent = '0';
     }, 500);
+});
+
+document.getElementById('resetAlertsBtn')?.addEventListener('click', () => {
+    socket.emit('clear_stats', 'alerts');
+});
+
+document.getElementById('resetConnsBtn')?.addEventListener('click', () => {
+    socket.emit('clear_stats', 'connections');
 });
