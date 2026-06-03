@@ -2,8 +2,6 @@ import './style.css';
 import '@fontsource/inter';
 import '@fontsource/fira-code';
 import { io } from "socket.io-client";
-import { OverlayScrollbars } from 'overlayscrollbars';
-import 'overlayscrollbars/styles/overlayscrollbars.css';
 
 function escapeHTML(str) {
     if (typeof str !== 'string') return str;
@@ -27,30 +25,6 @@ const pktCounter = document.getElementById('pktCounter'); // <span> contador de 
 const connStatus = document.getElementById('connStatus'); // <span> estado de la conexión WebSocket
 const searchInput = document.getElementById('searchInput'); // <input> de texto para el filtro BPF/texto libre
 
-// ==========================================
-// OVERLAYSCROLLBARS INIT
-// ==========================================
-document.addEventListener('DOMContentLoaded', () => {
-    const scrollOptions = {
-        scrollbars: {
-            theme: 'os-theme-dark',
-            autoHide: 'leave',
-            autoHideDelay: 500
-        }
-    };
-    
-    // Selectores para paneles con scroll
-    const scrollElements = [
-        document.querySelector('.overflow-y-auto.flex-1'), // Main table container
-        document.getElementById('alertsList'), // Alerts widget (directamente el ul)
-        document.getElementById('connsList'), // Connections widget (directamente el ul)
-        document.getElementById('legendContent') // Legend sidebar content
-    ];
-
-    scrollElements.forEach(el => {
-        if (el) OverlayScrollbars(el, scrollOptions);
-    });
-});
 
 // ==========================================
 // ESTADO GLOBAL DE LA APLICACIÓN
