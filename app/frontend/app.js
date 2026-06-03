@@ -222,10 +222,27 @@ let timeout = null;
 searchInput.addEventListener('keyup', () => {
     clearTimeout(timeout);
     timeout = setTimeout(() => {
-        packetBody.innerHTML = '';
-        totalPackets = 0;
-        pktCounter.textContent = '0';
-    }, 500);
+        const filterText = searchInput.value.toLowerCase();
+        const rows = packetBody.querySelectorAll('tr');
+        
+        rows.forEach(row => {
+            const rawData = row.textContent.toLowerCase();
+            
+            // Si el texto de la fila NO incluye la búsqueda, la ocultamos
+            if (filterText && !rawData.includes(filterText)) {
+                row.style.display = 'none';
+            } else {
+                // Si la búsqueda coincide, pero tenemos un filtro de categoría activo,
+                // respetamos el filtro de categoría.
+                const rowAlerts = row.dataset.alerts || '';
+                if (currentCategoryFilter && !rowAlerts.includes(currentCategoryFilter)) {
+                    row.style.display = 'none';
+                } else {
+                    row.style.display = '';
+                }
+            }
+        });
+    }, 300);
 });
 
 // Lógica para limpiar las estadísticas desde la interfaz (Widgets de la izquierda)
@@ -263,18 +280,26 @@ function applyCategoryFilter(filterValue) {
     // 2. Iterar sobre TODAS las filas de la tabla actual y ocultar/mostrar
     // En lugar de borrar la tabla (innerHTML = ''), alteramos el display de CSS
     // para mantener el historial intacto al cambiar de filtros.
+    const filterText = searchInput.value.toLowerCase();
     const rows = packetBody.querySelectorAll('tr');
     rows.forEach(row => {
+        const rawData = row.textContent.toLowerCase();
+        
+        // 1. Check search text filter
+        if (filterText && !rawData.includes(filterText)) {
+            row.style.display = 'none';
+            return; // Skip category check, it's already hidden
+        }
+        
+        // 2. Check category filter
         if (!filterValue) {
-            // Si el filtro está vacío ("All"), mostramos todas las filas
             row.style.display = '';
         } else {
-            // Verificamos si el 'data-alerts' de la fila contiene la palabra clave del filtro
             const rowAlerts = row.dataset.alerts || '';
             if (rowAlerts.includes(filterValue)) {
-                row.style.display = ''; // Mostrar si coincide
+                row.style.display = ''; 
             } else {
-                row.style.display = 'none'; // Ocultar si no coincide
+                row.style.display = 'none'; 
             }
         }
     });
