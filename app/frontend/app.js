@@ -196,7 +196,7 @@ function addPacketRow(pkt) {
     if (shouldHide) {
         tr.style.display = 'none';
     }
-    let domainHtml = pkt.domain ? `<span class="font-bold text-core-900 dark:text-core-100">[${escapeHTML(pkt.domain)}]</span> ` : '';
+    let domainCellHtml = pkt.domain ? `<span class="font-bold text-core-900 dark:text-core-100">${escapeHTML(pkt.domain)}</span>` : '<span class="text-core-400 dark:text-core-600">-</span>';
 
     const tdClasses = "py-2 px-4 whitespace-nowrap overflow-hidden text-ellipsis max-w-[300px]";
 
@@ -210,7 +210,8 @@ function addPacketRow(pkt) {
         <td class="${tdClasses}">${escapeHTML(pkt.dport.toString())}</td>
         <td class="${tdClasses} ${getProtoClass(pkt.proto)}">${escapeHTML(pkt.proto)}</td>
         <td class="${tdClasses}">${pkt.len || '-'}</td>
-        <td class="${tdClasses}" title="${safeInfo}">${domainHtml}${alertsHtml}${safeInfo}</td>
+        <td class="${tdClasses}">${domainCellHtml}</td>
+        <td class="${tdClasses}" title="${safeInfo}">${alertsHtml}${safeInfo}</td>
     `;
 
     packetBody.prepend(tr);
