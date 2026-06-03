@@ -16,15 +16,28 @@ function escapeHTML(str) {
     );
 }
 
+// ==========================================
+// REFERENCIAS AL DOM
+// ==========================================
 const socket = io();
-const packetBody = document.getElementById('packetBody');
-const pktCounter = document.getElementById('pktCounter');
-const connStatus = document.getElementById('connStatus');
-const searchInput = document.getElementById('searchInput');
+const packetBody = document.getElementById('packetBody'); // <tbody> de la tabla de paquetes principal
+const pktCounter = document.getElementById('pktCounter'); // <span> contador de paquetes
+const connStatus = document.getElementById('connStatus'); // <span> estado de la conexión WebSocket
+const searchInput = document.getElementById('searchInput'); // <input> de texto para el filtro BPF/texto libre
 
+// ==========================================
+// ESTADO GLOBAL DE LA APLICACIÓN
+// ==========================================
 let totalPackets = 0;
 const MAX_ROWS = 1000;
+
+// Almacena el filtro de categoría activo (ej. "BOTNET", "NMAP", etc.)
+// Si está vacío (''), significa que se muestran todos los paquetes.
 let currentCategoryFilter = '';
+
+// ==========================================
+// EVENTOS DE WEBSOCKET (CONEXIÓN Y ESTADO)
+// ==========================================
 
 socket.on('connect', () => {
     connStatus.textContent = 'Live';
@@ -45,30 +58,35 @@ socket.on('connect_error', (err) => {
     console.error('WebSocket Error:', err);
 });
 
+// ==========================================
+// EVENTOS DE WEBSOCKET (TRÁFICO Y ALERTAS)
+// ==========================================
+
+/**
+ * Escucha el evento 'packet' enviado por el servidor cada vez que tshark procesa un nuevo paquete de red.
+ * Aplica lógica de filtrado por texto (búsqueda BPF simulada) y delega el renderizado en pantalla.
+ * @param {Object} pkt - Objeto JSON con la información del paquete (src, dst, proto, alerts, etc.)
+ */
 socket.on('packet', (pkt) => {
+    // 1. Filtrado por texto libre (Buscador superior)
     const filterText = searchInput.value.toLowerCase();
     const rawData = Object.values(pkt).join(' ').toLowerCase();
     
+    // Si hay texto en el buscador y el paquete no lo contiene, lo ignoramos por completo
     if (filterText && !rawData.includes(filterText)) {
         return; 
     }
 
-    if (currentCategoryFilter) {
-        let hasCategory = false;
-        if (pkt.alerts && pkt.alerts.length > 0) {
-            for (const alert of pkt.alerts) {
-                if (alert.includes(currentCategoryFilter)) {
-                    hasCategory = true;
-                    break;
-                }
-            }
-        }
-        if (!hasCategory) return;
-    }
-
+    // 2. El paquete se agrega al DOM siempre, pero addPacketRow se encargará
+    // de ocultarlo visualmente si no coincide con 'currentCategoryFilter'.
     addPacketRow(pkt);
 });
 
+/**
+ * Escucha el evento 'stats_update' enviado periódicamente por el backend con los rankings.
+ * Re-renderiza los widgets del lado izquierdo: "Vulnerabilidades/Alertas" y "Conexiones Recurrentes".
+ * @param {Object} stats - Objeto con arreglos 'alerts' y 'connections' conteniendo objetos {id, count}.
+ */
 socket.on('stats_update', (stats) => {
     const alertsList = document.getElementById('alertsList');
     const connsList = document.getElementById('connsList');
@@ -95,6 +113,15 @@ socket.on('stats_update', (stats) => {
     }
 });
 
+// ==========================================
+// FUNCIONES AUXILIARES DE RENDERIZADO
+// ==========================================
+
+/**
+ * Asigna un color de texto de neón específico basado en la familia del protocolo.
+ * @param {string} proto - El nombre del protocolo (ej. "TCP", "HTTP", "DNS")
+ * @returns {string} Clase CSS de Tailwind para dar color al texto.
+ */
 function getProtoClass(proto) {
     if (proto.includes('HTTP')) return 'text-neon-green';
     if (proto.includes('DNS')) return 'text-neon-cyan';
@@ -105,6 +132,12 @@ function getProtoClass(proto) {
     return '';
 }
 
+/**
+ * Clasifica una alerta entrante y devuelve el estilo visual (colores, bordes, animaciones)
+ * correspondiente a su nivel de severidad.
+ * @param {string} alertName - Nombre de la alerta generada por el backend.
+ * @returns {Object} Objeto con 'badgeClass' (clases CSS) y 'isCritical' (booleano).
+ */
 function getAlertStyle(alertName) {
     // Críticos (Rojo Parpadeante)
     if (alertName.includes('⚠️') || alertName.includes('🎣') || alertName.includes('XMAS') || alertName.includes('NULL') || alertName.includes('🧟') || alertName.includes('⛏️')) {
@@ -122,6 +155,12 @@ function getAlertStyle(alertName) {
     return { badgeClass: 'border-slate-500 text-slate-300 bg-slate-500/20', isCritical: false };
 }
 
+/**
+ * Construye dinámicamente un elemento <tr> y lo inserta en la tabla principal.
+ * Maneja la visibilidad inicial de la fila si existe un filtro de categoría activo, 
+ * y gestiona el límite de filas en el DOM (MAX_ROWS).
+ * @param {Object} pkt - El paquete de red procesado.
+ */
 function addPacketRow(pkt) {
     const d = new Date(pkt.time);
     const timeStr = `${d.getHours().toString().padStart(2,'0')}:${d.getMinutes().toString().padStart(2,'0')}:${d.getSeconds().toString().padStart(2,'0')}.${d.getMilliseconds().toString().padStart(3,'0')}`;
@@ -140,6 +179,17 @@ function addPacketRow(pkt) {
     const tr = document.createElement('tr');
     // Si hay alerta crítica, pintamos todo el fondo de la fila de rojo translúcido
     tr.className = `transition-colors ${hasCritical ? 'bg-red-900/30 hover:bg-red-900/50' : 'hover:bg-white/5'}`;
+    
+    // Guardamos las alertas del paquete como un atributo "data-alerts" en la fila HTML.
+    // Esto nos permite iterar sobre las filas existentes más adelante y saber qué alertas tienen sin consultar el backend.
+    tr.dataset.alerts = pkt.alerts ? pkt.alerts.join('||') : '';
+    
+    // Si hay un filtro de categoría activo y este paquete NUEVO no lo contiene,
+    // lo ocultamos inmediatamente (display: none) en lugar de no agregarlo.
+    // Así no perdemos el historial si el usuario luego quita el filtro.
+    if (currentCategoryFilter && !tr.dataset.alerts.includes(currentCategoryFilter)) {
+        tr.style.display = 'none';
+    }
 
     let domainHtml = pkt.domain ? `<span class="neon-text-cyan">[${escapeHTML(pkt.domain)}]</span> ` : '';
 
@@ -177,6 +227,8 @@ searchInput.addEventListener('keyup', () => {
     }, 500);
 });
 
+// Lógica para limpiar las estadísticas desde la interfaz (Widgets de la izquierda)
+// Emite un evento al backend para que borre los registros correspondientes en SQLite.
 document.getElementById('resetAlertsBtn')?.addEventListener('click', () => {
     socket.emit('clear_stats', 'alerts');
 });
@@ -185,12 +237,18 @@ document.getElementById('resetConnsBtn')?.addEventListener('click', () => {
     socket.emit('clear_stats', 'connections');
 });
 
+// Elementos del DOM para los botones de filtrado de categorías (ej. Botnet, Trojan)
 const filterBtns = document.querySelectorAll('.filter-btn');
 const clearFiltersBtn = document.getElementById('clearFiltersBtn');
 
+/**
+ * Aplica el filtro de categoría seleccionada a los paquetes que YA están en la pantalla.
+ * @param {string} filterValue - El valor de data-filter (ej. "BOTNET") o vacío para "All"
+ */
 function applyCategoryFilter(filterValue) {
     currentCategoryFilter = filterValue;
     
+    // 1. Actualizar el estilo visual de los botones (efecto Neón para el activo)
     filterBtns.forEach(btn => {
         if (btn.dataset.filter === filterValue) {
             btn.classList.add('active', 'bg-neon-cyan/20', 'text-neon-cyan', 'border-neon-cyan/50', 'shadow-[0_0_8px_rgba(0,240,255,0.2)]');
@@ -201,9 +259,24 @@ function applyCategoryFilter(filterValue) {
         }
     });
 
-    packetBody.innerHTML = '';
-    totalPackets = 0;
-    pktCounter.textContent = '0';
+    // 2. Iterar sobre TODAS las filas de la tabla actual y ocultar/mostrar
+    // En lugar de borrar la tabla (innerHTML = ''), alteramos el display de CSS
+    // para mantener el historial intacto al cambiar de filtros.
+    const rows = packetBody.querySelectorAll('tr');
+    rows.forEach(row => {
+        if (!filterValue) {
+            // Si el filtro está vacío ("All"), mostramos todas las filas
+            row.style.display = '';
+        } else {
+            // Verificamos si el 'data-alerts' de la fila contiene la palabra clave del filtro
+            const rowAlerts = row.dataset.alerts || '';
+            if (rowAlerts.includes(filterValue)) {
+                row.style.display = ''; // Mostrar si coincide
+            } else {
+                row.style.display = 'none'; // Ocultar si no coincide
+            }
+        }
+    });
 }
 
 filterBtns.forEach(btn => {
