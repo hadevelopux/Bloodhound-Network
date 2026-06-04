@@ -4,8 +4,7 @@ import colors from 'tailwindcss/colors';
 export default {
   content: [
     "./index.html",
-    "./public/**/*.js",
-    "./public/*.js",
+    "./src/**/*.{vue,js,ts,jsx,tsx}",
   ],
   darkMode: 'class',
   theme: {

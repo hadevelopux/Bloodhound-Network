@@ -76,13 +76,11 @@ MENU_PROMPT="Select an option: "
 MENU_INSTALL_TITLE="Select the Modality to Install:"
 MENU_INSTALL_OPT_1="Local Network Mode (Transparent Bridge - 64 bit)"
 MENU_INSTALL_OPT_2="Sensor Mode (Rogue AP with WiFi - 64 bit)"
-MENU_INSTALL_OPT_3="Sensor Mode (Rogue AP with WiFi - 32 bit / Legacy)"
 MENU_INSTALL_OPT_4="Return to main menu"
 
 MENU_START_TITLE="Select the Environment to Start/Restart:"
 MENU_START_OPT_1="Local Network Mode (64-bit)"
 MENU_START_OPT_2="Sensor Mode (64-bit)"
-MENU_START_OPT_3="Sensor Mode (32-bit)"
 MENU_START_OPT_4="Return to main menu"
 
 MENU_STOP_TITLE="Select the Environment to Stop:"

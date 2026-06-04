@@ -62,16 +62,14 @@ menu_install() {
         echo -e "${BLUE}================================================================${NC}"
         echo " 1) $MENU_INSTALL_OPT_1"
         echo " 2) $MENU_INSTALL_OPT_2"
-        echo " 3) $MENU_INSTALL_OPT_3"
-        echo " 4) $MENU_INSTALL_OPT_4"
+        echo " 3) $MENU_INSTALL_OPT_4"
         echo -e "${BLUE}================================================================${NC}"
         read -p "${MENU_PROMPT}" OPT
         
         case $OPT in
             1) sudo bash "$DIR/setup/setup_redlocal_64.sh" "$SELECTED_FILE"; pause_menu; break ;;
             2) sudo bash "$DIR/setup/setup_sensor_64.sh" "$SELECTED_FILE"; pause_menu; break ;;
-            3) sudo bash "$DIR/setup/setup_sensor_32.sh" "$SELECTED_FILE"; pause_menu; break ;;
-            4) break ;;
+            3) break ;;
             *) echo -e "${RED}Invalid option.${NC}"; sleep 1 ;;
         esac
     done
@@ -85,16 +83,14 @@ menu_start() {
         echo -e "${BLUE}================================================================${NC}"
         echo " 1) $MENU_START_OPT_1"
         echo " 2) $MENU_START_OPT_2"
-        echo " 3) $MENU_START_OPT_3"
-        echo " 4) $MENU_START_OPT_4"
+        echo " 3) $MENU_START_OPT_4"
         echo -e "${BLUE}================================================================${NC}"
         read -p "${MENU_PROMPT}" OPT
         
         case $OPT in
             1) bash "$DIR/setup/start_redlocal_64.sh" "$SELECTED_FILE"; pause_menu; break ;;
             2) bash "$DIR/setup/start_sensor_64.sh" "$SELECTED_FILE"; pause_menu; break ;;
-            3) bash "$DIR/setup/start_sensor_32.sh" "$SELECTED_FILE"; pause_menu; break ;;
-            4) break ;;
+            3) break ;;
             *) echo -e "${RED}Invalid option.${NC}"; sleep 1 ;;
         esac
     done
@@ -108,16 +104,14 @@ menu_stop() {
         echo -e "${BLUE}================================================================${NC}"
         echo " 1) $MENU_START_OPT_1"
         echo " 2) $MENU_START_OPT_2"
-        echo " 3) $MENU_START_OPT_3"
-        echo " 4) $MENU_START_OPT_4"
+        echo " 3) $MENU_START_OPT_4"
         echo -e "${BLUE}================================================================${NC}"
         read -p "${MENU_PROMPT}" OPT
         
         case $OPT in
             1) echo -e "${YELLOW}${MENU_STOP_MSG}${NC}"; cd "$DIR/docker/redlocal-64" && docker compose stop; pause_menu; break ;;
             2) echo -e "${YELLOW}${MENU_STOP_MSG}${NC}"; cd "$DIR/docker/sensor-64" && docker compose stop; pause_menu; break ;;
-            3) echo -e "${YELLOW}${MENU_STOP_MSG}${NC}"; cd "$DIR/docker/sensor-32" && docker compose stop; pause_menu; break ;;
-            4) break ;;
+            3) break ;;
             *) echo -e "${RED}Invalid option.${NC}"; sleep 1 ;;
         esac
     done
@@ -131,11 +125,7 @@ detect_installation() {
     if [ -f "/etc/systemd/system/bloodhound-redlocal.service" ]; then
         ACTIVE_MODE="REDLOCAL64"
     elif [ -f "/etc/systemd/system/bloodhound-sensor.service" ]; then
-        if grep -q "start_sensor_32.sh" "/etc/systemd/system/bloodhound-sensor.service"; then
-            ACTIVE_MODE="SENSOR32"
-        else
-            ACTIVE_MODE="SENSOR64"
-        fi
+        ACTIVE_MODE="SENSOR64"
     else
         ACTIVE_MODE="NONE"
     fi
@@ -168,7 +158,6 @@ while true; do
         case "$ACTIVE_MODE" in
             REDLOCAL64) MODE_NAME="Red Local (64-bit)" ;;
             SENSOR64) MODE_NAME="Sensor (64-bit)" ;;
-            SENSOR32) MODE_NAME="Sensor (32-bit)" ;;
         esac
         
         echo -e "${YELLOW}      ${MENU_ACTIVE_MODE} ${MODE_NAME}         ${NC}"
@@ -185,14 +174,12 @@ while true; do
                 case "$ACTIVE_MODE" in
                     REDLOCAL64) bash "$DIR/setup/start_redlocal_64.sh" "$SELECTED_FILE"; pause_menu ;;
                     SENSOR64) bash "$DIR/setup/start_sensor_64.sh" "$SELECTED_FILE"; pause_menu ;;
-                    SENSOR32) bash "$DIR/setup/start_sensor_32.sh" "$SELECTED_FILE"; pause_menu ;;
                 esac
                 ;;
             2) 
                 case "$ACTIVE_MODE" in
                     REDLOCAL64) echo -e "${YELLOW}${MENU_STOP_MSG}${NC}"; cd "$DIR/docker/redlocal-64" && docker compose stop; pause_menu ;;
                     SENSOR64) echo -e "${YELLOW}${MENU_STOP_MSG}${NC}"; cd "$DIR/docker/sensor-64" && docker compose stop; pause_menu ;;
-                    SENSOR32) echo -e "${YELLOW}${MENU_STOP_MSG}${NC}"; cd "$DIR/docker/sensor-32" && docker compose stop; pause_menu ;;
                 esac
                 ;;
             3) menu_install ;;
