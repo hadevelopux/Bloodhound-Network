@@ -75,7 +75,6 @@
                     :alerts="stats.alerts"
                     :translations="translations"
                     :current-lang="currentLang"
-                    :get-alert-style="getAlertStyle"
                     @reset-alerts="resetAlerts"
                 ></alerts-widget>
 
@@ -96,7 +95,6 @@
                 :translations="translations"
                 :current-lang="currentLang"
                 :escape-h-t-m-l="escapeHTML"
-                :get-alert-style="getAlertStyle"
                 :get-proto-class="getProtoClass"
                 @set-category="setCategory"
                 @clear-filters="clearFilters"
@@ -116,6 +114,11 @@
 
     <!-- Carga de Componentes y Lógica Vue -->
     <script src="lang.js"></script>
+    <script src="components/UiButton.js"></script>
+    <script src="components/AlertBadge.js"></script>
+    <script src="components/UiWidgetPanel.js"></script>
+    <script src="components/LegendItem.js"></script>
+    <script src="components/UiInput.js"></script>
     <script src="components/HeaderWidget.js"></script>
     <script src="components/AlertsWidget.js"></script>
     <script src="components/ConnectionsWidget.js"></script>

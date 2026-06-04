@@ -1,4 +1,4 @@
-export const translations = {
+window.translations = {
     en: {
         title: "Bloodhound Forensics",
         live_filter_placeholder: "Live BPF Filter (e.g. tcp.port == 80)",

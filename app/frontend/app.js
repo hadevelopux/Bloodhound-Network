@@ -1,7 +1,16 @@
-const { createApp, ref, computed, onMounted } = Vue;
+const { createApp, ref, computed, onMounted, reactive } = Vue;
+
+const i18nState = reactive({
+    lang: localStorage.getItem('bloodhound_lang') || 'es'
+});
 
 const app = createApp({
     components: {
+        'ui-button': UiButton,
+        'alert-badge': AlertBadge,
+        'ui-widget-panel': UiWidgetPanel,
+        'legend-item': LegendItem,
+        'ui-input': UiInput,
         'header-widget': HeaderWidget,
         'alerts-widget': AlertsWidget,
         'connections-widget': ConnectionsWidget,
@@ -22,8 +31,6 @@ const app = createApp({
             connClass: 'text-red-500',
             filterText: '',
             currentCategoryFilter: '',
-            currentLang: 'es',
-            translations: {}, // Populated from lang.js
             isDark: true,
             showLegend: false,
             socket: null
@@ -85,8 +92,8 @@ const app = createApp({
             if(confirm("Clear Connection Stats?")) this.socket.emit('clear_stats', 'connections');
         },
         toggleLang() {
-            this.currentLang = this.currentLang === 'es' ? 'en' : 'es';
-            localStorage.setItem('bloodhound_lang', this.currentLang);
+            i18nState.lang = i18nState.lang === 'es' ? 'en' : 'es';
+            localStorage.setItem('bloodhound_lang', i18nState.lang);
         },
         toggleTheme() {
             this.isDark = !this.isDark;
@@ -103,18 +110,6 @@ const app = createApp({
             p.textContent = str;
             return p.innerHTML;
         },
-        getAlertStyle(alertName) {
-            if (alertName.includes('⚠️') || alertName.includes('🎣') || alertName.includes('XMAS') || alertName.includes('NULL') || alertName.includes('🧟') || alertName.includes('⛏️')) {
-                return { badgeClass: 'border-red-500 text-red-600 dark:text-red-400 bg-red-100 dark:bg-red-900/30 animate-pulse shadow-[0_0_8px_rgba(239,68,68,0.3)]', isCritical: true };
-            }
-            if (alertName.includes('🔓') || alertName.includes('SYN-SCAN') || alertName.includes('EXFILTRACIÓN') || alertName.includes('👁️') || alertName.includes('🔎') || alertName.includes('EXFILTRATION')) {
-                return { badgeClass: 'border-orange-500 text-orange-600 dark:text-orange-400 bg-orange-100 dark:bg-orange-900/30', isCritical: false };
-            }
-            if (alertName === 'CNN') return { badgeClass: 'border-core-400 text-core-600 dark:text-core-300 bg-core-200 dark:bg-core-800', isCritical: false };
-            if (alertName === 'SYN') return { badgeClass: 'border-core-500 text-core-700 dark:text-core-200 bg-core-200 dark:bg-core-800', isCritical: false };
-            
-            return { badgeClass: 'border-core-300 dark:border-core-600 text-core-500 dark:text-core-400 bg-core-100 dark:bg-core-800', isCritical: false };
-        },
         getProtoClass(proto) {
             proto = (proto || '').toUpperCase();
             if (['TCP', 'UDP'].includes(proto)) return 'text-blue-600 dark:text-blue-400';
@@ -124,11 +119,6 @@ const app = createApp({
         }
     },
     mounted() {
-        // Load Translations from lang.js (assuming it defines a global window.translations)
-        if (window.translations) {
-            this.translations = window.translations;
-        }
-
         // Load Preferences
         const savedTheme = localStorage.getItem('bloodhound_theme');
         if (savedTheme) {
@@ -137,21 +127,16 @@ const app = createApp({
         if (this.isDark) document.documentElement.classList.add('dark');
         else document.documentElement.classList.remove('dark');
 
-        const savedLang = localStorage.getItem('bloodhound_lang');
-        if (savedLang) {
-            this.currentLang = savedLang;
-        }
-
         // Setup WebSocket
         this.socket = io();
 
         this.socket.on('connect', () => {
-            this.connStatus = this.currentLang === 'es' ? 'En Vivo' : 'Live';
+            this.connStatus = i18nState.lang === 'es' ? 'En Vivo' : 'Live';
             this.connClass = 'text-neon-green drop-shadow-[0_0_5px_rgba(57,255,20,0.4)]';
         });
 
         this.socket.on('disconnect', () => {
-            this.connStatus = this.currentLang === 'es' ? 'Desconectado' : 'Disconnected';
+            this.connStatus = i18nState.lang === 'es' ? 'Desconectado' : 'Disconnected';
             this.connClass = 'text-neon-red';
         });
 
@@ -180,5 +165,10 @@ const app = createApp({
         });
     }
 });
+
+app.config.globalProperties.$t = function(key) {
+    return window.translations[i18nState.lang]?.[key] || key;
+};
+app.config.globalProperties.$i18n = i18nState;
 
 app.mount('#app');
