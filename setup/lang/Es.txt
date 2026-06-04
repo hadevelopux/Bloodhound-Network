@@ -61,6 +61,12 @@ SETUP_SENSOR_NO_REBOOT="Recuerda reiniciar manualmente."
 # MÓDULO: ORQUESTADOR MAESTRO (Menú Principal)
 # ------------------------------------------------------------------------------
 MENU_TITLE="BLOODHOUND NETWORK - ORQUESTADOR MAESTRO"
+MENU_ACTIVE_MODE="Modo Activo:"
+MENU_NOT_INSTALLED="(No hay instalación detectada)"
+MENU_DYN_START="Iniciar / Reiniciar Servicio"
+MENU_DYN_STOP="Detener Servicio"
+MENU_DYN_REINSTALL="Reinstalar / Cambiar Modo"
+
 MENU_OPTION_1="Instalar Suite (Aprovisionamiento Bare-Metal)"
 MENU_OPTION_2="Encender Suite"
 MENU_OPTION_3="Detener Suite"

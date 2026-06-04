@@ -61,6 +61,12 @@ SETUP_SENSOR_NO_REBOOT="Remember to manually reboot."
 # MODULE: MASTER ORCHESTRATOR (Main Menu)
 # ------------------------------------------------------------------------------
 MENU_TITLE="BLOODHOUND NETWORK - MASTER ORCHESTRATOR"
+MENU_ACTIVE_MODE="Active Mode:"
+MENU_NOT_INSTALLED="(No installation detected)"
+MENU_DYN_START="Start / Restart Service"
+MENU_DYN_STOP="Stop Service"
+MENU_DYN_REINSTALL="Reinstall / Change Mode"
+
 MENU_OPTION_1="Install Suite (Bare-Metal Provisioning)"
 MENU_OPTION_2="Start Suite"
 MENU_OPTION_3="Stop Suite"

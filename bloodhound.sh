@@ -124,26 +124,80 @@ menu_stop() {
 }
 
 # ------------------------------------------------------------------------------
-# 3. BUCLE PRINCIPAL (MAIN LOOP)
+# 3. DETECCIÓN DE INSTALACIÓN
+# ------------------------------------------------------------------------------
+ACTIVE_MODE="NONE"
+detect_installation() {
+    if [ -f "/etc/systemd/system/bloodhound-redlocal.service" ]; then
+        ACTIVE_MODE="REDLOCAL64"
+    elif [ -f "/etc/systemd/system/bloodhound-sensor.service" ]; then
+        if grep -q "start_sensor_32.sh" "/etc/systemd/system/bloodhound-sensor.service"; then
+            ACTIVE_MODE="SENSOR32"
+        else
+            ACTIVE_MODE="SENSOR64"
+        fi
+    else
+        ACTIVE_MODE="NONE"
+    fi
+}
+
+# ------------------------------------------------------------------------------
+# 4. BUCLE PRINCIPAL (MAIN LOOP)
 # ------------------------------------------------------------------------------
 
 while true; do
+    detect_installation
     clear
     echo -e "${BLUE}================================================================${NC}"
     echo -e "${GREEN}      ${MENU_TITLE}         ${NC}"
-    echo -e "${BLUE}================================================================${NC}"
-    echo " 1) $MENU_OPTION_1"
-    echo " 2) $MENU_OPTION_2"
-    echo " 3) $MENU_OPTION_3"
-    echo " 4) $MENU_OPTION_4"
-    echo -e "${BLUE}================================================================${NC}"
-    read -p "${MENU_PROMPT}" MAIN_OPT
     
-    case $MAIN_OPT in
-        1) menu_install ;;
-        2) menu_start ;;
-        3) menu_stop ;;
-        4) echo -e "${GREEN}Bye!${NC}"; exit 0 ;;
-        *) echo -e "${RED}Invalid option.${NC}"; sleep 1 ;;
-    esac
+    if [ "$ACTIVE_MODE" = "NONE" ]; then
+        echo -e "${YELLOW}      ${MENU_NOT_INSTALLED}         ${NC}"
+        echo -e "${BLUE}================================================================${NC}"
+        echo " 1) $MENU_OPTION_1"
+        echo " 2) $MENU_OPTION_4"
+        echo -e "${BLUE}================================================================${NC}"
+        read -p "${MENU_PROMPT}" MAIN_OPT
+        
+        case $MAIN_OPT in
+            1) menu_install ;;
+            2) echo -e "${GREEN}Bye!${NC}"; exit 0 ;;
+            *) echo -e "${RED}Invalid option.${NC}"; sleep 1 ;;
+        esac
+    else
+        case "$ACTIVE_MODE" in
+            REDLOCAL64) MODE_NAME="Red Local (64-bit)" ;;
+            SENSOR64) MODE_NAME="Sensor (64-bit)" ;;
+            SENSOR32) MODE_NAME="Sensor (32-bit)" ;;
+        esac
+        
+        echo -e "${YELLOW}      ${MENU_ACTIVE_MODE} ${MODE_NAME}         ${NC}"
+        echo -e "${BLUE}================================================================${NC}"
+        echo " 1) $MENU_DYN_START"
+        echo " 2) $MENU_DYN_STOP"
+        echo " 3) $MENU_DYN_REINSTALL"
+        echo " 4) $MENU_OPTION_4"
+        echo -e "${BLUE}================================================================${NC}"
+        read -p "${MENU_PROMPT}" MAIN_OPT
+        
+        case $MAIN_OPT in
+            1) 
+                case "$ACTIVE_MODE" in
+                    REDLOCAL64) bash "$DIR/setup/start_redlocal_64.sh" "$SELECTED_FILE"; pause_menu ;;
+                    SENSOR64) bash "$DIR/setup/start_sensor_64.sh" "$SELECTED_FILE"; pause_menu ;;
+                    SENSOR32) bash "$DIR/setup/start_sensor_32.sh" "$SELECTED_FILE"; pause_menu ;;
+                esac
+                ;;
+            2) 
+                case "$ACTIVE_MODE" in
+                    REDLOCAL64) echo -e "${YELLOW}${MENU_STOP_MSG}${NC}"; cd "$DIR/docker/redlocal-64" && docker compose stop; pause_menu ;;
+                    SENSOR64) echo -e "${YELLOW}${MENU_STOP_MSG}${NC}"; cd "$DIR/docker/sensor-64" && docker compose stop; pause_menu ;;
+                    SENSOR32) echo -e "${YELLOW}${MENU_STOP_MSG}${NC}"; cd "$DIR/docker/sensor-32" && docker compose stop; pause_menu ;;
+                esac
+                ;;
+            3) menu_install ;;
+            4) echo -e "${GREEN}Bye!${NC}"; exit 0 ;;
+            *) echo -e "${RED}Invalid option.${NC}"; sleep 1 ;;
+        esac
+    fi
 done
