@@ -57,16 +57,22 @@
         <div class="flex flex-col lg:flex-row flex-1 overflow-hidden">
             <!-- Left Column (Widgets) -->
             <aside class="flex flex-col lg:w-[400px] xl:w-[450px] h-full shrink-0 border-r border-stone-300 dark:border-stone-800 bg-stone-50 dark:bg-stone-900/50">
-                
-                <alerts-widget
-                    :alerts="stats.alerts"
-                ></alerts-widget>
+                <alerts-widget 
+                    :alerts="stats.alerts" 
+                    @clear-stats="socket.emit('request_clear_stats')">
+                </alerts-widget>
 
-                <connections-widget
-                    :connections="stats.connections"
+                <connections-widget 
+                    :connections="stats.connections" 
                     :escape-h-t-m-l="escapeHTML"
-                ></connections-widget>
+                    @clear-stats="socket.emit('request_clear_stats')">
+                </connections-widget>
 
+                <domains-widget
+                    :domains="stats.trackingDomains"
+                    :escape-h-t-m-l="escapeHTML"
+                    @clear-stats="socket.emit('request_clear_stats')">
+                </domains-widget>
             </aside>
 
             <!-- Main Packet Stream Table -->
@@ -100,6 +106,7 @@
     <script src="components/HeaderWidget.js"></script>
     <script src="components/AlertsWidget.js"></script>
     <script src="components/ConnectionsWidget.js"></script>
+    <script src="components/DomainsWidget.js"></script>
     <script src="components/MainTable.js"></script>
     <script src="components/LegendSidebar.js"></script>
     <script src="app.js"></script>

@@ -127,31 +127,39 @@ setInterval(() => {
                 logger.error('Error fetching connections:', err.message);
                 return;
             }
-            db.get(`SELECT count FROM stats_agg WHERE id = 'TOTAL_BYTES'`, [], (err, row) => {
-                const totalBytes = row ? row.count : 0;
-                
-                const timeRemaining = (cycleStartMs + LIFECYCLE_MS) - Date.now();
+            db.all(`SELECT * FROM stats_agg WHERE type = 'TRACKING_DOMAIN' ORDER BY count DESC LIMIT 50`, [], (err, trackingDomains) => {
+                if (err) {
+                    logger.error('Error fetching tracking domains:', err.message);
+                    return;
+                }
+                db.get(`SELECT count FROM stats_agg WHERE id = 'TOTAL_BYTES'`, [], (err, row) => {
+                    const totalBytes = row ? row.count : 0;
+                    const timeRemaining = (cycleStartMs + LIFECYCLE_MS) - Date.now();
 
-                // Auto-Destruct if 30 days have passed
-                if (timeRemaining <= 0) {
-                    logger.warn('LIFECYCLE EXPIRED! Auto-resetting database...');
-                    dbQueue.length = 0;
-                    cycleStartMs = Date.now();
-                    db.serialize(() => {
-                        db.run("DELETE FROM stats_agg");
-                        db.run("DELETE FROM raw_logs");
-                        db.run(`INSERT INTO stats_agg (id, type, count) VALUES ('CYCLE_START', 'GLOBAL', ?)`, [cycleStartMs]);
-                        db.run("VACUUM");
+                    // Auto-Destruct if 30 days have passed
+                    if (timeRemaining <= 0) {
+                        logger.warn('LIFECYCLE EXPIRED! Auto-resetting database...');
+                        dbQueue.length = 0;
+                        cycleStartMs = Date.now();
+                        db.serialize(() => {
+                            db.run(`DELETE FROM raw_logs`);
+                            db.run(`DELETE FROM stats_agg`);
+                            db.run(`INSERT INTO stats_agg (id, type, count) VALUES ('CYCLE_START', 'GLOBAL', ?)`, [cycleStartMs]);
+                        });
+                        io.emit('factory_reset_completed');
+                    }
+
+                    if (connections.length > 0 || alerts.length > 0 || totalBytes > 0) {
+                        logger.debug(`Broadcasting stats: ${connections.length} connections, ${alerts.length} alerts, ${trackingDomains.length} tracking domains, ${totalBytes} bytes`);
+                    }
+                    io.emit('stats_update', { 
+                        connections, 
+                        alerts, 
+                        trackingDomains, 
+                        totalBytes, 
+                        timeRemaining 
                     });
-                    io.emit('historical_logs', []);
-                    io.emit('stats_update', { connections: [], alerts: [], totalBytes: 0, timeRemaining: LIFECYCLE_MS });
-                    return; 
-                }
-                
-                if (connections.length > 0 || alerts.length > 0 || totalBytes > 0) {
-                    logger.debug(`Broadcasting stats: ${connections.length} connections, ${alerts.length} alerts, ${totalBytes} bytes`);
-                }
-                io.emit('stats_update', { connections, alerts, totalBytes, timeRemaining });
+                });
             });
         });
     });
@@ -265,6 +273,14 @@ function startTshark() {
                         params: [alert]
                     });
                 });
+                
+                // Extraer dominios de rastreo/adware
+                if (pkt.alerts.includes('👀 ADWARE/TRACKING') && pkt.domain) {
+                    dbQueue.push({
+                        query: `INSERT INTO stats_agg (id, type, count) VALUES (?, 'TRACKING_DOMAIN', 1) ON CONFLICT(id) DO UPDATE SET count = count + 1`,
+                        params: [pkt.domain]
+                    });
+                }
              }
              
              // Update Global Data Consumption
@@ -503,9 +519,10 @@ io.on('connection', (socket) => {
       let params = [];
 
       if (filterText && filterText.trim() !== '') {
-          // Usa LIKE para buscar dentro del JSON stringificado de alertas o info
-          query = `SELECT * FROM raw_logs WHERE alerts LIKE ? OR info LIKE ? ORDER BY time DESC LIMIT 1000`;
-          params = [`%${filterText}%`, `%${filterText}%`];
+          // Busca en todas las columnas para igualar el comportamiento del frontend
+          query = `SELECT * FROM raw_logs WHERE src LIKE ? OR dst LIKE ? OR sport LIKE ? OR dport LIKE ? OR proto LIKE ? OR domain LIKE ? OR info LIKE ? OR alerts LIKE ? ORDER BY time DESC LIMIT 1000`;
+          const p = `%${filterText}%`;
+          params = [p, p, p, p, p, p, p, p];
       }
 
       db.all(query, params, (err, rows) => {

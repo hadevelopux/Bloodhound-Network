@@ -37,8 +37,8 @@ const HeaderWidget = {
                     <span class="text-orange-500 font-bold" v-show="timeRemaining !== null && timeRemaining <= (5 * 24 * 60 * 60 * 1000)">
                         <span>{{ $t('reset_in') }}</span> <span>{{ formattedTimeRemaining }}</span>
                     </span>
-                    <span><span>{{ $t('pkts') }}</span> <span>{{ totalPackets }}</span></span>
-                    <span><span>{{ $t('data_used') }}</span> <span>{{ formattedTotalBytes }}</span></span>
+                    <span class="text-neon-cyan drop-shadow-[0_0_2px_rgba(0,240,255,0.8)]"><span>{{ $t('pkts') }}</span> <span>{{ totalPackets }}</span></span>
+                    <span class="text-neon-purple drop-shadow-[0_0_2px_rgba(176,38,255,0.8)]"><span>{{ $t('data_used') }}</span> <span>{{ formattedTotalBytes }}</span></span>
                     <ui-button variant="danger" @click="$emit('factory-reset')">{{ $t('factory_reset_btn') }}</ui-button>
                     <ui-button @click="$emit('toggle-legend')">{{ $t('legend_btn') }}</ui-button>
                     <ui-button @click="$emit('toggle-lang')">{{ $i18n.lang === 'es' ? 'EN' : 'ES' }}</ui-button>

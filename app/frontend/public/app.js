@@ -22,7 +22,8 @@ const app = createApp({
             packets: [],
             stats: {
                 alerts: [],
-                connections: []
+                connections: [],
+                trackingDomains: []
             },
             totalBytes: 0,
             totalPackets: 0,
@@ -196,6 +197,7 @@ const app = createApp({
             logger.debug('Actualización de estadísticas recibida:', data);
             if (data.alerts) this.stats.alerts = data.alerts;
             if (data.connections) this.stats.connections = data.connections;
+            if (data.trackingDomains) this.stats.trackingDomains = data.trackingDomains;
             if (data.totalBytes !== undefined) this.totalBytes = data.totalBytes;
             if (data.timeRemaining !== undefined) this.timeRemaining = data.timeRemaining;
         });
@@ -220,6 +222,7 @@ app.component('ui-input', UiInput);
 app.component('header-widget', HeaderWidget);
 app.component('alerts-widget', AlertsWidget);
 app.component('connections-widget', ConnectionsWidget);
+app.component('domains-widget', DomainsWidget);
 app.component('main-table', MainTable);
 app.component('legend-sidebar', LegendSidebar);
 
