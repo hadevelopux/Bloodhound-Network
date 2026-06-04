@@ -110,13 +110,13 @@
           <tbody class="font-mono text-xs font-medium">
             <tr v-for="pkt in packets" :key="pkt.id" 
                 :class="[getRowClass(pkt), 'border-b border-stone-200 dark:border-stone-800/50 transition-colors duration-150 group']">
-              <td class="px-4 py-2 text-stone-500 dark:text-stone-500 group-hover:text-stone-700 dark:group-hover:text-stone-300">{{ formatTime(pkt.timestamp) }}</td>
+              <td class="px-4 py-2 text-stone-500 dark:text-stone-500 group-hover:text-stone-700 dark:group-hover:text-stone-300">{{ formatTime(pkt.time) }}</td>
               <td class="px-4 py-2" v-html="escapeHTML(pkt.src)"></td>
               <td class="px-4 py-2 text-stone-500 dark:text-stone-500" v-html="escapeHTML(pkt.sport)"></td>
               <td class="px-4 py-2" v-html="escapeHTML(pkt.dst)"></td>
               <td class="px-4 py-2 text-stone-500 dark:text-stone-500" v-html="escapeHTML(pkt.dport)"></td>
               <td class="px-4 py-2 text-stone-600 dark:text-stone-400">{{ pkt.proto }}</td>
-              <td class="px-4 py-2 text-stone-600 dark:text-stone-400">{{ pkt.size }}</td>
+              <td class="px-4 py-2 text-stone-600 dark:text-stone-400">{{ pkt.len }}</td>
               <td class="px-4 py-2 text-stone-600 dark:text-stone-400 truncate max-w-[200px]" :title="pkt.domain || '-'">{{ pkt.domain || '-' }}</td>
               <td class="px-4 py-2 text-right">
                 <div class="flex flex-wrap justify-end gap-1">
@@ -160,8 +160,9 @@ function clearFilters() {
   emit('clear-filters');
 }
 
-function formatTime(timestamp) {
-  const d = new Date(timestamp);
+function formatTime(timeVal) {
+  const d = new Date(timeVal);
+  if (isNaN(d.getTime())) return '-';
   return d.toLocaleTimeString('es-ES', { hour12: false, hour: '2-digit', minute:'2-digit', second:'2-digit' }) + '.' + d.getMilliseconds().toString().padStart(3, '0');
 }
 

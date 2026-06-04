@@ -31,13 +31,13 @@
         @input-change="$emit('update-filter', $event)"
         :placeholder="$t('live_filter_placeholder')">
       </UiInput>
-      <div class="flex gap-6 text-sm font-mono items-center">
+      <div class="flex gap-6 text-sm font-mono items-center whitespace-nowrap">
         <span :class="['font-bold', connClass]">{{ connStatus }}</span>
         <span class="text-orange-500 font-bold" v-show="timeRemaining !== null && timeRemaining <= (5 * 24 * 60 * 60 * 1000)">
           <span>{{ $t('reset_in') }}</span> <span>{{ formattedTimeRemaining }}</span>
         </span>
-        <span class="text-neon-cyan drop-shadow-[0_0_2px_rgba(0,240,255,0.8)]"><span>{{ $t('pkts') }}</span> <span>{{ totalPackets }}</span></span>
-        <span class="text-neon-purple drop-shadow-[0_0_2px_rgba(176,38,255,0.8)]"><span>{{ $t('data_used') }}</span> <span>{{ formattedTotalBytes }}</span></span>
+        <div class="flex items-center gap-2 text-neon-cyan drop-shadow-[0_0_2px_rgba(0,240,255,0.8)]"><span>{{ $t('pkts') }}</span><span>{{ totalPackets }}</span></div>
+        <div class="flex items-center gap-2 text-neon-purple drop-shadow-[0_0_2px_rgba(176,38,255,0.8)]"><span>{{ $t('data_used') }}</span><span>{{ formattedTotalBytes }}</span></div>
         <UiButton variant="danger" @click="$emit('factory-reset')">{{ $t('factory_reset_btn') }}</UiButton>
         <UiButton @click="$emit('toggle-legend')">{{ $t('legend_btn') }}</UiButton>
         <UiButton @click="$emit('toggle-lang')">{{ $i18n.locale === 'es' ? 'EN' : 'ES' }}</UiButton>
