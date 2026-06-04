@@ -364,9 +364,33 @@ function processPacket(layers) {
 
     // 4. Secuestro de DNS (DNS Hijacking) (CRÍTICO)
     if (dport === '53' || sport === '53') {
-        const trustedDns = ['8.8.8.8', '8.8.4.4', '1.1.1.1', '1.0.0.1'];
-        if (dst && !dst.startsWith('192.168.') && !trustedDns.includes(dst)) {
-            alerts.push(`⚠️ DNS HIJACKED`);
+        const trustedDns = [
+            // Google Public DNS
+            '8.8.8.8', '8.8.4.4', 
+            // Cloudflare
+            '1.1.1.1', '1.0.0.1', 
+            // Quad9
+            '9.9.9.9', '149.112.112.112', 
+            // OpenDNS (Cisco Umbrella)
+            '208.67.222.222', '208.67.220.220',
+            // AdGuard DNS
+            '94.140.14.14', '94.140.15.15',
+            // CleanBrowsing
+            '185.228.168.9', '185.228.169.9',
+            // Alternate DNS
+            '76.76.19.19', '76.223.122.150',
+            // Yandex DNS
+            '77.88.8.8', '77.88.8.1',
+            // Control D
+            '76.76.2.0', '76.76.10.0',
+            // Comodo Secure DNS
+            '8.26.56.26', '8.20.247.20'
+        ];
+        // Solo alertamos si sale a internet hacia un DNS muy raro. 
+        // Si el usuario usa el DNS de su ISP, puede saltar como falso positivo, 
+        // pero limitarlo reduce el ruido.
+        if (dst && !dst.startsWith('192.168.') && !dst.startsWith('10.') && !dst.startsWith('172.16.') && !trustedDns.includes(dst)) {
+            alerts.push(`⚠️ DNS SECUESTRADO`);
         }
     }
 
@@ -375,7 +399,8 @@ function processPacket(layers) {
         alerts.push(`🔓 PLAINTEXT [FTP]`);
     } else if (dport === '23' || sport === '23') {
         alerts.push(`🔓 PLAINTEXT [Telnet]`);
-    } else if (method && dport !== '443' && sport !== '443') {
+    } else if (method && dport !== '443' && sport !== '443' && dport !== '1900' && sport !== '1900' && protoCol !== 'SSDP') {
+        // Excluimos puerto 1900 (SSDP/UPnP) porque usa HTTP methods (M-SEARCH, NOTIFY)
         alerts.push(`🔓 PLAINTEXT [HTTP]`);
     }
 
@@ -421,8 +446,14 @@ function processPacket(layers) {
     }
 
     // 10. Exfiltración de Datos (Data Leak)
-    if (len > 5000) {
-        alerts.push(`📦 EXFILTRATION`);
+    // El TSO (TCP Segmentation Offload) agrupa paquetes, haciendo que frame_len sea > 5000 normalmente.
+    // Solo alertaremos si es una subida masiva (> 50,000 bytes en un solo chunk) HACIA internet.
+    if (len > 50000) {
+        const isOutbound = src && (src.startsWith('192.168.') || src.startsWith('10.')) && 
+                           dst && (!dst.startsWith('192.168.') && !dst.startsWith('10.'));
+        if (isOutbound) {
+            alerts.push(`📦 EXFILTRATION`);
+        }
     }
     
     // Alertas Legadas
