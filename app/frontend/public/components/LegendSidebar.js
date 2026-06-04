@@ -1,3 +1,12 @@
+/**
+ * LegendSidebar Component
+ * 
+ * Panel lateral deslizable (Off-canvas) que actúa como documentación de apoyo para el usuario.
+ * Enumera y explica todas las posibles alertas de ciberseguridad que el sniffer puede detectar.
+ * 
+ * @vue-prop {Boolean} show - Determina si el panel está visible o escondido.
+ * @vue-event close - Emite evento para cerrar el panel.
+ */
 const LegendSidebar = {
     props: ['show'],
     emits: ['close'],

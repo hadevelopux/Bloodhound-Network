@@ -1,3 +1,11 @@
+/**
+ * AlertBadge Component
+ * 
+ * Renderiza una pequeña insignia (badge) de alerta basada en el tipo de amenaza detectada.
+ * Utiliza clases CSS condicionales para dar colores distintos según la severidad.
+ * 
+ * @vue-prop {String} name - El nombre de la alerta (ej. "BOTNET", "TROJAN", "PLAINTEXT").
+ */
 const AlertBadge = {
     props: {
         name: { type: String, required: true },

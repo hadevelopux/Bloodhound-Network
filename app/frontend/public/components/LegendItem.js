@@ -1,3 +1,13 @@
+/**
+ * LegendItem Component
+ * 
+ * Componente auxiliar para la barra lateral de Leyenda.
+ * Muestra el título, color de severidad y descripción de una categoría de amenaza específica.
+ * 
+ * @vue-prop {String} title - Título de la alerta.
+ * @vue-prop {String} colorClass - Clases Tailwind para el color de la insignia.
+ * @vue-prop {String} desc - Descripción detallada de la alerta.
+ */
 const LegendItem = {
     props: {
         badge: { type: String, required: true },

@@ -1,3 +1,10 @@
+/**
+ * AlertsWidget Component
+ * 
+ * Widget del panel lateral que muestra un resumen de las alertas de seguridad más frecuentes.
+ * 
+ * @vue-prop {Array} alerts - Lista de objetos de alertas con su conteo {id, count}.
+ */
 const AlertsWidget = {
     props: ['alerts'],
     emits: ['clear-stats'],

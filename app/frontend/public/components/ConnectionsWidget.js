@@ -1,3 +1,11 @@
+/**
+ * ConnectionsWidget Component
+ * 
+ * Widget del panel lateral que muestra las conexiones de red más recurrentes (IP a IP).
+ * 
+ * @vue-prop {Array} connections - Lista de conexiones ordenadas por frecuencia.
+ * @vue-prop {Function} escapeHTML - Función de utilidad para sanear strings.
+ */
 const ConnectionsWidget = {
     props: ['connections', 'escapeHTML'],
     emits: ['clear-stats'],

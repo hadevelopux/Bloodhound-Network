@@ -1,3 +1,11 @@
+/**
+ * UiWidgetPanel Component
+ * 
+ * Contenedor genérico para los widgets del panel lateral izquierdo.
+ * Proporciona el marco, fondo oscuro/claro y el título estandarizado.
+ * 
+ * @vue-prop {String} title - El título que se mostrará en la cabecera del widget.
+ */
 const UiWidgetPanel = {
     props: {
         title: { type: String, required: true },

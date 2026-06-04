@@ -1,3 +1,16 @@
+/**
+ * MainTable Component
+ * 
+ * Componente principal que renderiza la tabla de paquetes en tiempo real.
+ * Incluye la botonera de filtros de categoría rápidos encima de la tabla.
+ * 
+ * @vue-prop {Array} packets - Lista reactiva de los paquetes a renderizar (ya filtrados).
+ * @vue-prop {String} currentCategoryFilter - La categoría actualmente seleccionada.
+ * @vue-prop {Function} escapeHTML - Función de saneamiento de HTML.
+ * @vue-prop {Function} getProtoClass - Función que devuelve el color según el protocolo.
+ * @vue-event {String} set-category - Emite el valor del filtro de categoría clickeado.
+ * @vue-event clear-filters - Emite evento para remover todos los filtros activos.
+ */
 const MainTable = {
     props: ['packets', 'currentCategoryFilter', 'escapeHTML', 'getProtoClass'],
     emits: ['set-category', 'clear-filters'],

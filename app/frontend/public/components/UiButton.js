@@ -1,3 +1,12 @@
+/**
+ * UiButton Component
+ * 
+ * Componente de botón reutilizable.
+ * Soporta diferentes variantes visuales como 'danger', 'icon', 'filter' y 'default'.
+ * 
+ * @vue-prop {String} variant - Tipo de botón (default, danger, icon, filter).
+ * @vue-prop {Boolean} active - Estado activo (usado principalmente en botones de filtro).
+ */
 const UiButton = {
     props: {
         variant: { type: String, default: 'default' },

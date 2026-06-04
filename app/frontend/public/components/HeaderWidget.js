@@ -1,3 +1,22 @@
+/**
+ * HeaderWidget Component
+ * 
+ * Componente de la barra superior de la aplicación (Navbar).
+ * Contiene el buscador global, estadísticas generales de captura, estado de conexión y botones de acción.
+ * 
+ * @vue-prop {String} connStatus - Texto de estado de conexión WebSocket.
+ * @vue-prop {String} connClass - Clase CSS para el color del estado de conexión.
+ * @vue-prop {Number} totalBytes - Cantidad total de bytes capturados.
+ * @vue-prop {Number} totalPackets - Cantidad total de paquetes procesados.
+ * @vue-prop {Number} timeRemaining - Tiempo restante antes del reinicio automático.
+ * @vue-prop {Boolean} isDark - Estado del tema oscuro.
+ * @vue-prop {String} filterText - Texto actual del buscador.
+ * @vue-event toggle-legend - Emite evento para abrir la barra lateral de leyenda.
+ * @vue-event toggle-lang - Emite evento para cambiar idioma.
+ * @vue-event toggle-theme - Emite evento para cambiar el tema (dark/light).
+ * @vue-event factory-reset - Emite evento para vaciar la base de datos completa.
+ * @vue-event {String} update-filter - Emite el nuevo texto al tipear en el buscador.
+ */
 const HeaderWidget = {
     props: ['connStatus', 'connClass', 'totalBytes', 'totalPackets', 'timeRemaining', 'isDark', 'filterText'],
     emits: ['toggle-legend', 'toggle-lang', 'toggle-theme', 'factory-reset', 'update-filter'],
@@ -10,7 +29,7 @@ const HeaderWidget = {
             <div class="flex items-center gap-5">
                 <ui-input 
                     :model-value="filterText"
-                    @update:modelValue="$emit('update-filter', $event)"
+                    @input-change="$emit('update-filter', $event)"
                     :placeholder="$t('live_filter_placeholder')">
                 </ui-input>
                 <div class="flex gap-4 text-sm font-mono items-center">
