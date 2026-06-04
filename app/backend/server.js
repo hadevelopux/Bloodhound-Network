@@ -525,10 +525,6 @@ io.on('connection', (socket) => {
           db.run("DELETE FROM stats_agg");
           db.run("DELETE FROM raw_logs");
           db.run(`INSERT INTO stats_agg (id, type, count) VALUES ('CYCLE_START', 'GLOBAL', ?)`, [cycleStartMs]);
-          db.run("VACUUM", (err) => {
-              if (err) logger.error('Error durante VACUUM:', err.message);
-              else logger.info('Base de datos purgada y espacio liberado (VACUUM completado).');
-          });
       });
 
       // Emitir evento a todos los clientes para que limpien su UI instantáneamente
