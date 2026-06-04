@@ -1,5 +1,6 @@
 const LegendSidebar = {
     props: ['show'],
+    emits: ['close'],
     template: `
         <aside class="w-80 h-full shrink-0 bg-white dark:bg-stone-950 border-l border-stone-300 dark:border-stone-800 transition-all duration-300 flex flex-col z-20 relative"
                :class="show ? 'mr-0' : '-mr-80'">

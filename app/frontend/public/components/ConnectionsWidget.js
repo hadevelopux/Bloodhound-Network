@@ -1,5 +1,6 @@
 const ConnectionsWidget = {
     props: ['connections', 'escapeHTML'],
+    emits: ['clear-stats'],
     template: `
         <ui-widget-panel 
             :title="$t('recurring_conns')" 

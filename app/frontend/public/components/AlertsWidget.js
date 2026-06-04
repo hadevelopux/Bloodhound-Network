@@ -1,5 +1,6 @@
 const AlertsWidget = {
     props: ['alerts'],
+    emits: ['clear-stats'],
     template: `
         <ui-widget-panel 
             :title="$t('vuln_alerts')" 

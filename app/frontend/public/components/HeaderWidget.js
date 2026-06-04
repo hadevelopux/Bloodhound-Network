@@ -1,5 +1,6 @@
 const HeaderWidget = {
     props: ['connStatus', 'connClass', 'totalBytes', 'totalPackets', 'timeRemaining', 'isDark'],
+    emits: ['toggle-legend', 'toggle-lang', 'toggle-theme'],
     template: `
         <header class="bg-white dark:bg-stone-900 border-b border-stone-300 dark:border-stone-800 p-3 md:px-6 flex justify-between items-center shrink-0">
             <div class="flex items-center gap-3">

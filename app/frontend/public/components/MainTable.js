@@ -1,5 +1,6 @@
 const MainTable = {
     props: ['packets', 'currentCategoryFilter', 'escapeHTML', 'getProtoClass'],
+    emits: ['set-category', 'clear-filters', 'factory-reset'],
     template: `
         <main class="flex-1 flex flex-col min-w-0 overflow-hidden bg-white dark:bg-stone-950">
             <div class="bg-stone-100 dark:bg-stone-900 px-4 py-3 border-b border-stone-300 dark:border-stone-800 flex flex-col gap-2 shrink-0">
