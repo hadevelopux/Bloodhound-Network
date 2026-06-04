@@ -31,7 +31,8 @@
           </ConnectionsWidget>
 
           <DomainsWidget
-            :domains="stats.trackingDomains"
+            :domains="dynamicDomains"
+            :currentCategory="currentCategoryFilter"
             :escapeHTML="escapeHTML"
             @clear-stats="socket.emit('request_clear_stats')">
           </DomainsWidget>
@@ -101,6 +102,22 @@ const filteredPackets = computed(() => {
     }
     return true;
   });
+});
+
+const dynamicDomains = computed(() => {
+  if (!currentCategoryFilter.value) {
+    return stats.trackingDomains;
+  }
+  const domainCounts = {};
+  filteredPackets.value.forEach(pkt => {
+    if (pkt.domain) {
+      domainCounts[pkt.domain] = (domainCounts[pkt.domain] || 0) + 1;
+    }
+  });
+  return Object.entries(domainCounts)
+    .map(([domain, count]) => ({ id: domain, count }))
+    .sort((a, b) => b.count - a.count)
+    .slice(0, 50);
 });
 
 const applyTextFilter = (text) => {

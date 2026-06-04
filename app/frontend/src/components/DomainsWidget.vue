@@ -11,9 +11,9 @@
 -->
 <template>
   <UiWidgetPanel 
-    :title="$t('tracking_widget_title')"
+    :title="currentCategory ? `${currentCategory} DOMAINS` : $t('tracking_widget_title')"
     :col-left="$t('domain_col_header')"
-    :col-right="$t('requests_col')">
+    :col-right="currentCategory ? `${currentCategory} PETICIONES` : $t('requests_col')">
     
     <li v-for="dom in domains" :key="dom.id" class="flex justify-between py-2 px-3 border-b border-stone-300 dark:border-stone-800 hover:bg-stone-200 dark:hover:bg-stone-800/50 transition-colors text-stone-800 dark:text-stone-300">
       <span class="font-bold text-stone-500 dark:text-stone-500 truncate mr-2" v-html="escapeHTML(dom.id)"></span>
@@ -31,6 +31,7 @@ import UiButton from './UiButton.vue';
 
 defineProps({
   domains: { type: Array, default: () => [] },
+  currentCategory: { type: String, default: '' },
   escapeHTML: { type: Function, required: true }
 });
 
