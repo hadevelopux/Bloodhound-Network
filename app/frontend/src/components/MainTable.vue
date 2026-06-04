@@ -18,72 +18,85 @@
     <div class="p-3 bg-stone-200 dark:bg-[#111] border-b border-stone-300 dark:border-stone-800 flex items-center justify-between shrink-0">
       <div class="flex items-center gap-6">
         <h2 class="text-[10px] uppercase tracking-wider font-bold text-stone-700 dark:text-stone-200 shrink-0 w-32">{{ $t('filters_title') }}</h2>
-        <div class="flex flex-wrap gap-x-4 gap-y-2">
-          <button 
+        <div class="flex flex-wrap gap-x-2 gap-y-2">
+          <UiButton 
             @click="setCategory('')"
-            :class="['px-2 py-0.5 text-[10px] font-bold tracking-wider transition-colors', currentCategory === '' ? 'border border-stone-600 text-stone-200' : 'border border-transparent text-stone-500 hover:text-stone-300']">
+            :variant="currentCategory === '' ? 'primary' : 'ghost'"
+            class="text-[10px] uppercase tracking-wider px-2 py-0.5">
             {{ $t('cat_all') }}
-          </button>
-          <button 
+          </UiButton>
+          <UiButton 
             @click="setCategory('BOTNET')"
-            :class="['px-2 py-0.5 text-[10px] font-bold tracking-wider transition-colors', currentCategory === 'BOTNET' ? 'border border-stone-600 text-stone-200' : 'border border-transparent text-stone-500 hover:text-stone-300']">
+            :variant="currentCategory === 'BOTNET' ? 'primary' : 'ghost'"
+            class="text-[10px] uppercase tracking-wider px-2 py-0.5">
             {{ $t('cat_botnet') }}
-          </button>
-          <button 
+          </UiButton>
+          <UiButton 
             @click="setCategory('TROJAN')"
-            :class="['px-2 py-0.5 text-[10px] font-bold tracking-wider transition-colors', currentCategory === 'TROJAN' ? 'border border-stone-600 text-stone-200' : 'border border-transparent text-stone-500 hover:text-stone-300']">
+            :variant="currentCategory === 'TROJAN' ? 'primary' : 'ghost'"
+            class="text-[10px] uppercase tracking-wider px-2 py-0.5">
             {{ $t('cat_trojan') }}
-          </button>
-          <button 
+          </UiButton>
+          <UiButton 
             @click="setCategory('NMAP')"
-            :class="['px-2 py-0.5 text-[10px] font-bold tracking-wider transition-colors', currentCategory === 'NMAP' ? 'border border-stone-600 text-stone-200' : 'border border-transparent text-stone-500 hover:text-stone-300']">
+            :variant="currentCategory === 'NMAP' ? 'primary' : 'ghost'"
+            class="text-[10px] uppercase tracking-wider px-2 py-0.5">
             {{ $t('cat_nmap') }}
-          </button>
-          <button 
+          </UiButton>
+          <UiButton 
             @click="setCategory('PLAINTEXT')"
-            :class="['px-2 py-0.5 text-[10px] font-bold tracking-wider transition-colors', currentCategory === 'PLAINTEXT' ? 'border border-stone-600 text-stone-200' : 'border border-transparent text-stone-500 hover:text-stone-300']">
+            :variant="currentCategory === 'PLAINTEXT' ? 'primary' : 'ghost'"
+            class="text-[10px] uppercase tracking-wider px-2 py-0.5">
             {{ $t('cat_plain') }}
-          </button>
-          <button 
+          </UiButton>
+          <UiButton 
             @click="setCategory('DNS SECUESTRADO')"
-            :class="['px-2 py-0.5 text-[10px] font-bold tracking-wider transition-colors', currentCategory === 'DNS SECUESTRADO' ? 'border border-stone-600 text-stone-200' : 'border border-transparent text-stone-500 hover:text-stone-300']">
+            :variant="currentCategory === 'DNS SECUESTRADO' ? 'primary' : 'ghost'"
+            class="text-[10px] uppercase tracking-wider px-2 py-0.5">
             {{ $t('cat_dns') }}
-          </button>
-          <button 
+          </UiButton>
+          <UiButton 
             @click="setCategory('CRYPTO')"
-            :class="['px-2 py-0.5 text-[10px] font-bold tracking-wider transition-colors', currentCategory === 'CRYPTO' ? 'border border-stone-600 text-stone-200' : 'border border-transparent text-stone-500 hover:text-stone-300']">
+            :variant="currentCategory === 'CRYPTO' ? 'primary' : 'ghost'"
+            class="text-[10px] uppercase tracking-wider px-2 py-0.5">
             {{ $t('cat_crypto') }}
-          </button>
-          <button 
+          </UiButton>
+          <UiButton 
             @click="setCategory('EXFILTRACIÓN')"
-            :class="['px-2 py-0.5 text-[10px] font-bold tracking-wider transition-colors', currentCategory === 'EXFILTRACIÓN' ? 'border border-stone-600 text-stone-200' : 'border border-transparent text-stone-500 hover:text-stone-300']">
+            :variant="currentCategory === 'EXFILTRACIÓN' ? 'primary' : 'ghost'"
+            class="text-[10px] uppercase tracking-wider px-2 py-0.5">
             {{ $t('cat_exfil') }}
-          </button>
-          <button 
+          </UiButton>
+          <UiButton 
             @click="setCategory('PHISHING')"
-            :class="['px-2 py-0.5 text-[10px] font-bold tracking-wider transition-colors', currentCategory === 'PHISHING' ? 'border border-stone-600 text-stone-200' : 'border border-transparent text-stone-500 hover:text-stone-300']">
+            :variant="currentCategory === 'PHISHING' ? 'primary' : 'ghost'"
+            class="text-[10px] uppercase tracking-wider px-2 py-0.5">
             {{ $t('cat_phish') }}
-          </button>
-          <button 
+          </UiButton>
+          <UiButton 
             @click="setCategory('TRACKING')"
-            :class="['px-2 py-0.5 text-[10px] font-bold tracking-wider transition-colors', currentCategory === 'TRACKING' ? 'border border-stone-600 text-stone-200' : 'border border-transparent text-stone-500 hover:text-stone-300']">
+            :variant="currentCategory === 'TRACKING' ? 'primary' : 'ghost'"
+            class="text-[10px] uppercase tracking-wider px-2 py-0.5">
             {{ $t('cat_track') }}
-          </button>
-          <button 
+          </UiButton>
+          <UiButton 
             @click="setCategory('SYN-SCAN')"
-            :class="['px-2 py-0.5 text-[10px] font-bold tracking-wider transition-colors', currentCategory === 'SYN-SCAN' ? 'border border-stone-600 text-stone-200' : 'border border-transparent text-stone-500 hover:text-stone-300']">
+            :variant="currentCategory === 'SYN-SCAN' ? 'primary' : 'ghost'"
+            class="text-[10px] uppercase tracking-wider px-2 py-0.5">
             {{ $t('cat_syn') }}
-          </button>
-          <button 
+          </UiButton>
+          <UiButton 
             @click="setCategory('LOCAL')"
-            :class="['px-2 py-0.5 text-[10px] font-bold tracking-wider transition-colors', currentCategory === 'LOCAL' ? 'border border-stone-600 text-stone-200' : 'border border-transparent text-stone-500 hover:text-stone-300']">
+            :variant="currentCategory === 'LOCAL' ? 'primary' : 'ghost'"
+            class="text-[10px] uppercase tracking-wider px-2 py-0.5">
             {{ $t('cat_local') }}
-          </button>
-          <button 
+          </UiButton>
+          <UiButton 
             @click="setCategory('HTTP-404')"
-            :class="['px-2 py-0.5 text-[10px] font-bold tracking-wider transition-colors', currentCategory === 'HTTP-404' ? 'border border-stone-600 text-stone-200' : 'border border-transparent text-stone-500 hover:text-stone-300']">
+            :variant="currentCategory === 'HTTP-404' ? 'primary' : 'ghost'"
+            class="text-[10px] uppercase tracking-wider px-2 py-0.5">
             {{ $t('cat_404') }}
-          </button>
+          </UiButton>
         </div>
       </div>
       <UiButton v-if="filterText || currentCategory" variant="ghost" @click="clearFilters">

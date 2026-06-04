@@ -14,7 +14,7 @@
 <template>
   <div class="bg-transparent p-3 transition-colors">
     <div class="flex items-center gap-2 mb-2">
-      <span :class="['inline-block px-1.5 py-0.5 rounded-sm text-[10px] font-bold border tracking-wider', badgeClass]">{{ name }}</span>
+      <AlertBadge :name="name" :pulsing="false" />
       <span class="text-[10px] font-bold text-stone-500 uppercase tracking-widest">{{ severity }}</span>
     </div>
     <p class="text-xs text-stone-700 dark:text-stone-400 mb-2 leading-relaxed">{{ description }}</p>
@@ -25,6 +25,8 @@
 </template>
 
 <script setup>
+import AlertBadge from './AlertBadge.vue';
+
 defineProps({
   name: String,
   severity: String,

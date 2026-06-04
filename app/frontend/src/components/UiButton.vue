@@ -23,7 +23,7 @@ const props = defineProps({
 });
 
 const buttonClass = computed(() => {
-  const base = 'inline-flex items-center justify-center font-bold transition-all focus:outline-none focus:ring-2 focus:ring-offset-1 focus:ring-stone-500 disabled:opacity-50 disabled:cursor-not-allowed';
+const base = 'inline-flex items-center justify-center font-bold transition-all focus:outline-none disabled:opacity-50 disabled:cursor-not-allowed';
   
   if (props.variant === 'primary') {
     return `${base} px-3 py-1.5 rounded bg-stone-200 dark:bg-stone-800 text-stone-800 dark:text-stone-200 hover:bg-stone-300 dark:hover:bg-stone-700 border border-stone-300 dark:border-stone-700`;
