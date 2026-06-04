@@ -169,7 +169,7 @@ onMounted(() => {
   
   socket.on('connect', () => {
     connStatus.value = 'Live';
-    connClass.value = 'text-neon-cyan';
+    connClass.value = 'text-neon-green';
     if (filterText.value || currentCategoryFilter.value) {
       socket.emit('request_filter_history', currentCategoryFilter.value || filterText.value);
     }
@@ -188,7 +188,7 @@ onMounted(() => {
     if (data.timeRemaining !== undefined) timeRemaining.value = data.timeRemaining;
   });
 
-  socket.on('new_packet', (pkt) => {
+  socket.on('packet', (pkt) => {
     if (filterText.value === '' && currentCategoryFilter.value === '') {
       packets.value.unshift(pkt);
       if (packets.value.length > 1000) packets.value.pop();

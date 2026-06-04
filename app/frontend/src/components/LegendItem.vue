@@ -12,14 +12,14 @@
  */
 -->
 <template>
-  <div class="bg-white dark:bg-stone-900 border border-stone-200 dark:border-stone-800 rounded-lg p-3 hover:border-neon-cyan/50 transition-colors">
+  <div class="bg-transparent border border-stone-800/60 rounded-sm p-3 hover:border-neon-cyan/50 transition-colors">
     <div class="flex items-center gap-2 mb-2">
-      <span :class="['inline-block px-1.5 py-0.5 rounded text-xs font-bold border', badgeClass]">{{ name }}</span>
-      <span class="text-xs font-bold text-stone-500 uppercase tracking-wider">{{ severity }}</span>
+      <span :class="['inline-block px-1.5 py-0.5 rounded-sm text-[10px] font-bold border tracking-wider', badgeClass]">{{ name }}</span>
+      <span class="text-[10px] font-bold text-stone-500 uppercase tracking-widest">{{ severity }}</span>
     </div>
-    <p class="text-sm text-stone-600 dark:text-stone-400 mb-2 leading-relaxed">{{ description }}</p>
-    <div class="bg-stone-50 dark:bg-stone-950 rounded p-2 text-xs font-mono text-stone-500 dark:text-stone-500">
-      <span class="font-bold text-stone-600 dark:text-stone-400">Trigger:</span> {{ trigger }}
+    <p class="text-xs text-stone-400 mb-2 leading-relaxed">{{ description }}</p>
+    <div class="bg-[#111] rounded-sm p-2 text-[10px] font-mono text-stone-500 border border-stone-800/50">
+      <span class="font-bold text-stone-600">Trigger:</span> {{ trigger }}
     </div>
   </div>
 </template>
