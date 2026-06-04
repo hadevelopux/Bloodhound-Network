@@ -3,8 +3,9 @@ const UiButton = {
         variant: { type: String, default: 'default' },
         active: { type: Boolean, default: false }
     },
+    emits: ['click'],
     template: `
-        <button :class="btnClass">
+        <button :class="btnClass" @click="$emit('click')">
             <slot></slot>
         </button>
     `,
