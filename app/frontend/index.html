@@ -60,13 +60,13 @@
                 
                 <alerts-widget
                     :alerts="stats.alerts"
-                    @reset-alerts="resetAlerts"
+                    @clear-stats="resetAlerts"
                 ></alerts-widget>
 
                 <connections-widget
                     :connections="stats.connections"
                     :escape-h-t-m-l="escapeHTML"
-                    @reset-conns="resetConns"
+                    @clear-stats="resetConns"
                 ></connections-widget>
 
             </aside>

@@ -539,18 +539,14 @@ io.on('connection', (socket) => {
       
       dbQueue.length = 0; // Purge memory queue
       
-      // Destrucción total física de los archivos de la base de datos
-      db.close((err) => {
-          if (err) logger.error('Error cerrando DB:', err.message);
-          
-          try { fs.unlinkSync(dbPath); } catch(e) {}
-          try { fs.unlinkSync(dbPath + '-wal'); } catch(e) {}
-          try { fs.unlinkSync(dbPath + '-shm'); } catch(e) {}
-          
-          logger.warn('Base de datos eliminada físicamente del disco. Forzando reinicio del backend...');
-          // Salir del proceso. Docker o el script de inicio lo levantará de nuevo limpio.
-          process.exit(0); 
-      });
+      // Destrucción total física de los archivos de la base de datos INMEDIATA
+      try { fs.unlinkSync(dbPath); } catch(e) {}
+      try { fs.unlinkSync(dbPath + '-wal'); } catch(e) {}
+      try { fs.unlinkSync(dbPath + '-shm'); } catch(e) {}
+      
+      logger.warn('Base de datos eliminada físicamente del disco. Forzando reinicio del backend...');
+      // Salir del proceso inmediatamente. Docker o el script de inicio lo levantará de nuevo limpio.
+      process.exit(0); 
   });
 });
 
