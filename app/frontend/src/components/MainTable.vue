@@ -99,7 +99,11 @@
           </UiButton>
         </div>
       </div>
-      <UiButton v-if="filterText || currentCategory" variant="ghost" @click="clearFilters">
+      <UiButton 
+        v-if="filterText || currentCategory" 
+        variant="ghost" 
+        @click="clearFilters"
+        class="text-[10px] uppercase tracking-wider px-2 py-0.5 text-stone-500">
         {{ $t('clear_filter_btn') }}
       </UiButton>
     </div>
@@ -109,6 +113,7 @@
         <table class="w-full text-left text-[10px] whitespace-nowrap min-w-[800px]">
           <thead class="sticky top-0 bg-stone-300 dark:bg-[#111] text-stone-600 dark:text-stone-400 font-bold text-xs uppercase shadow-md z-10 border-b border-stone-300 dark:border-stone-800">
             <tr>
+              <th class="px-4 py-3 w-16">ID</th>
               <th class="px-4 py-3 w-32">{{ $t('time_col') }}</th>
               <th class="px-4 py-3">{{ $t('origin_col') }}</th>
               <th class="px-4 py-3">{{ $t('p_origin_col') }}</th>
@@ -121,8 +126,9 @@
             </tr>
           </thead>
           <tbody class="font-mono text-xs font-medium">
-            <tr v-for="pkt in packets" :key="pkt.id" 
+            <tr v-for="pkt in packets" :key="pkt.id || pkt.time" 
                 :class="[getRowClass(pkt), 'border-b border-stone-200 dark:border-stone-800/50 transition-colors duration-150 group']">
+              <td class="px-4 py-2 font-mono text-stone-400 dark:text-stone-600 text-[10px]">{{ pkt.id || '-' }}</td>
               <td class="px-4 py-2 text-stone-500 dark:text-stone-500 group-hover:text-stone-700 dark:group-hover:text-stone-300">{{ formatTime(pkt.time) }}</td>
               <td class="px-4 py-2" v-html="escapeHTML(pkt.src)"></td>
               <td class="px-4 py-2 text-stone-500 dark:text-stone-500" v-html="escapeHTML(pkt.sport)"></td>

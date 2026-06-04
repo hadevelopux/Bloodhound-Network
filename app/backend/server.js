@@ -4,6 +4,9 @@ const { Server } = require('socket.io');
 const { spawn } = require('child_process');
 const fs = require('fs');
 const sqlite3 = require('sqlite3').verbose();
+
+// Determine global current ID
+let currentDbId = 0;
 const path = require('path');
 
 process.on('uncaughtException', (err) => {
@@ -42,6 +45,10 @@ const db = new sqlite3.Database(dbPath, (err) => {
         // Optimizar SQLite para alto rendimiento en streaming
         db.run('PRAGMA journal_mode = WAL;');
         db.run('PRAGMA synchronous = NORMAL;');
+        
+        db.get("SELECT MAX(id) as maxId FROM raw_logs", [], (err, row) => {
+            if (row && row.maxId) currentDbId = row.maxId;
+        });
         
         db.run(`CREATE TABLE IF NOT EXISTS raw_logs (
             id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -244,6 +251,8 @@ function startTshark() {
         if (parsed.layers && !isResetting) {
            const pkt = processPacket(parsed.layers);
            if (pkt) {
+             currentDbId++;
+             pkt.id = currentDbId;
              logger.debug(`[PACKET] ${pkt.src}:${pkt.sport} -> ${pkt.dst}:${pkt.dport} [${pkt.proto}]`);
              if (pkt.alerts && pkt.alerts.length > 0) {
                  logger.debug(`[ALERT TRIGGERED] ${pkt.alerts.join(', ')} on packet from ${pkt.src}`);
