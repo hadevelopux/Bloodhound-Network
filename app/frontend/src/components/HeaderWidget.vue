@@ -32,11 +32,17 @@
       </UiInput>
       <div class="flex gap-6 text-sm font-mono items-center whitespace-nowrap">
         <span :class="['font-bold', connClass]">{{ connStatus }}</span>
-        <span class="text-orange-500 font-bold" v-show="timeRemaining !== null && timeRemaining <= (5 * 24 * 60 * 60 * 1000)">
-          <span>{{ $t('reset_in') }}</span> <span>{{ formattedTimeRemaining }}</span>
-        </span>
         <div class="flex items-center gap-2 text-neon-cyan drop-shadow-[0_0_2px_rgba(0,240,255,0.8)]"><span>{{ $t('pkts') }}</span><span>{{ totalPackets }}</span></div>
         <div class="flex items-center gap-2 text-neon-purple drop-shadow-[0_0_2px_rgba(176,38,255,0.8)]"><span>{{ $t('data_used') }}</span><span>{{ formattedTotalBytes }}</span></div>
+        <div v-if="timeRemaining !== null" class="flex items-center gap-1.5 text-orange-400 drop-shadow-[0_0_2px_rgba(251,146,60,0.8)]">
+          <svg class="w-4 h-4 animate-pulse" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+          </svg>
+          <span class="text-stone-400 dark:text-stone-500 font-sans text-xs uppercase tracking-wider">{{ $t('reset_in') }}</span>
+          <span :class="['font-bold', timeRemaining <= (5 * 24 * 60 * 60 * 1000) ? 'text-red-500 animate-pulse drop-shadow-[0_0_2px_rgba(239,68,68,0.8)]' : 'text-orange-400']">
+            {{ formattedTimeRemaining }}
+          </span>
+        </div>
         <UiButton variant="danger" @click="$emit('factory-reset')">{{ $t('factory_reset_btn') }}</UiButton>
         <UiButton @click="$emit('toggle-legend')">{{ $t('legend_btn') }}</UiButton>
         <UiButton @click="$emit('toggle-lang')">{{ $i18n.locale === 'es' ? 'EN' : 'ES' }}</UiButton>
@@ -70,11 +76,18 @@ defineEmits(['toggle-legend', 'toggle-lang', 'toggle-theme', 'factory-reset', 'u
 const { t, locale } = useI18n();
 
 const formattedTimeRemaining = computed(() => {
-  if (!props.timeRemaining) return '-';
+  if (props.timeRemaining === null || props.timeRemaining === undefined || props.timeRemaining < 0) return '-';
   const days = Math.floor(props.timeRemaining / (1000 * 60 * 60 * 24));
   const hours = Math.floor((props.timeRemaining % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
-  if (days > 0) return `${days} ${t('days')}`;
-  return `${hours} ${t('hours')}`;
+  const minutes = Math.floor((props.timeRemaining % (1000 * 60 * 60)) / (1000 * 60));
+  
+  if (days > 0) {
+    return `${days}${t('days')} ${hours}${t('hours')}`;
+  }
+  if (hours > 0) {
+    return `${hours}${t('hours')} ${minutes}m`;
+  }
+  return `${Math.max(0, Math.floor(props.timeRemaining / 1000))}s`;
 });
 
 const formattedTotalBytes = computed(() => {
