@@ -22,67 +22,67 @@
           <button 
             @click="setCategory('')"
             :class="['px-2 py-0.5 rounded-sm text-[10px] font-bold tracking-wider transition-colors', currentCategory === '' ? 'bg-stone-700 text-stone-100 dark:bg-stone-700/50 dark:text-white border border-stone-500' : 'bg-transparent text-stone-500 dark:text-stone-400 hover:text-stone-700 dark:hover:text-stone-200']">
-            All
+            {{ $t('cat_all') }}
           </button>
           <button 
             @click="setCategory('BOTNET')"
             :class="['px-2 py-0.5 rounded-sm text-[10px] font-bold tracking-wider transition-colors', currentCategory === 'BOTNET' ? 'bg-stone-700 text-stone-100 dark:bg-stone-700/50 dark:text-white border border-stone-500' : 'bg-transparent text-stone-500 dark:text-stone-400 hover:text-stone-700 dark:hover:text-stone-200']">
-            Botnet
+            {{ $t('cat_botnet') }}
           </button>
           <button 
             @click="setCategory('TROJAN')"
             :class="['px-2 py-0.5 rounded-sm text-[10px] font-bold tracking-wider transition-colors', currentCategory === 'TROJAN' ? 'bg-stone-700 text-stone-100 dark:bg-stone-700/50 dark:text-white border border-stone-500' : 'bg-transparent text-stone-500 dark:text-stone-400 hover:text-stone-700 dark:hover:text-stone-200']">
-            Trojan/C2
+            {{ $t('cat_trojan') }}
           </button>
           <button 
             @click="setCategory('NMAP')"
             :class="['px-2 py-0.5 rounded-sm text-[10px] font-bold tracking-wider transition-colors', currentCategory === 'NMAP' ? 'bg-stone-700 text-stone-100 dark:bg-stone-700/50 dark:text-white border border-stone-500' : 'bg-transparent text-stone-500 dark:text-stone-400 hover:text-stone-700 dark:hover:text-stone-200']">
-            Nmap Scan
+            {{ $t('cat_nmap') }}
           </button>
           <button 
             @click="setCategory('PLAINTEXT')"
             :class="['px-2 py-0.5 rounded-sm text-[10px] font-bold tracking-wider transition-colors', currentCategory === 'PLAINTEXT' ? 'bg-stone-700 text-stone-100 dark:bg-stone-700/50 dark:text-white border border-stone-500' : 'bg-transparent text-stone-500 dark:text-stone-400 hover:text-stone-700 dark:hover:text-stone-200']">
-            Plaintext
+            {{ $t('cat_plain') }}
           </button>
           <button 
             @click="setCategory('DNS SECUESTRADO')"
             :class="['px-2 py-0.5 rounded-sm text-[10px] font-bold tracking-wider transition-colors', currentCategory === 'DNS SECUESTRADO' ? 'bg-stone-700 text-stone-100 dark:bg-stone-700/50 dark:text-white border border-stone-500' : 'bg-transparent text-stone-500 dark:text-stone-400 hover:text-stone-700 dark:hover:text-stone-200']">
-            DNS Hijacked
+            {{ $t('cat_dns') }}
           </button>
           <button 
             @click="setCategory('CRYPTO')"
             :class="['px-2 py-0.5 rounded-sm text-[10px] font-bold tracking-wider transition-colors', currentCategory === 'CRYPTO' ? 'bg-stone-700 text-stone-100 dark:bg-stone-700/50 dark:text-white border border-stone-500' : 'bg-transparent text-stone-500 dark:text-stone-400 hover:text-stone-700 dark:hover:text-stone-200']">
-            Crypto
+            {{ $t('cat_crypto') }}
           </button>
           <button 
             @click="setCategory('EXFILTRACIÓN')"
             :class="['px-2 py-0.5 rounded-sm text-[10px] font-bold tracking-wider transition-colors', currentCategory === 'EXFILTRACIÓN' ? 'bg-stone-700 text-stone-100 dark:bg-stone-700/50 dark:text-white border border-stone-500' : 'bg-transparent text-stone-500 dark:text-stone-400 hover:text-stone-700 dark:hover:text-stone-200']">
-            Exfiltration
+            {{ $t('cat_exfil') }}
           </button>
           <button 
             @click="setCategory('PHISHING')"
             :class="['px-2 py-0.5 rounded-sm text-[10px] font-bold tracking-wider transition-colors', currentCategory === 'PHISHING' ? 'bg-stone-700 text-stone-100 dark:bg-stone-700/50 dark:text-white border border-stone-500' : 'bg-transparent text-stone-500 dark:text-stone-400 hover:text-stone-700 dark:hover:text-stone-200']">
-            Phishing
+            {{ $t('cat_phish') }}
           </button>
           <button 
             @click="setCategory('TRACKING')"
             :class="['px-2 py-0.5 rounded-sm text-[10px] font-bold tracking-wider transition-colors', currentCategory === 'TRACKING' ? 'bg-stone-700 text-stone-100 dark:bg-stone-700/50 dark:text-white border border-stone-500' : 'bg-transparent text-stone-500 dark:text-stone-400 hover:text-stone-700 dark:hover:text-stone-200']">
-            Tracking/Adware
+            {{ $t('cat_track') }}
           </button>
           <button 
             @click="setCategory('SYN-SCAN')"
             :class="['px-2 py-0.5 rounded-sm text-[10px] font-bold tracking-wider transition-colors', currentCategory === 'SYN-SCAN' ? 'bg-stone-700 text-stone-100 dark:bg-stone-700/50 dark:text-white border border-stone-500' : 'bg-transparent text-stone-500 dark:text-stone-400 hover:text-stone-700 dark:hover:text-stone-200']">
-            SYN-Scan
+            {{ $t('cat_syn') }}
           </button>
           <button 
             @click="setCategory('LOCAL')"
             :class="['px-2 py-0.5 rounded-sm text-[10px] font-bold tracking-wider transition-colors', currentCategory === 'LOCAL' ? 'bg-stone-700 text-stone-100 dark:bg-stone-700/50 dark:text-white border border-stone-500' : 'bg-transparent text-stone-500 dark:text-stone-400 hover:text-stone-700 dark:hover:text-stone-200']">
-            Local Scan
+            {{ $t('cat_local') }}
           </button>
           <button 
             @click="setCategory('HTTP-404')"
             :class="['px-2 py-0.5 rounded-sm text-[10px] font-bold tracking-wider transition-colors', currentCategory === 'HTTP-404' ? 'bg-stone-700 text-stone-100 dark:bg-stone-700/50 dark:text-white border border-stone-500' : 'bg-transparent text-stone-500 dark:text-stone-400 hover:text-stone-700 dark:hover:text-stone-200']">
-            HTTP-404
+            {{ $t('cat_404') }}
           </button>
         </div>
       </div>

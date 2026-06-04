@@ -12,7 +12,7 @@
  */
 -->
 <template>
-  <div class="bg-transparent border border-stone-800/60 rounded-sm p-3 hover:border-neon-cyan/50 transition-colors">
+  <div class="bg-transparent p-3 transition-colors">
     <div class="flex items-center gap-2 mb-2">
       <span :class="['inline-block px-1.5 py-0.5 rounded-sm text-[10px] font-bold border tracking-wider', badgeClass]">{{ name }}</span>
       <span class="text-[10px] font-bold text-stone-500 uppercase tracking-widest">{{ severity }}</span>
