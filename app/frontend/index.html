@@ -91,12 +91,10 @@
 
         </div>
 
-        <legend-modal
+        <legend-sidebar
             :show="showLegend"
-            :translations="translations"
-            :current-lang="currentLang"
             @close="showLegend = false"
-        ></legend-modal>
+        ></legend-sidebar>
 
     </div>
 
@@ -111,7 +109,7 @@
     <script src="components/AlertsWidget.js"></script>
     <script src="components/ConnectionsWidget.js"></script>
     <script src="components/MainTable.js"></script>
-    <script src="components/LegendModal.js"></script>
+    <script src="components/LegendSidebar.js"></script>
     <script src="app.js"></script>
 </body>
 </html>

@@ -5,18 +5,6 @@ const i18nState = reactive({
 });
 
 const app = createApp({
-    components: {
-        'ui-button': UiButton,
-        'alert-badge': AlertBadge,
-        'ui-widget-panel': UiWidgetPanel,
-        'legend-item': LegendItem,
-        'ui-input': UiInput,
-        'header-widget': HeaderWidget,
-        'alerts-widget': AlertsWidget,
-        'connections-widget': ConnectionsWidget,
-        'main-table': MainTable,
-        'legend-modal': LegendModal
-    },
     data() {
         return {
             packets: [],
@@ -170,5 +158,16 @@ app.config.globalProperties.$t = function(key) {
     return window.translations[i18nState.lang]?.[key] || key;
 };
 app.config.globalProperties.$i18n = i18nState;
+
+app.component('ui-button', UiButton);
+app.component('alert-badge', AlertBadge);
+app.component('ui-widget-panel', UiWidgetPanel);
+app.component('legend-item', LegendItem);
+app.component('ui-input', UiInput);
+app.component('header-widget', HeaderWidget);
+app.component('alerts-widget', AlertsWidget);
+app.component('connections-widget', ConnectionsWidget);
+app.component('main-table', MainTable);
+app.component('legend-sidebar', LegendSidebar);
 
 app.mount('#app');
