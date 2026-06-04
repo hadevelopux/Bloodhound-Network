@@ -115,7 +115,7 @@ const app = createApp({
             if (['TCP', 'UDP'].includes(proto)) return 'text-blue-600 dark:text-blue-400';
             if (['HTTP', 'HTTPS', 'DNS', 'TLS'].includes(proto)) return 'text-purple-600 dark:text-purple-400 font-bold';
             if (['ICMP', 'ARP'].includes(proto)) return 'text-orange-600 dark:text-orange-400';
-            return 'text-core-600 dark:text-core-400';
+            return 'text-stone-600 dark:text-stone-400';
         }
     },
     mounted() {

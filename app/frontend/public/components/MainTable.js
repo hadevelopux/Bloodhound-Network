@@ -1,9 +1,9 @@
 const MainTable = {
     props: ['packets', 'currentCategoryFilter', 'escapeHTML', 'getProtoClass'],
     template: `
-        <main class="flex-1 flex flex-col min-w-0 overflow-hidden bg-white dark:bg-core-950">
-            <div class="bg-core-100 dark:bg-core-900 px-4 py-3 border-b border-core-300 dark:border-core-800 flex flex-col gap-2 shrink-0">
-                <div class="font-semibold text-sm text-core-800 dark:text-core-300 flex justify-between items-center">
+        <main class="flex-1 flex flex-col min-w-0 overflow-hidden bg-white dark:bg-stone-950">
+            <div class="bg-stone-100 dark:bg-stone-900 px-4 py-3 border-b border-stone-300 dark:border-stone-800 flex flex-col gap-2 shrink-0">
+                <div class="font-semibold text-sm text-stone-800 dark:text-stone-300 flex justify-between items-center">
                     <span>{{ $t('realtime_filters') }}</span>
                     <div class="ml-auto flex items-center gap-2">
                         <ui-button @click="$emit('clear-filters')">{{ $t('clear_filter') }}</ui-button>
@@ -16,9 +16,9 @@ const MainTable = {
                 </div>
             </div>
             
-            <div class="flex-1 overflow-auto bg-core-50 dark:bg-core-950">
+            <div class="flex-1 overflow-auto bg-stone-50 dark:bg-stone-950">
                 <table class="w-full text-left text-sm whitespace-nowrap">
-                    <thead class="sticky top-0 bg-core-200 dark:bg-core-900 text-core-600 dark:text-core-400 font-mono text-xs uppercase shadow-sm z-10 border-b border-core-300 dark:border-core-800">
+                    <thead class="sticky top-0 bg-stone-200 dark:bg-stone-900 text-stone-600 dark:text-stone-400 font-mono text-xs uppercase shadow-sm z-10 border-b border-stone-300 dark:border-stone-800">
                         <tr>
                             <th class="py-3 px-4 font-bold">{{ $t('col_time') }}</th>
                             <th class="py-3 px-4 font-bold">{{ $t('col_src') }}</th>
@@ -31,7 +31,7 @@ const MainTable = {
                             <th class="py-3 px-4 font-bold">{{ $t('col_info') }}</th>
                         </tr>
                     </thead>
-                    <tbody class="font-mono text-xs divider-y divider-core-200 dark:divider-core-800">
+                    <tbody class="font-mono text-xs divider-y divider-stone-200 dark:divider-stone-800">
                         <tr v-for="pkt in packets" :key="pkt.id" :class="getRowClass(pkt)">
                             <td class="py-2 px-4 whitespace-nowrap overflow-hidden text-ellipsis max-w-[300px]">{{ formatTime(pkt.time) }}</td>
                             <td class="py-2 px-4 whitespace-nowrap overflow-hidden text-ellipsis max-w-[300px]">{{ escapeHTML(pkt.src) }}</td>
@@ -41,8 +41,8 @@ const MainTable = {
                             <td :class="['py-2 px-4 whitespace-nowrap overflow-hidden text-ellipsis max-w-[300px]', getProtoClass(pkt.proto)]">{{ escapeHTML(pkt.proto) }}</td>
                             <td class="py-2 px-4 whitespace-nowrap overflow-hidden text-ellipsis max-w-[300px]">{{ pkt.len || '-' }}</td>
                             <td class="py-2 px-4 whitespace-nowrap overflow-hidden text-ellipsis max-w-[300px]">
-                                <span v-if="pkt.domain" class="font-bold text-core-900 dark:text-core-100">{{ escapeHTML(pkt.domain) }}</span>
-                                <span v-else class="text-core-400 dark:text-core-600">-</span>
+                                <span v-if="pkt.domain" class="font-bold text-stone-900 dark:text-stone-100">{{ escapeHTML(pkt.domain) }}</span>
+                                <span v-else class="text-stone-400 dark:text-stone-600">-</span>
                             </td>
                             <td class="py-2 px-4 whitespace-nowrap overflow-hidden text-ellipsis max-w-[300px]" :title="escapeHTML(pkt.info || '')">
                                 <alert-badge v-for="a in pkt.alerts" :key="a" :name="a" class="mr-1.5"></alert-badge>
@@ -87,7 +87,7 @@ const MainTable = {
                     }
                 }
             }
-            return `transition-colors ${hasCritical ? 'bg-red-50 dark:bg-red-900/20 hover:bg-red-100 dark:hover:bg-red-900/40 text-core-900 dark:text-core-100' : 'hover:bg-core-100 dark:hover:bg-core-800/50 text-core-700 dark:text-core-300'}`;
+            return `transition-colors ${hasCritical ? 'bg-red-50 dark:bg-red-900/20 hover:bg-red-100 dark:hover:bg-red-900/40 text-stone-900 dark:text-stone-100' : 'hover:bg-stone-100 dark:hover:bg-stone-800/50 text-stone-700 dark:text-stone-300'}`;
         }
     }
 };

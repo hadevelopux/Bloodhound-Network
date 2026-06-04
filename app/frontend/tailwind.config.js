@@ -14,7 +14,6 @@ export default {
         mono: ['Fira Code', 'monospace'],
       },
       colors: {
-        core: colors.stone,
         neon: {
           cyan: '#00f0ff',
           green: '#39ff14',

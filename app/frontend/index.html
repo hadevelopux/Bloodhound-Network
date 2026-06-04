@@ -12,29 +12,17 @@
             theme: {
                 extend: {
                     colors: {
-                        core: {
-                            50: '#f6f7f9',
-                            100: '#ecedf2',
-                            200: '#d5d7e2',
-                            300: '#b1b6c8',
-                            400: '#878fa7',
-                            500: '#67708b',
-                            600: '#525a74',
-                            700: '#43495f',
-                            800: '#393f50',
-                            900: '#323644',
-                            950: '#1b1d25',
-                        },
                         neon: {
+                            cyan: '#00f0ff',
                             green: '#39ff14',
-                            blue: '#00f3ff',
-                            purple: '#b000ff',
-                            red: '#ff003c'
+                            red: '#ff003c',
+                            yellow: '#fcee0a',
+                            purple: '#b026ff'
                         }
                     },
                     fontFamily: {
-                        sans: ['Inter', 'system-ui', 'sans-serif'],
-                        mono: ['JetBrains Mono', 'Fira Code', 'monospace']
+                        sans: ['Inter', 'sans-serif'],
+                        mono: ['Fira Code', 'monospace']
                     }
                 }
             }
@@ -50,7 +38,7 @@
     <!-- Socket.IO -->
     <script src="/socket.io/socket.io.js"></script>
 </head>
-<body class="font-sans bg-core-100 dark:bg-core-950 text-core-800 dark:text-core-200 h-screen w-full overflow-hidden flex">
+<body class="font-sans bg-stone-100 dark:bg-stone-950 text-stone-800 dark:text-stone-200 h-screen w-full overflow-hidden flex">
     <div id="app" class="flex-1 h-full flex flex-col overflow-hidden min-w-0">
         
         <header-widget 
@@ -69,7 +57,7 @@
 
         <div class="flex flex-col lg:flex-row flex-1 overflow-hidden">
             <!-- Left Column (Widgets) -->
-            <aside class="flex flex-col lg:w-[400px] xl:w-[450px] h-full shrink-0 border-r border-core-300 dark:border-core-800 bg-core-50 dark:bg-core-900/50">
+            <aside class="flex flex-col lg:w-[400px] xl:w-[450px] h-full shrink-0 border-r border-stone-300 dark:border-stone-800 bg-stone-50 dark:bg-stone-900/50">
                 
                 <alerts-widget
                     :alerts="stats.alerts"

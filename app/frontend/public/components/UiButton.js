@@ -17,20 +17,20 @@ const UiButton = {
             }
             
             if (this.variant === 'small') {
-                return `${base} text-xs bg-core-300 dark:bg-core-800 hover:bg-core-400 dark:hover:bg-core-700 px-2 py-1 font-normal`;
+                return `${base} text-xs bg-stone-300 dark:bg-stone-800 hover:bg-stone-400 dark:hover:bg-stone-700 px-2 py-1 font-normal`;
             }
             
             if (this.variant === 'filter') {
-                const activeClass = this.active ? 'bg-core-300 dark:bg-core-700 text-core-900 dark:text-core-100' : 'bg-core-200 dark:bg-core-800 hover:bg-core-300 dark:hover:bg-core-700 text-core-600 dark:text-core-400';
-                return `px-2 py-1 rounded border border-core-400 dark:border-core-600 transition-all cursor-pointer text-xs font-mono filter-btn ${activeClass}`;
+                const activeClass = this.active ? 'bg-stone-300 dark:bg-stone-700 text-stone-900 dark:text-stone-100' : 'bg-stone-200 dark:bg-stone-800 hover:bg-stone-300 dark:hover:bg-stone-700 text-stone-600 dark:text-stone-400';
+                return `px-2 py-1 rounded border border-stone-400 dark:border-stone-600 transition-all cursor-pointer text-xs font-mono filter-btn ${activeClass}`;
             }
             
             if (this.variant === 'icon') {
-                return `p-1.5 rounded-md hover:bg-core-200 dark:hover:bg-core-800 transition-colors cursor-pointer text-core-600 dark:text-core-400`;
+                return `p-1.5 rounded-md hover:bg-stone-200 dark:hover:bg-stone-800 transition-colors cursor-pointer text-stone-600 dark:text-stone-400`;
             }
             
             // default
-            return `${base} px-3 py-1.5 bg-core-200 hover:bg-core-300 dark:bg-core-800 dark:hover:bg-core-700 text-xs uppercase tracking-wider text-core-800 dark:text-core-200`;
+            return `${base} px-3 py-1.5 bg-stone-200 hover:bg-stone-300 dark:bg-stone-800 dark:hover:bg-stone-700 text-xs uppercase tracking-wider text-stone-800 dark:text-stone-200`;
         }
     }
 };

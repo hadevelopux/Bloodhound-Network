@@ -8,9 +8,9 @@ const ConnectionsWidget = {
             :reset-label="$t('reset_btn')"
             @reset="$emit('reset-conns')">
             
-            <li v-for="c in connections" :key="c.id" class="flex justify-between items-center py-2 px-3 border-b border-core-300 dark:border-core-800 hover:bg-core-200 dark:hover:bg-core-800/50 transition-colors text-core-800 dark:text-core-300">
+            <li v-for="c in connections" :key="c.id" class="flex justify-between items-center py-2 px-3 border-b border-stone-300 dark:border-stone-800 hover:bg-stone-200 dark:hover:bg-stone-800/50 transition-colors text-stone-800 dark:text-stone-300">
                 <span class="truncate pr-2" :title="c.id">{{ c.id }}</span>
-                <span class="font-bold text-core-600 dark:text-core-400 shrink-0">{{ c.count }}</span>
+                <span class="font-bold text-stone-600 dark:text-stone-400 shrink-0">{{ c.count }}</span>
             </li>
             
         </ui-widget-panel>

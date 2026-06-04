@@ -8,11 +8,11 @@ const AlertsWidget = {
             :reset-label="$t('reset_btn')"
             @reset="$emit('reset-alerts')">
             
-            <li v-for="item in alerts" :key="item.id" class="flex justify-between py-2 px-3 border-b border-core-300 dark:border-core-800 hover:bg-core-200 dark:hover:bg-core-800/50 transition-colors text-core-800 dark:text-core-300">
+            <li v-for="item in alerts" :key="item.id" class="flex justify-between py-2 px-3 border-b border-stone-300 dark:border-stone-800 hover:bg-stone-200 dark:hover:bg-stone-800/50 transition-colors text-stone-800 dark:text-stone-300">
                 <span>
                     <alert-badge :name="item.id" class="mr-1.5"></alert-badge>
                 </span>
-                <span class="font-bold text-core-600 dark:text-core-400">{{ item.count }}</span>
+                <span class="font-bold text-stone-600 dark:text-stone-400">{{ item.count }}</span>
             </li>
             
         </ui-widget-panel>

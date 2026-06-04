@@ -2,13 +2,13 @@ const LegendModal = {
     props: ['show'],
     template: `
         <div v-if="show" class="fixed inset-0 bg-black/60 backdrop-blur-sm z-50 flex justify-center items-center p-4">
-            <div class="bg-white dark:bg-core-900 border border-core-300 dark:border-core-700 rounded-lg shadow-2xl w-full max-w-4xl max-h-[90vh] flex flex-col">
-                <div class="flex justify-between items-center p-4 border-b border-core-200 dark:border-core-800">
-                    <h2 class="text-lg font-bold text-core-800 dark:text-core-200 flex items-center gap-2">
-                        <svg class="w-5 h-5 text-core-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+            <div class="bg-white dark:bg-stone-900 border border-stone-300 dark:border-stone-700 rounded-lg shadow-2xl w-full max-w-4xl max-h-[90vh] flex flex-col">
+                <div class="flex justify-between items-center p-4 border-b border-stone-200 dark:border-stone-800">
+                    <h2 class="text-lg font-bold text-stone-800 dark:text-stone-200 flex items-center gap-2">
+                        <svg class="w-5 h-5 text-stone-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
                         <span data-i18n="legend_title">{{ $t('legend_title') }}</span>
                     </h2>
-                    <button @click="$emit('close')" class="text-core-500 hover:text-red-500 transition-colors p-1 rounded-md hover:bg-core-100 dark:hover:bg-core-800">
+                    <button @click="$emit('close')" class="text-stone-500 hover:text-red-500 transition-colors p-1 rounded-md hover:bg-stone-100 dark:hover:bg-stone-800">
                         <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
                     </button>
                 </div>
@@ -46,8 +46,8 @@ const LegendModal = {
                     </div>
                 </div>
                 
-                <div class="bg-core-100 dark:bg-core-900 p-4 border-t border-core-200 dark:border-core-800 text-center">
-                    <p class="text-xs text-core-500" data-i18n="leg_footer">{{ $t('leg_footer') }}</p>
+                <div class="bg-stone-100 dark:bg-stone-900 p-4 border-t border-stone-200 dark:border-stone-800 text-center">
+                    <p class="text-xs text-stone-500" data-i18n="leg_footer">{{ $t('leg_footer') }}</p>
                 </div>
             </div>
         </div>

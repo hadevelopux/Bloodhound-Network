@@ -7,7 +7,7 @@ const LegendItem = {
     template: `
         <div>
             <alert-badge :name="badge" class="mb-2" :pulsing="pulsing"></alert-badge>
-            <p class="text-core-600 dark:text-core-400 leading-relaxed">{{ desc }}</p>
+            <p class="text-stone-600 dark:text-stone-400 leading-relaxed">{{ desc }}</p>
         </div>
     `
 };

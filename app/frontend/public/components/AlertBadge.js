@@ -24,11 +24,11 @@ const AlertBadge = {
             }
             
             // Low/Debug
-            if (alertName === 'CNN') return { badgeClass: 'border-core-400 text-core-600 dark:text-core-300 bg-core-200 dark:bg-core-800', isCritical: false };
-            if (alertName === 'SYN') return { badgeClass: 'border-core-500 text-core-700 dark:text-core-200 bg-core-200 dark:bg-core-800', isCritical: false };
+            if (alertName === 'CNN') return { badgeClass: 'border-stone-400 text-stone-600 dark:text-stone-300 bg-stone-200 dark:bg-stone-800', isCritical: false };
+            if (alertName === 'SYN') return { badgeClass: 'border-stone-500 text-stone-700 dark:text-stone-200 bg-stone-200 dark:bg-stone-800', isCritical: false };
             
             // Default
-            return { badgeClass: 'border-core-300 dark:border-core-600 text-core-500 dark:text-core-400 bg-core-100 dark:bg-core-800', isCritical: false };
+            return { badgeClass: 'border-stone-300 dark:border-stone-600 text-stone-500 dark:text-stone-400 bg-stone-100 dark:bg-stone-800', isCritical: false };
         }
     }
 };
