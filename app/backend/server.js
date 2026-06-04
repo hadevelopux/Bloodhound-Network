@@ -347,7 +347,11 @@ function processPacket(layers) {
     if (dport === '1900' || sport === '1900') {
         // Ignorar tráfico local típico de UPnP/SSDP (Broadcast, Multicast o LAN local)
         // Solo alertar si el tráfico SSDP está intentando salir hacia un servidor en Internet (posible DDoS)
-        if (dst && dst !== '239.255.255.250' && dst !== '255.255.255.255' && !dst.startsWith('192.168.') && !dst.startsWith('10.') && !dst.startsWith('172.16.')) {
+        const d = dst || '';
+        const isLocalOrMulticast = d.includes('239.255.255.250') || d.includes('255.255.255.255') || 
+                                   d.startsWith('192.168.') || d.startsWith('10.') || d.startsWith('172.16.') || 
+                                   d.startsWith('ff02:');
+        if (!isLocalOrMulticast) {
             alerts.push(`🧟 BOTNET IoT (SSDP)`);
         }
     }
@@ -355,15 +359,14 @@ function processPacket(layers) {
     // 3. Minería de Criptomonedas Oculta (CRÍTICO)
     const cryptoPorts = ['3333', '14433', '14444'];
     if (cryptoPorts.includes(dport) || cryptoPorts.includes(sport)) {
-        const p = cryptoPorts.includes(dport) ? dport : sport;
-        alerts.push(`⛏️ CRYPTOMINER [Port: ${p}]`);
+        alerts.push(`⛏️ CRYPTOMINER`);
     }
 
     // 4. Secuestro de DNS (DNS Hijacking) (CRÍTICO)
     if (dport === '53' || sport === '53') {
         const trustedDns = ['8.8.8.8', '8.8.4.4', '1.1.1.1', '1.0.0.1'];
         if (dst && !dst.startsWith('192.168.') && !trustedDns.includes(dst)) {
-            alerts.push(`⚠️ DNS HIJACKED [To IP: ${dst}]`);
+            alerts.push(`⚠️ DNS HIJACKED`);
         }
     }
 

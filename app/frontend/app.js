@@ -161,17 +161,13 @@ socket.on('stats_update', (data) => {
     }
 
     // 2. Connection Stats
-    const connsBody = document.getElementById('connsBody');
-    if (connsBody && data.connections) {
-        connsBody.innerHTML = '';
+    if (connsList && data.connections) {
+        connsList.innerHTML = '';
         data.connections.forEach(c => {
-            const row = document.createElement('tr');
-            row.className = 'hover:bg-core-200 dark:hover:bg-core-800/50 transition-colors';
-            row.innerHTML = `
-                <td class="px-3 py-2 font-mono text-xs border-b border-core-300 dark:border-core-800 text-core-700 dark:text-core-300">${escapeHTML(c.id)}</td>
-                <td class="px-3 py-2 font-mono text-xs border-b border-core-300 dark:border-core-800 text-right font-bold">${c.count}</td>
-            `;
-            connsBody.appendChild(row);
+            const li = document.createElement('li');
+            li.className = 'flex justify-between items-center py-2 px-3 border-b border-core-300 dark:border-core-800 hover:bg-core-200 dark:hover:bg-core-800/50 transition-colors text-core-800 dark:text-core-300';
+            li.innerHTML = `<span class="truncate pr-2" title="${escapeHTML(c.id)}">${escapeHTML(c.id)}</span> <span class="font-bold text-core-600 dark:text-core-400 shrink-0">${c.count}</span>`;
+            connsList.appendChild(li);
         });
     }
 
