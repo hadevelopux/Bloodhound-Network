@@ -275,7 +275,7 @@ function startTshark() {
                 });
                 
                 // Extraer dominios de rastreo/adware
-                if (pkt.alerts.includes('👁️ TRACKING/ADWARE') && pkt.domain) {
+                if (pkt.alerts.some(a => a.includes('TRACKING/ADWARE')) && pkt.domain) {
                     dbQueue.push({
                         query: `INSERT INTO stats_agg (id, type, count) VALUES (?, 'TRACKING_DOMAIN', 1) ON CONFLICT(id) DO UPDATE SET count = count + 1`,
                         params: [pkt.domain]
