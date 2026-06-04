@@ -20,6 +20,7 @@ const DEBUG_MODE = process.env.ENABLE_DEBUG_LOGS === 'true';
 const logger = {
     info: (...args) => console.log('[INFO]', ...args),
     error: (...args) => console.error('[ERROR]', ...args),
+    warn: (...args) => console.warn('[WARN]', ...args),
     debug: (...args) => {
         if (DEBUG_MODE) {
             console.log('[DEBUG]', ...args);
@@ -72,11 +73,13 @@ db.on('error', (err) => {
 
 // Cola de inserción para evitar Memory Leaks (OOM)
 const dbQueue = [];
+let isResetting = false;
+
 setInterval(() => {
-    if (dbQueue.length === 0) return;
+    if (dbQueue.length === 0 || isResetting) return;
     
-    // Extraer hasta 100 queries por lote para no bloquear el Event Loop
-    const batch = dbQueue.splice(0, 100);
+    // Extraer hasta 2000 queries por lote para no bloquear el Event Loop
+    const batch = dbQueue.splice(0, 2000);
     db.serialize(() => {
         db.run("BEGIN TRANSACTION;");
         for (const q of batch) {
@@ -230,7 +233,7 @@ function startTshark() {
         // ek format emits an index object before the actual document object
         if (parsed.index) continue; 
         
-        if (parsed.layers) {
+        if (parsed.layers && !isResetting) {
            const pkt = processPacket(parsed.layers);
            if (pkt) {
              logger.debug(`[PACKET] ${pkt.src}:${pkt.sport} -> ${pkt.dst}:${pkt.dport} [${pkt.proto}]`);
@@ -518,6 +521,7 @@ io.on('connection', (socket) => {
   
   socket.on('factory_reset', () => {
       logger.warn('Ejecutando FACTORY RESET NUCLEAR de la base de datos completa!');
+      isResetting = true;
       
       // Limpiar memoria
       dbQueue.length = 0;
@@ -525,9 +529,12 @@ io.on('connection', (socket) => {
       
       // Borrado a nivel SQL en vez de FS para evitar race conditions en Docker
       db.serialize(() => {
+          db.run("CREATE TABLE IF NOT EXISTS stats_agg (id TEXT PRIMARY KEY, type TEXT, count INTEGER DEFAULT 0)");
           db.run("DELETE FROM stats_agg");
           db.run("DELETE FROM raw_logs");
-          db.run(`INSERT INTO stats_agg (id, type, count) VALUES ('CYCLE_START', 'GLOBAL', ?)`, [cycleStartMs]);
+          db.run(`INSERT INTO stats_agg (id, type, count) VALUES ('CYCLE_START', 'GLOBAL', ?)`, [cycleStartMs], (err) => {
+              isResetting = false; // Liberar lock cuando termine de escribir
+          });
       });
 
       // Emitir evento a todos los clientes para que limpien su UI instantáneamente
