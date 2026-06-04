@@ -111,8 +111,12 @@ if ! getent hosts get.docker.com > /dev/null 2>&1; then
     fi
 fi
 
-echo -e "${GREEN}[+] Instalando Docker Engine oficial...${NC}"
-curl -sSL "https://get.docker.com/" | bash
+if ! command -v docker &> /dev/null; then
+    echo -e "${GREEN}[+] Instalando Docker Engine oficial...${NC}"
+    curl -sSL "https://get.docker.com/" | bash
+else
+    echo -e "${GREEN}[+] Docker ya está instalado. Omitiendo instalación para evitar bloqueos...${NC}"
+fi
 
 echo -e "${GREEN}[+] Configurando actualizaciones de seguridad automáticas...${NC}"
 cat <<EOF > /etc/apt/apt.conf.d/20auto-upgrades
