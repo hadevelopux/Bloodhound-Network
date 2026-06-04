@@ -58,7 +58,7 @@
 </template>
 
 <script setup>
-import { ref, reactive, computed, onMounted, watch } from 'vue';
+import { ref, shallowRef, reactive, computed, onMounted, watch } from 'vue';
 import { useI18n } from 'vue-i18n';
 import HeaderWidget from './components/HeaderWidget.vue';
 import AlertsWidget from './components/AlertsWidget.vue';
@@ -70,7 +70,8 @@ import { io } from 'socket.io-client';
 
 const { locale } = useI18n();
 
-const packets = ref([]);
+const packets = shallowRef([]);
+const packetBuffer = [];
 const stats = reactive({
   alerts: [],
   connections: [],
@@ -167,6 +168,14 @@ onMounted(() => {
   const wsUrl = `${protocol}//${window.location.host}`;
   socket = io(wsUrl, { transports: ['websocket', 'polling'] });
   
+  // Flush buffer periodically to avoid UI freezing from deep reactivity proxies
+  setInterval(() => {
+    if (packetBuffer.length > 0) {
+      packets.value = [...packetBuffer, ...packets.value].slice(0, 1000);
+      packetBuffer.length = 0;
+    }
+  }, 200);
+  
   socket.on('connect', () => {
     connStatus.value = 'Live';
     connClass.value = 'text-neon-green';
@@ -190,8 +199,7 @@ onMounted(() => {
 
   socket.on('packet', (pkt) => {
     if (filterText.value === '' && currentCategoryFilter.value === '') {
-      packets.value.unshift(pkt);
-      if (packets.value.length > 1000) packets.value.pop();
+      packetBuffer.unshift(pkt);
     }
     totalPackets.value++;
     if (pkt.len) {
