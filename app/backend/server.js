@@ -585,6 +585,7 @@ io.on('connection', (socket) => {
       
       // Limpiar memoria
       dbQueue.length = 0;
+      currentDbId = 0; // Reset active packets counter in memory
       cycleStartMs = Date.now();
       
       // Borrado a nivel SQL en vez de FS para evitar race conditions en Docker
@@ -599,7 +600,7 @@ io.on('connection', (socket) => {
 
       // Emitir evento a todos los clientes para que limpien su UI instantáneamente
       io.emit('historical_logs', []);
-      io.emit('stats_update', { connections: [], alerts: [], totalBytes: 0, timeRemaining: LIFECYCLE_MS });
+      io.emit('stats_update', { connections: [], alerts: [], totalBytes: 0, totalPackets: 0, timeRemaining: LIFECYCLE_MS });
   });
 });
 
