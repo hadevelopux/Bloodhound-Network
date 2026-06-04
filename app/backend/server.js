@@ -178,6 +178,7 @@ setInterval(() => {
                         alerts, 
                         trackingDomains, 
                         totalBytes, 
+                        totalPackets: currentDbId,
                         timeRemaining 
                     });
                 });
@@ -525,6 +526,19 @@ io.on('connection', (socket) => {
   
   // Enviar configuración de logs centralizada al frontend
   socket.emit('app_config', { debug: DEBUG_MODE });
+
+  // Emitir estadísticas iniciales de inmediato para evitar retrasos en el frontend
+  db.get(`SELECT count FROM stats_agg WHERE id = 'TOTAL_BYTES'`, [], (err, row) => {
+      const totalBytes = row ? row.count : 0;
+      socket.emit('stats_update', {
+          connections: [],
+          alerts: [],
+          trackingDomains: [],
+          totalBytes,
+          totalPackets: currentDbId,
+          timeRemaining: (cycleStartMs + LIFECYCLE_MS) - Date.now()
+      });
+  });
   
   // Send the last 500 packets immediately on connect
   db.all(`SELECT * FROM raw_logs ORDER BY time DESC LIMIT 500`, [], (err, rows) => {
