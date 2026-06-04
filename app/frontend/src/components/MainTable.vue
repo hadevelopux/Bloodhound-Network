@@ -15,23 +15,75 @@
 -->
 <template>
   <div class="flex-1 overflow-hidden flex flex-col relative bg-stone-100 dark:bg-transparent">
-    <div class="p-3 bg-stone-100 dark:bg-stone-900 border-b border-stone-300 dark:border-stone-800 flex items-center justify-between shrink-0">
-      <div class="flex items-center gap-4">
-        <h2 class="text-sm font-bold text-stone-700 dark:text-stone-300">{{ $t('filters_title') }}</h2>
-        <div class="flex flex-wrap gap-2">
-          <UiButton :variant="currentCategory === '' ? 'primary' : 'ghost'" @click="setCategory('')">All</UiButton>
-          <UiButton :variant="currentCategory === 'BOTNET' ? 'primary' : 'ghost'" @click="setCategory('BOTNET')">Botnet</UiButton>
-          <UiButton :variant="currentCategory === 'TROJAN' ? 'primary' : 'ghost'" @click="setCategory('TROJAN')">Trojan/C2</UiButton>
-          <UiButton :variant="currentCategory === 'NMAP' ? 'primary' : 'ghost'" @click="setCategory('NMAP')">Nmap Scan</UiButton>
-          <UiButton :variant="currentCategory === 'PLAINTEXT' ? 'primary' : 'ghost'" @click="setCategory('PLAINTEXT')">Plaintext</UiButton>
-          <UiButton :variant="currentCategory === 'DNS SECUESTRADO' ? 'primary' : 'ghost'" @click="setCategory('DNS SECUESTRADO')">DNS Hijacked</UiButton>
-          <UiButton :variant="currentCategory === 'CRYPTO' ? 'primary' : 'ghost'" @click="setCategory('CRYPTO')">Crypto</UiButton>
-          <UiButton :variant="currentCategory === 'EXFILTRACIÓN' ? 'primary' : 'ghost'" @click="setCategory('EXFILTRACIÓN')">Exfiltration</UiButton>
-          <UiButton :variant="currentCategory === 'PHISHING' ? 'primary' : 'ghost'" @click="setCategory('PHISHING')">Phishing</UiButton>
-          <UiButton :variant="currentCategory === 'TRACKING' ? 'primary' : 'ghost'" @click="setCategory('TRACKING')">Tracking/Adware</UiButton>
-          <UiButton :variant="currentCategory === 'SYN-SCAN' ? 'primary' : 'ghost'" @click="setCategory('SYN-SCAN')">SYN-Scan</UiButton>
-          <UiButton :variant="currentCategory === 'LOCAL' ? 'primary' : 'ghost'" @click="setCategory('LOCAL')">Local Scan</UiButton>
-          <UiButton :variant="currentCategory === 'HTTP-404' ? 'primary' : 'ghost'" @click="setCategory('HTTP-404')">HTTP-404</UiButton>
+    <div class="p-3 bg-[#111] border-b border-stone-300 dark:border-stone-800 flex items-center justify-between shrink-0">
+      <div class="flex items-center gap-6">
+        <h2 class="text-[10px] uppercase tracking-wider font-bold text-stone-700 dark:text-stone-200 shrink-0 w-32">{{ $t('filters_title') }}</h2>
+        <div class="flex flex-wrap gap-x-4 gap-y-2">
+          <button 
+            @click="setCategory('')"
+            :class="['px-2 py-0.5 rounded-sm text-[10px] font-bold tracking-wider transition-colors', currentCategory === '' ? 'bg-stone-700 text-stone-100 dark:bg-stone-700/50 dark:text-white border border-stone-500' : 'bg-transparent text-stone-500 dark:text-stone-400 hover:text-stone-700 dark:hover:text-stone-200']">
+            All
+          </button>
+          <button 
+            @click="setCategory('BOTNET')"
+            :class="['px-2 py-0.5 rounded-sm text-[10px] font-bold tracking-wider transition-colors', currentCategory === 'BOTNET' ? 'bg-stone-700 text-stone-100 dark:bg-stone-700/50 dark:text-white border border-stone-500' : 'bg-transparent text-stone-500 dark:text-stone-400 hover:text-stone-700 dark:hover:text-stone-200']">
+            Botnet
+          </button>
+          <button 
+            @click="setCategory('TROJAN')"
+            :class="['px-2 py-0.5 rounded-sm text-[10px] font-bold tracking-wider transition-colors', currentCategory === 'TROJAN' ? 'bg-stone-700 text-stone-100 dark:bg-stone-700/50 dark:text-white border border-stone-500' : 'bg-transparent text-stone-500 dark:text-stone-400 hover:text-stone-700 dark:hover:text-stone-200']">
+            Trojan/C2
+          </button>
+          <button 
+            @click="setCategory('NMAP')"
+            :class="['px-2 py-0.5 rounded-sm text-[10px] font-bold tracking-wider transition-colors', currentCategory === 'NMAP' ? 'bg-stone-700 text-stone-100 dark:bg-stone-700/50 dark:text-white border border-stone-500' : 'bg-transparent text-stone-500 dark:text-stone-400 hover:text-stone-700 dark:hover:text-stone-200']">
+            Nmap Scan
+          </button>
+          <button 
+            @click="setCategory('PLAINTEXT')"
+            :class="['px-2 py-0.5 rounded-sm text-[10px] font-bold tracking-wider transition-colors', currentCategory === 'PLAINTEXT' ? 'bg-stone-700 text-stone-100 dark:bg-stone-700/50 dark:text-white border border-stone-500' : 'bg-transparent text-stone-500 dark:text-stone-400 hover:text-stone-700 dark:hover:text-stone-200']">
+            Plaintext
+          </button>
+          <button 
+            @click="setCategory('DNS SECUESTRADO')"
+            :class="['px-2 py-0.5 rounded-sm text-[10px] font-bold tracking-wider transition-colors', currentCategory === 'DNS SECUESTRADO' ? 'bg-stone-700 text-stone-100 dark:bg-stone-700/50 dark:text-white border border-stone-500' : 'bg-transparent text-stone-500 dark:text-stone-400 hover:text-stone-700 dark:hover:text-stone-200']">
+            DNS Hijacked
+          </button>
+          <button 
+            @click="setCategory('CRYPTO')"
+            :class="['px-2 py-0.5 rounded-sm text-[10px] font-bold tracking-wider transition-colors', currentCategory === 'CRYPTO' ? 'bg-stone-700 text-stone-100 dark:bg-stone-700/50 dark:text-white border border-stone-500' : 'bg-transparent text-stone-500 dark:text-stone-400 hover:text-stone-700 dark:hover:text-stone-200']">
+            Crypto
+          </button>
+          <button 
+            @click="setCategory('EXFILTRACIÓN')"
+            :class="['px-2 py-0.5 rounded-sm text-[10px] font-bold tracking-wider transition-colors', currentCategory === 'EXFILTRACIÓN' ? 'bg-stone-700 text-stone-100 dark:bg-stone-700/50 dark:text-white border border-stone-500' : 'bg-transparent text-stone-500 dark:text-stone-400 hover:text-stone-700 dark:hover:text-stone-200']">
+            Exfiltration
+          </button>
+          <button 
+            @click="setCategory('PHISHING')"
+            :class="['px-2 py-0.5 rounded-sm text-[10px] font-bold tracking-wider transition-colors', currentCategory === 'PHISHING' ? 'bg-stone-700 text-stone-100 dark:bg-stone-700/50 dark:text-white border border-stone-500' : 'bg-transparent text-stone-500 dark:text-stone-400 hover:text-stone-700 dark:hover:text-stone-200']">
+            Phishing
+          </button>
+          <button 
+            @click="setCategory('TRACKING')"
+            :class="['px-2 py-0.5 rounded-sm text-[10px] font-bold tracking-wider transition-colors', currentCategory === 'TRACKING' ? 'bg-stone-700 text-stone-100 dark:bg-stone-700/50 dark:text-white border border-stone-500' : 'bg-transparent text-stone-500 dark:text-stone-400 hover:text-stone-700 dark:hover:text-stone-200']">
+            Tracking/Adware
+          </button>
+          <button 
+            @click="setCategory('SYN-SCAN')"
+            :class="['px-2 py-0.5 rounded-sm text-[10px] font-bold tracking-wider transition-colors', currentCategory === 'SYN-SCAN' ? 'bg-stone-700 text-stone-100 dark:bg-stone-700/50 dark:text-white border border-stone-500' : 'bg-transparent text-stone-500 dark:text-stone-400 hover:text-stone-700 dark:hover:text-stone-200']">
+            SYN-Scan
+          </button>
+          <button 
+            @click="setCategory('LOCAL')"
+            :class="['px-2 py-0.5 rounded-sm text-[10px] font-bold tracking-wider transition-colors', currentCategory === 'LOCAL' ? 'bg-stone-700 text-stone-100 dark:bg-stone-700/50 dark:text-white border border-stone-500' : 'bg-transparent text-stone-500 dark:text-stone-400 hover:text-stone-700 dark:hover:text-stone-200']">
+            Local Scan
+          </button>
+          <button 
+            @click="setCategory('HTTP-404')"
+            :class="['px-2 py-0.5 rounded-sm text-[10px] font-bold tracking-wider transition-colors', currentCategory === 'HTTP-404' ? 'bg-stone-700 text-stone-100 dark:bg-stone-700/50 dark:text-white border border-stone-500' : 'bg-transparent text-stone-500 dark:text-stone-400 hover:text-stone-700 dark:hover:text-stone-200']">
+            HTTP-404
+          </button>
         </div>
       </div>
       <UiButton v-if="filterText || currentCategory" variant="ghost" @click="clearFilters">

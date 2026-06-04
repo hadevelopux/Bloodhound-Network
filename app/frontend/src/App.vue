@@ -18,7 +18,7 @@
       />
 
       <div class="flex flex-col lg:flex-row flex-1 overflow-hidden">
-        <aside class="flex flex-col lg:w-[400px] xl:w-[450px] h-full shrink-0 border-r border-stone-300 dark:border-stone-800 bg-stone-50 dark:bg-stone-900/50">
+        <aside class="flex flex-col lg:w-[400px] xl:w-[450px] h-full shrink-0 border-r border-stone-300 dark:border-stone-800 bg-stone-50 dark:bg-stone-900/50 overflow-hidden">
           <AlertsWidget 
             :alerts="stats.alerts" 
             @clear-stats="socket.emit('request_clear_stats')">
@@ -194,10 +194,22 @@ onMounted(() => {
       if (packets.value.length > 1000) packets.value.pop();
     }
     totalPackets.value++;
+    if (pkt.len) {
+      totalBytes.value += parseInt(pkt.len);
+    }
   });
 
   socket.on('historical_logs', (historicalData) => {
     packets.value = historicalData;
+    totalPackets.value = historicalData.length;
+    let bytes = 0;
+    historicalData.forEach(p => {
+      if (p.len) bytes += parseInt(p.len);
+    });
+    // Solo actualizamos si no viene del servidor en stats_update
+    if (totalBytes.value === 0) {
+        totalBytes.value = bytes;
+    }
   });
 
   socket.on('factory_reset_completed', () => {

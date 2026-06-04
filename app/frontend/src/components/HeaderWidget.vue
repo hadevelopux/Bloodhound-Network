@@ -25,13 +25,13 @@
       <span class="pulse-dot w-3 h-3 bg-red-500 rounded-full shadow-[0_0_10px_var(--tw-shadow-color)] shadow-red-500" :style="{ animationPlayState: connStatus === 'Live' || connStatus === 'En Vivo' ? 'running' : 'paused' }"></span>
       <h1 class="text-xl md:text-2xl font-extrabold tracking-tight"><span class="text-stone-600 dark:text-stone-400">Bloodhound</span> Forensics</h1>
     </div>
-    <div class="flex items-center gap-5">
+    <div class="flex items-center gap-6">
       <UiInput 
         :model-value="filterText"
         @input-change="$emit('update-filter', $event)"
         :placeholder="$t('live_filter_placeholder')">
       </UiInput>
-      <div class="flex gap-4 text-sm font-mono items-center">
+      <div class="flex gap-6 text-sm font-mono items-center">
         <span :class="['font-bold', connClass]">{{ connStatus }}</span>
         <span class="text-orange-500 font-bold" v-show="timeRemaining !== null && timeRemaining <= (5 * 24 * 60 * 60 * 1000)">
           <span>{{ $t('reset_in') }}</span> <span>{{ formattedTimeRemaining }}</span>
