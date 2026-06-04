@@ -38,17 +38,16 @@
     <!-- Socket.IO -->
     <script src="/socket.io/socket.io.js"></script>
 </head>
-<body class="font-sans bg-stone-100 dark:bg-stone-950 text-stone-800 dark:text-stone-200 h-screen w-full overflow-hidden flex">
-    <div id="app" class="flex-1 h-full flex flex-col overflow-hidden min-w-0">
+<body class="font-sans bg-stone-100 dark:bg-stone-950 text-stone-800 dark:text-stone-200 h-screen w-full overflow-hidden">
+    <div id="app" class="h-full w-full flex">
         
-        <header-widget 
+        <div class="flex-1 h-full flex flex-col overflow-hidden min-w-0">
+            <header-widget 
             :conn-status="connStatus"
             :conn-class="connClass"
             :total-bytes="totalBytes"
             :total-packets="totalPackets"
             :time-remaining="timeRemaining"
-            :translations="translations"
-            :current-lang="currentLang"
             :is-dark="isDark"
             @toggle-legend="showLegend = true"
             @toggle-lang="toggleLang"
@@ -61,15 +60,11 @@
                 
                 <alerts-widget
                     :alerts="stats.alerts"
-                    :translations="translations"
-                    :current-lang="currentLang"
                     @reset-alerts="resetAlerts"
                 ></alerts-widget>
 
                 <connections-widget
                     :connections="stats.connections"
-                    :translations="translations"
-                    :current-lang="currentLang"
                     :escape-h-t-m-l="escapeHTML"
                     @reset-conns="resetConns"
                 ></connections-widget>
@@ -80,14 +75,14 @@
             <main-table
                 :packets="filteredPackets"
                 :current-category-filter="currentCategoryFilter"
-                :translations="translations"
-                :current-lang="currentLang"
                 :escape-h-t-m-l="escapeHTML"
                 :get-proto-class="getProtoClass"
                 @set-category="setCategory"
                 @clear-filters="clearFilters"
                 @factory-reset="factoryReset"
             ></main-table>
+
+        </div>
 
         </div>
 

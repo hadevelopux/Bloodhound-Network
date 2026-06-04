@@ -34,8 +34,8 @@ const HeaderWidget = {
             if (!this.timeRemaining) return '-';
             const days = Math.floor(this.timeRemaining / (1000 * 60 * 60 * 24));
             const hours = Math.floor((this.timeRemaining % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
-            if (days > 0) return `${days} dias`;
-            return `${hours} hrs`;
+            if (days > 0) return `${days} ${this.$t('days')}`;
+            return `${hours} ${this.$t('hours')}`;
         },
         formattedTotalBytes() {
             let bytes = this.totalBytes || 0;

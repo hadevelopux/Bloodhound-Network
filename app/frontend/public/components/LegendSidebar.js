@@ -11,47 +11,47 @@ const LegendSidebar = {
             <div class="p-4 flex-1 overflow-auto text-sm space-y-6 custom-scrollbar">
                 
                 <div>
-                    <span class="inline-block px-1.5 py-0.5 rounded text-xs font-bold border border-red-500 text-red-600 dark:text-red-400 bg-red-100 dark:bg-red-900/30 shadow-[0_0_8px_rgba(239,68,68,0.3)] mb-2">⚠️ TROYANO/C2</span>
+                    <span class="inline-block px-1.5 py-0.5 rounded text-xs font-bold border border-red-500 text-red-600 dark:text-red-400 bg-red-100 dark:bg-red-900/30 shadow-[0_0_8px_rgba(239,68,68,0.3)] mb-2">{{ $t('leg_c2_title') }}</span>
                     <p class="text-stone-600 dark:text-stone-400 leading-relaxed">{{ $t('leg_c2_desc') }}</p>
                 </div>
                 <div>
-                    <span class="inline-block px-1.5 py-0.5 rounded text-xs font-bold border border-red-500 text-red-600 dark:text-red-400 bg-red-100 dark:bg-red-900/30 shadow-[0_0_8px_rgba(239,68,68,0.3)] mb-2">🧟 BOTNET IoT</span>
+                    <span class="inline-block px-1.5 py-0.5 rounded text-xs font-bold border border-red-500 text-red-600 dark:text-red-400 bg-red-100 dark:bg-red-900/30 shadow-[0_0_8px_rgba(239,68,68,0.3)] mb-2">{{ $t('leg_botnet_title') }}</span>
                     <p class="text-stone-600 dark:text-stone-400 leading-relaxed">{{ $t('leg_botnet_desc') }}</p>
                 </div>
                 <div>
-                    <span class="inline-block px-1.5 py-0.5 rounded text-xs font-bold border border-red-500 text-red-600 dark:text-red-400 bg-red-100 dark:bg-red-900/30 shadow-[0_0_8px_rgba(239,68,68,0.3)] mb-2">⛏️ CRYPTOMINERO</span>
+                    <span class="inline-block px-1.5 py-0.5 rounded text-xs font-bold border border-red-500 text-red-600 dark:text-red-400 bg-red-100 dark:bg-red-900/30 shadow-[0_0_8px_rgba(239,68,68,0.3)] mb-2">{{ $t('leg_crypto_title') }}</span>
                     <p class="text-stone-600 dark:text-stone-400 leading-relaxed">{{ $t('leg_crypto_desc') }}</p>
                 </div>
                 <div>
-                    <span class="inline-block px-1.5 py-0.5 rounded text-xs font-bold border border-red-500 text-red-600 dark:text-red-400 bg-red-100 dark:bg-red-900/30 shadow-[0_0_8px_rgba(239,68,68,0.3)] mb-2">⚠️ DNS SECUESTRADO</span>
+                    <span class="inline-block px-1.5 py-0.5 rounded text-xs font-bold border border-red-500 text-red-600 dark:text-red-400 bg-red-100 dark:bg-red-900/30 shadow-[0_0_8px_rgba(239,68,68,0.3)] mb-2">{{ $t('leg_dns_title') }}</span>
                     <p class="text-stone-600 dark:text-stone-400 leading-relaxed">{{ $t('leg_dns_desc') }}</p>
                 </div>
                 <div>
-                    <span class="inline-block px-1.5 py-0.5 rounded text-xs font-bold border border-red-500 text-red-600 dark:text-red-400 bg-red-100 dark:bg-red-900/30 shadow-[0_0_8px_rgba(239,68,68,0.3)] mb-2">🎣 PHISHING/DARKWEB</span>
+                    <span class="inline-block px-1.5 py-0.5 rounded text-xs font-bold border border-red-500 text-red-600 dark:text-red-400 bg-red-100 dark:bg-red-900/30 shadow-[0_0_8px_rgba(239,68,68,0.3)] mb-2">{{ $t('leg_phishing_title') }}</span>
                     <p class="text-stone-600 dark:text-stone-400 leading-relaxed">{{ $t('leg_phishing_desc') }}</p>
                 </div>
                 <div>
-                    <span class="inline-block px-1.5 py-0.5 rounded text-xs font-bold border border-red-500 text-red-600 dark:text-red-400 bg-red-100 dark:bg-red-900/30 shadow-[0_0_8px_rgba(239,68,68,0.3)] mb-2">🕵️ ESCANEO NMAP</span>
+                    <span class="inline-block px-1.5 py-0.5 rounded text-xs font-bold border border-red-500 text-red-600 dark:text-red-400 bg-red-100 dark:bg-red-900/30 shadow-[0_0_8px_rgba(239,68,68,0.3)] mb-2">{{ $t('leg_nmap_title') }}</span>
                     <p class="text-stone-600 dark:text-stone-400 leading-relaxed">{{ $t('leg_nmap_desc') }}</p>
                 </div>
                 <div>
-                    <span class="inline-block px-1.5 py-0.5 rounded text-xs font-bold border border-orange-500 text-orange-600 dark:text-orange-400 bg-orange-100 dark:bg-orange-900/30 mb-2">🔓 TEXTO PLANO</span>
+                    <span class="inline-block px-1.5 py-0.5 rounded text-xs font-bold border border-orange-500 text-orange-600 dark:text-orange-400 bg-orange-100 dark:bg-orange-900/30 mb-2">{{ $t('leg_plaintext_title') }}</span>
                     <p class="text-stone-600 dark:text-stone-400 leading-relaxed">{{ $t('leg_plaintext_desc') }}</p>
                 </div>
                 <div>
-                    <span class="inline-block px-1.5 py-0.5 rounded text-xs font-bold border border-orange-500 text-orange-600 dark:text-orange-400 bg-orange-100 dark:bg-orange-900/30 mb-2">👁️ RASTREO/ADWARE</span>
+                    <span class="inline-block px-1.5 py-0.5 rounded text-xs font-bold border border-orange-500 text-orange-600 dark:text-orange-400 bg-orange-100 dark:bg-orange-900/30 mb-2">{{ $t('leg_adware_title') }}</span>
                     <p class="text-stone-600 dark:text-stone-400 leading-relaxed">{{ $t('leg_adware_desc') }}</p>
                 </div>
                 <div>
-                    <span class="inline-block px-1.5 py-0.5 rounded text-xs font-bold border border-orange-500 text-orange-600 dark:text-orange-400 bg-orange-100 dark:bg-orange-900/30 mb-2">🔎 ESCANEO LOCAL (ARP)</span>
+                    <span class="inline-block px-1.5 py-0.5 rounded text-xs font-bold border border-orange-500 text-orange-600 dark:text-orange-400 bg-orange-100 dark:bg-orange-900/30 mb-2">{{ $t('leg_arp_title') }}</span>
                     <p class="text-stone-600 dark:text-stone-400 leading-relaxed">{{ $t('leg_arp_desc') }}</p>
                 </div>
                 <div>
-                    <span class="inline-block px-1.5 py-0.5 rounded text-xs font-bold border border-orange-500 text-orange-600 dark:text-orange-400 bg-orange-100 dark:bg-orange-900/30 mb-2">📦 EXFILTRACIÓN</span>
+                    <span class="inline-block px-1.5 py-0.5 rounded text-xs font-bold border border-orange-500 text-orange-600 dark:text-orange-400 bg-orange-100 dark:bg-orange-900/30 mb-2">{{ $t('leg_exfil_title') }}</span>
                     <p class="text-stone-600 dark:text-stone-400 leading-relaxed">{{ $t('leg_exfil_desc') }}</p>
                 </div>
                 <div>
-                    <span class="inline-block px-1.5 py-0.5 rounded text-xs font-bold border border-orange-500 text-orange-600 dark:text-orange-400 bg-orange-100 dark:bg-orange-900/30 mb-2">SYN-SCAN</span>
+                    <span class="inline-block px-1.5 py-0.5 rounded text-xs font-bold border border-orange-500 text-orange-600 dark:text-orange-400 bg-orange-100 dark:bg-orange-900/30 mb-2">{{ $t('leg_syn_title') }}</span>
                     <p class="text-stone-600 dark:text-stone-400 leading-relaxed">{{ $t('leg_syn_desc') }}</p>
                 </div>
                 
