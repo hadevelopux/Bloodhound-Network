@@ -20,15 +20,15 @@ const MainTable = {
                 <table class="w-full text-left text-sm whitespace-nowrap">
                     <thead class="sticky top-0 bg-stone-200 dark:bg-stone-900 text-stone-600 dark:text-stone-400 font-mono text-xs uppercase shadow-sm z-10 border-b border-stone-300 dark:border-stone-800">
                         <tr>
-                            <th class="py-3 px-4 font-bold">{{ $t('col_time') }}</th>
-                            <th class="py-3 px-4 font-bold">{{ $t('col_src') }}</th>
-                            <th class="py-3 px-4 font-bold">{{ $t('col_sport') }}</th>
-                            <th class="py-3 px-4 font-bold">{{ $t('col_dst') }}</th>
-                            <th class="py-3 px-4 font-bold">{{ $t('col_dport') }}</th>
-                            <th class="py-3 px-4 font-bold">{{ $t('col_proto') }}</th>
-                            <th class="py-3 px-4 font-bold">{{ $t('col_size') }}</th>
-                            <th class="py-3 px-4 font-bold">{{ $t('col_domain') }}</th>
-                            <th class="py-3 px-4 font-bold">{{ $t('col_info') }}</th>
+                            <th class="py-3 px-4 font-bold">{{ $t('th_time') }}</th>
+                            <th class="py-3 px-4 font-bold">{{ $t('th_source') }}</th>
+                            <th class="py-3 px-4 font-bold">{{ $t('th_sport') }}</th>
+                            <th class="py-3 px-4 font-bold">{{ $t('th_destination') }}</th>
+                            <th class="py-3 px-4 font-bold">{{ $t('th_dport') }}</th>
+                            <th class="py-3 px-4 font-bold">{{ $t('th_proto') }}</th>
+                            <th class="py-3 px-4 font-bold">{{ $t('th_size') }}</th>
+                            <th class="py-3 px-4 font-bold">{{ $t('th_domain') }}</th>
+                            <th class="py-3 px-4 font-bold">{{ $t('th_info') }}</th>
                         </tr>
                     </thead>
                     <tbody class="font-mono text-xs divider-y divider-stone-200 dark:divider-stone-800">

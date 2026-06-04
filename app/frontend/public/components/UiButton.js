@@ -4,7 +4,7 @@ const UiButton = {
         active: { type: Boolean, default: false }
     },
     template: `
-        <button :class="btnClass" @click="$emit('click')">
+        <button :class="btnClass">
             <slot></slot>
         </button>
     `,
