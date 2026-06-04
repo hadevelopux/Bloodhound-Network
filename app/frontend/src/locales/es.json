@@ -14,6 +14,7 @@
   "pkts_sent_col": "Paquetes Enviados",
   "no_connections": "Sin conexiones recientes",
   "tracking_widget_title": "Rastreo y Adware (Top)",
+  "threat_domains_title": "Dominios Suspechosos (Alertas)",
   "domain_col_header": "DOMINIO",
   "requests_col": "PETICIONES",
   "no_trackers": "Sin rastreadores detectados",

@@ -11,28 +11,45 @@
 -->
 <template>
   <UiWidgetPanel 
-    :title="currentCategory ? `${currentCategory} DOMAINS` : $t('tracking_widget_title')"
+    :title="$t('threat_domains_title')"
     :col-left="$t('domain_col_header')"
-    :col-right="currentCategory ? `${currentCategory} PETICIONES` : $t('requests_col')">
+    :col-right="$t('requests_col')">
     
-    <li v-for="dom in domains" :key="dom.id" class="flex justify-between py-2 px-3 border-b border-stone-300 dark:border-stone-800 hover:bg-stone-200 dark:hover:bg-stone-800/50 transition-colors text-stone-800 dark:text-stone-300">
-      <span class="font-bold text-stone-500 dark:text-stone-500 truncate mr-2" v-html="escapeHTML(dom.id)"></span>
-      <span class="font-bold text-stone-800 dark:text-stone-300 shrink-0">{{ dom.count }}</span>
+    <li v-for="dom in parsedDomains" :key="dom.id" class="flex justify-between items-center py-2 px-3 border-b border-stone-300 dark:border-stone-800 hover:bg-stone-200 dark:hover:bg-stone-800/50 transition-colors text-stone-800 dark:text-stone-300">
+      <div class="flex items-center min-w-0 mr-2 flex-1">
+         <AlertBadge v-if="dom.alert !== 'UNKNOWN'" :name="dom.alert" :pulsing="false" class="scale-90 origin-left shrink-0 mr-1" />
+         <span class="font-bold text-stone-500 dark:text-stone-500 truncate" v-html="escapeHTML(dom.domain)"></span>
+      </div>
+      <span class="font-bold text-stone-800 dark:text-stone-300 shrink-0 ml-2">{{ dom.count }}</span>
     </li>
-    <li v-if="!domains || domains.length === 0" class="text-xs text-stone-500 text-center py-4 italic">
+    <li v-if="!parsedDomains || parsedDomains.length === 0" class="text-xs text-stone-500 text-center py-4 italic">
       {{ $t('no_trackers') }}
     </li>
   </UiWidgetPanel>
 </template>
 
 <script setup>
+import { computed } from 'vue';
 import UiWidgetPanel from './UiWidgetPanel.vue';
-import UiButton from './UiButton.vue';
+import AlertBadge from './AlertBadge.vue';
 
-defineProps({
+const props = defineProps({
   domains: { type: Array, default: () => [] },
-  currentCategory: { type: String, default: '' },
   escapeHTML: { type: Function, required: true }
+});
+
+const parsedDomains = computed(() => {
+  return props.domains.map(dom => {
+    const parts = dom.id.split('|');
+    const domain = parts[0];
+    const alert = parts.length > 1 ? parts[1] : 'UNKNOWN';
+    return {
+      id: dom.id,
+      domain: domain,
+      alert: alert,
+      count: dom.count
+    };
+  });
 });
 
 defineEmits(['clear-stats']);

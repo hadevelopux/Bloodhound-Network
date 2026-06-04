@@ -127,7 +127,7 @@ setInterval(() => {
                 logger.error('Error fetching connections:', err.message);
                 return;
             }
-            db.all(`SELECT * FROM stats_agg WHERE type = 'TRACKING_DOMAIN' ORDER BY count DESC LIMIT 50`, [], (err, trackingDomains) => {
+            db.all(`SELECT * FROM stats_agg WHERE type = 'THREAT_DOMAIN' ORDER BY count DESC LIMIT 50`, [], (err, trackingDomains) => {
                 if (err) {
                     logger.error('Error fetching tracking domains:', err.message);
                     return;
@@ -274,11 +274,14 @@ function startTshark() {
                     });
                 });
                 
-                // Extraer dominios de rastreo/adware
-                if (pkt.alerts.some(a => a.includes('TRACKING/ADWARE')) && pkt.domain) {
-                    dbQueue.push({
-                        query: `INSERT INTO stats_agg (id, type, count) VALUES (?, 'TRACKING_DOMAIN', 1) ON CONFLICT(id) DO UPDATE SET count = count + 1`,
-                        params: [pkt.domain]
+                // Extraer todos los dominios que dispararon alertas
+                if (pkt.alerts.length > 0 && pkt.domain) {
+                    pkt.alerts.forEach(alert => {
+                        const domainAlert = `${pkt.domain}|${alert}`;
+                        dbQueue.push({
+                            query: `INSERT INTO stats_agg (id, type, count) VALUES (?, 'THREAT_DOMAIN', 1) ON CONFLICT(id) DO UPDATE SET count = count + 1`,
+                            params: [domainAlert]
+                        });
                     });
                 }
              }

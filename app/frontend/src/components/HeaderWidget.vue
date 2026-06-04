@@ -22,7 +22,6 @@
 <template>
   <header class="bg-white dark:bg-stone-900 border-b border-stone-300 dark:border-stone-800 p-3 md:px-6 flex justify-between items-center shrink-0">
     <div class="flex items-center gap-3">
-      <span class="pulse-dot w-3 h-3 bg-red-500 rounded-full shadow-[0_0_10px_var(--tw-shadow-color)] shadow-red-500" :style="{ animationPlayState: connStatus === 'Live' || connStatus === 'En Vivo' ? 'running' : 'paused' }"></span>
       <h1 class="text-xl md:text-2xl font-extrabold tracking-tight"><span class="text-stone-600 dark:text-stone-400">Bloodhound</span> Forensics</h1>
     </div>
     <div class="flex items-center gap-6">
