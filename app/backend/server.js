@@ -178,6 +178,7 @@ setInterval(() => {
                         alerts, 
                         trackingDomains, 
                         totalBytes, 
+                        totalPackets: currentDbId,
                         timeRemaining 
                     });
                 });
@@ -287,6 +288,13 @@ function startTshark() {
                  statsAggregator.get(id).count++;
              };
 
+             const addStatValue = (id, type, value) => {
+                 if (!statsAggregator.has(id)) {
+                     statsAggregator.set(id, { type, count: 0 });
+                 }
+                 statsAggregator.get(id).count += value;
+             };
+
              // Update Stats Connections
              if (pkt.src && pkt.dst && pkt.dst !== '-') {
                  const connId = `${pkt.src} -> ${pkt.dst} : ${pkt.dport}`;
@@ -315,10 +323,7 @@ function startTshark() {
              }
              
              if (packetLen > 0) {
-                 dbQueue.push({
-                     query: `INSERT INTO stats_agg (id, type, count) VALUES ('TOTAL_BYTES', 'GLOBAL', ?) ON CONFLICT(id) DO UPDATE SET count = count + ?`,
-                     params: [packetLen, packetLen]
-                 });
+                 addStatValue('TOTAL_BYTES', 'GLOBAL', packetLen);
              }
              
              // Prevenir desbordamiento absoluto (Drop packets if disk is too slow)
@@ -525,6 +530,19 @@ io.on('connection', (socket) => {
   
   // Enviar configuración de logs centralizada al frontend
   socket.emit('app_config', { debug: DEBUG_MODE });
+
+  // Emitir estadísticas iniciales de inmediato para evitar retrasos en el frontend
+  db.get(`SELECT count FROM stats_agg WHERE id = 'TOTAL_BYTES'`, [], (err, row) => {
+      const totalBytes = row ? row.count : 0;
+      socket.emit('stats_update', {
+          connections: [],
+          alerts: [],
+          trackingDomains: [],
+          totalBytes,
+          totalPackets: currentDbId,
+          timeRemaining: (cycleStartMs + LIFECYCLE_MS) - Date.now()
+      });
+  });
   
   // Send the last 500 packets immediately on connect
   db.all(`SELECT * FROM raw_logs ORDER BY time DESC LIMIT 500`, [], (err, rows) => {
@@ -567,6 +585,7 @@ io.on('connection', (socket) => {
       
       // Limpiar memoria
       dbQueue.length = 0;
+      currentDbId = 0; // Reset active packets counter in memory
       cycleStartMs = Date.now();
       
       // Borrado a nivel SQL en vez de FS para evitar race conditions en Docker
@@ -581,7 +600,7 @@ io.on('connection', (socket) => {
 
       // Emitir evento a todos los clientes para que limpien su UI instantáneamente
       io.emit('historical_logs', []);
-      io.emit('stats_update', { connections: [], alerts: [], totalBytes: 0, timeRemaining: LIFECYCLE_MS });
+      io.emit('stats_update', { connections: [], alerts: [], totalBytes: 0, totalPackets: 0, timeRemaining: LIFECYCLE_MS });
   });
 });
 

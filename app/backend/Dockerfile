@@ -1,4 +1,4 @@
-FROM node:20-trixie-slim
+FROM node:22-trixie-slim
 
 RUN apt-get update && apt-get install -y \
     tshark \
@@ -7,8 +7,9 @@ RUN apt-get update && apt-get install -y \
     && rm -rf /var/lib/apt/lists/*
 
 WORKDIR /app
-COPY package*.json ./
-RUN npm install
+RUN corepack enable && corepack prepare pnpm@11 --activate
+COPY package.json pnpm-lock.yaml* pnpm-workspace.yaml* ./
+RUN pnpm install --prod --frozen-lockfile
 
 COPY . .
 

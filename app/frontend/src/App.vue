@@ -194,6 +194,7 @@ onMounted(() => {
     if (data.connections) stats.connections = data.connections;
     if (data.trackingDomains) stats.trackingDomains = data.trackingDomains;
     if (data.totalBytes !== undefined) totalBytes.value = data.totalBytes;
+    if (data.totalPackets !== undefined) totalPackets.value = data.totalPackets;
     if (data.timeRemaining !== undefined) timeRemaining.value = data.timeRemaining;
   });
 
@@ -209,14 +210,10 @@ onMounted(() => {
 
   socket.on('historical_logs', (historicalData) => {
     packets.value = historicalData;
-    totalPackets.value = historicalData.length;
-    let bytes = 0;
-    historicalData.forEach(p => {
-      if (p.len) bytes += parseInt(p.len);
-    });
-    // Solo actualizamos si no viene del servidor en stats_update
-    if (totalBytes.value === 0) {
-        totalBytes.value = bytes;
+    // Si se vacía completamente, reseteamos contadores
+    if (historicalData.length === 0) {
+      totalPackets.value = 0;
+      totalBytes.value = 0;
     }
   });
 
