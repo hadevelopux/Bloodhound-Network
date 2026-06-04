@@ -85,7 +85,7 @@ MENU_STOP_MSG="[+] Safely stopping all containers..."
 # ------------------------------------------------------------------------------
 # MODULE: START SCRIPTS (Container startup)
 # ------------------------------------------------------------------------------
-START_SCRIPT_TITLE="[+] Starting WiFi Server Forensics environment"
+START_SCRIPT_TITLE="[+] Starting Bloodhound Forensics environment"
 START_SCRIPT_STOPPING="[+] Stopping running containers..."
 START_SCRIPT_STARTING="[+] Starting containers..."
 START_SCRIPT_DONE="[+] Service successfully started."

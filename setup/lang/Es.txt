@@ -86,7 +86,7 @@ MENU_PAUSE_PROMPT="[Presione Enter para volver al menú principal...] "
 # ------------------------------------------------------------------------------
 # MÓDULO: START SCRIPTS (Arranque de contenedores)
 # ------------------------------------------------------------------------------
-START_SCRIPT_TITLE="[+] Iniciando entorno WiFi Server Forensics"
+START_SCRIPT_TITLE="[+] Iniciando entorno Bloodhound Forensics"
 START_SCRIPT_STOPPING="[+] Deteniendo contenedores en ejecución..."
 START_SCRIPT_STARTING="[+] Levantando contenedores..."
 START_SCRIPT_DONE="[+] Servicio iniciado con éxito."
