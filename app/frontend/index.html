@@ -52,6 +52,7 @@
             @toggle-legend="showLegend = true"
             @toggle-lang="toggleLang"
             @toggle-theme="toggleTheme"
+            @factory-reset="factoryReset"
         ></header-widget>
 
         <div class="flex flex-col lg:flex-row flex-1 overflow-hidden">
@@ -60,13 +61,11 @@
                 
                 <alerts-widget
                     :alerts="stats.alerts"
-                    @clear-stats="resetAlerts"
                 ></alerts-widget>
 
                 <connections-widget
                     :connections="stats.connections"
                     :escape-h-t-m-l="escapeHTML"
-                    @clear-stats="resetConns"
                 ></connections-widget>
 
             </aside>
@@ -79,7 +78,6 @@
                 :get-proto-class="getProtoClass"
                 @set-category="setCategory"
                 @clear-filters="clearFilters"
-                @factory-reset="factoryReset"
             ></main-table>
 
         </div>

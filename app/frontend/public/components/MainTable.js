@@ -1,6 +1,6 @@
 const MainTable = {
     props: ['packets', 'currentCategoryFilter', 'escapeHTML', 'getProtoClass'],
-    emits: ['set-category', 'clear-filters', 'factory-reset'],
+    emits: ['set-category', 'clear-filters'],
     template: `
         <main class="flex-1 flex flex-col min-w-0 overflow-hidden bg-white dark:bg-stone-950">
             <div class="bg-stone-100 dark:bg-stone-900 px-4 py-3 border-b border-stone-300 dark:border-stone-800 flex flex-col gap-2 shrink-0">
@@ -8,7 +8,6 @@ const MainTable = {
                     <span>{{ $t('realtime_filters') }}</span>
                     <div class="ml-auto flex items-center gap-2">
                         <ui-button @click="$emit('clear-filters')">{{ $t('clear_filter') }}</ui-button>
-                        <ui-button variant="danger" @click="$emit('factory-reset')">{{ $t('factory_reset_btn') }}</ui-button>
                     </div>
                 </div>
                 <div class="flex flex-wrap gap-2 text-xs font-mono">

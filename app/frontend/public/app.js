@@ -73,12 +73,6 @@ const app = createApp({
                 this.totalBytes = 0;
             }
         },
-        resetAlerts() {
-            if(confirm("Clear Alert Stats?")) this.socket.emit('clear_stats', 'alerts');
-        },
-        resetConns() {
-            if(confirm("Clear Connection Stats?")) this.socket.emit('clear_stats', 'connections');
-        },
         toggleLang() {
             i18nState.lang = i18nState.lang === 'es' ? 'en' : 'es';
             localStorage.setItem('bloodhound_lang', i18nState.lang);

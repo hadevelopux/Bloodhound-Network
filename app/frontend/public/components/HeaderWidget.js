@@ -1,6 +1,6 @@
 const HeaderWidget = {
     props: ['connStatus', 'connClass', 'totalBytes', 'totalPackets', 'timeRemaining', 'isDark'],
-    emits: ['toggle-legend', 'toggle-lang', 'toggle-theme'],
+    emits: ['toggle-legend', 'toggle-lang', 'toggle-theme', 'factory-reset'],
     template: `
         <header class="bg-white dark:bg-stone-900 border-b border-stone-300 dark:border-stone-800 p-3 md:px-6 flex justify-between items-center shrink-0">
             <div class="flex items-center gap-3">
@@ -20,6 +20,7 @@ const HeaderWidget = {
                     </span>
                     <span><span>{{ $t('pkts') }}</span> <span>{{ totalPackets }}</span></span>
                     <span><span>{{ $t('data_used') }}</span> <span>{{ formattedTotalBytes }}</span></span>
+                    <ui-button variant="danger" @click="$emit('factory-reset')">{{ $t('factory_reset_btn') }}</ui-button>
                     <ui-button @click="$emit('toggle-legend')">{{ $t('legend_btn') }}</ui-button>
                     <ui-button @click="$emit('toggle-lang')">{{ $i18n.lang === 'es' ? 'EN' : 'ES' }}</ui-button>
                     <ui-button variant="icon" @click="$emit('toggle-theme')">

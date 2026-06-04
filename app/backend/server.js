@@ -513,40 +513,27 @@ io.on('connection', (socket) => {
       });
   });
   
-  socket.on('clear_stats', (type) => {
-    if (type === 'alerts') {
-      db.run("DELETE FROM stats_agg WHERE type = 'ALERT'");
-    } else if (type === 'connections') {
-      db.run("DELETE FROM stats_agg WHERE type = 'CONNECTION'");
-    }
-    logger.info(`Stats cleared for type: ${type}`);
-    // Clear in queue as well just in case
-    for (let i = dbQueue.length - 1; i >= 0; i--) {
-        if (dbQueue[i].query.includes(type === 'alerts' ? "'ALERT'" : "'CONNECTION'")) {
-            dbQueue.splice(i, 1);
-        }
-    }
-    // Broadcast immediate empty update so clients clear out
-    if (type === 'alerts') io.emit('stats_update', { alerts: [], totalBytes: 0 }); // Note: totalBytes not cleared here
-    if (type === 'connections') io.emit('stats_update', { connections: [], totalBytes: 0 });
-  });
-
   socket.on('factory_reset', () => {
       logger.warn('Ejecutando FACTORY RESET NUCLEAR de la base de datos completa!');
-      // Broadcast to ALL clients to reset their UI immediately
+      
+      // Limpiar memoria
+      dbQueue.length = 0;
+      cycleStartMs = Date.now();
+      
+      // Borrado a nivel SQL en vez de FS para evitar race conditions en Docker
+      db.serialize(() => {
+          db.run("DELETE FROM stats_agg");
+          db.run("DELETE FROM raw_logs");
+          db.run(`INSERT INTO stats_agg (id, type, count) VALUES ('CYCLE_START', 'GLOBAL', ?)`, [cycleStartMs]);
+          db.run("VACUUM", (err) => {
+              if (err) logger.error('Error durante VACUUM:', err.message);
+              else logger.info('Base de datos purgada y espacio liberado (VACUUM completado).');
+          });
+      });
+
+      // Emitir evento a todos los clientes para que limpien su UI instantáneamente
       io.emit('historical_logs', []);
       io.emit('stats_update', { connections: [], alerts: [], totalBytes: 0, timeRemaining: LIFECYCLE_MS });
-      
-      dbQueue.length = 0; // Purge memory queue
-      
-      // Destrucción total física de los archivos de la base de datos INMEDIATA
-      try { fs.unlinkSync(dbPath); } catch(e) {}
-      try { fs.unlinkSync(dbPath + '-wal'); } catch(e) {}
-      try { fs.unlinkSync(dbPath + '-shm'); } catch(e) {}
-      
-      logger.warn('Base de datos eliminada físicamente del disco. Forzando reinicio del backend...');
-      // Salir del proceso inmediatamente. Docker o el script de inicio lo levantará de nuevo limpio.
-      process.exit(0); 
   });
 });
 
