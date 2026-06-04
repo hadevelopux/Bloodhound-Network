@@ -6,6 +6,10 @@
     <title>Bloodhound Network Forensics | Powered by HADEVELOPUX</title>
     <!-- Tailwind CSS (via CDN with strict security) -->
     <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Vue.js 3 CDN (Reemplazo Oficial de Vanilla JS) -->
+    <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
+    <!-- Socket.IO -->
+    <script src="/socket.io/socket.io.js"></script>
     <script>
         tailwind.config = {
             darkMode: 'class',
@@ -28,15 +32,8 @@
             }
         }
     </script>
-    
     <!-- Custom CSS -->
     <link rel="stylesheet" href="style.css">
-    
-    <!-- Vue.js 3 CDN (Reemplazo Oficial de Vanilla JS) -->
-    <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
-
-    <!-- Socket.IO -->
-    <script src="/socket.io/socket.io.js"></script>
 </head>
 <body class="font-sans bg-stone-100 dark:bg-stone-950 text-stone-800 dark:text-stone-200 h-screen w-full overflow-hidden">
     <div id="app" class="h-full w-full flex">
@@ -49,6 +46,8 @@
             :total-packets="totalPackets"
             :time-remaining="timeRemaining"
             :is-dark="isDark"
+            :filter-text="filterText"
+            @update-filter="applyTextFilter"
             @toggle-legend="showLegend = true"
             @toggle-lang="toggleLang"
             @toggle-theme="toggleTheme"

@@ -1,6 +1,6 @@
 const HeaderWidget = {
-    props: ['connStatus', 'connClass', 'totalBytes', 'totalPackets', 'timeRemaining', 'isDark'],
-    emits: ['toggle-legend', 'toggle-lang', 'toggle-theme', 'factory-reset'],
+    props: ['connStatus', 'connClass', 'totalBytes', 'totalPackets', 'timeRemaining', 'isDark', 'filterText'],
+    emits: ['toggle-legend', 'toggle-lang', 'toggle-theme', 'factory-reset', 'update-filter'],
     template: `
         <header class="bg-white dark:bg-stone-900 border-b border-stone-300 dark:border-stone-800 p-3 md:px-6 flex justify-between items-center shrink-0">
             <div class="flex items-center gap-3">
@@ -9,8 +9,8 @@ const HeaderWidget = {
             </div>
             <div class="flex items-center gap-5">
                 <ui-input 
-                    :model-value="$parent.filterText"
-                    @update:modelValue="$parent.applyTextFilter($event)"
+                    :model-value="filterText"
+                    @update:modelValue="$emit('update-filter', $event)"
                     :placeholder="$t('live_filter_placeholder')">
                 </ui-input>
                 <div class="flex gap-4 text-sm font-mono items-center">

@@ -155,8 +155,39 @@ const app = createApp({
         this.socket.on('packet', (pkt) => {
             logger.debug('Paquete en vivo recibido:', pkt.src, '->', pkt.dst);
             this.packets.unshift(pkt);
+            
             if (this.packets.length > 1000) {
-                this.packets.length = 1000;
+                // Recolector de basura inteligente: si hay filtro, expulsar primero la basura oculta
+                if (this.filterText || this.currentCategoryFilter) {
+                    let evicted = false;
+                    for (let i = this.packets.length - 1; i >= 0; i--) {
+                        const p = this.packets[i];
+                        let isVisible = true;
+                        
+                        // Text Filter
+                        if (this.filterText) {
+                            const text = this.filterText.toLowerCase();
+                            const rawData = JSON.stringify(p).toLowerCase();
+                            if (!rawData.includes(text)) isVisible = false;
+                        }
+                        
+                        // Category Filter
+                        if (this.currentCategoryFilter) {
+                            if (!p.alerts || !p.alerts.some(a => a.includes(this.currentCategoryFilter))) {
+                                isVisible = false;
+                            }
+                        }
+                        
+                        if (!isVisible) {
+                            this.packets.splice(i, 1); // Expulsamos este porque es invisible
+                            evicted = true;
+                            break;
+                        }
+                    }
+                    if (!evicted) this.packets.pop();
+                } else {
+                    this.packets.pop();
+                }
             }
             this.totalPackets++;
         });
