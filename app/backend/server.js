@@ -80,10 +80,24 @@ db.on('error', (err) => {
 
 // Cola de inserción para evitar Memory Leaks (OOM)
 const dbQueue = [];
+const statsAggregator = new Map();
 let isResetting = false;
 
 setInterval(() => {
-    if (dbQueue.length === 0 || isResetting) return;
+    if (isResetting) return;
+    
+    // Volcar agregador de memoria a cola SQL (Evita miles de queries/seg bajo ataques)
+    if (statsAggregator.size > 0) {
+        statsAggregator.forEach((data, id) => {
+            dbQueue.push({
+                query: `INSERT INTO stats_agg (id, type, count) VALUES (?, ?, ?) ON CONFLICT(id) DO UPDATE SET count = count + ?`,
+                params: [id, data.type, data.count, data.count]
+            });
+        });
+        statsAggregator.clear();
+    }
+    
+    if (dbQueue.length === 0) return;
     
     // Extraer hasta 2000 queries por lote para no bloquear el Event Loop
     const batch = dbQueue.splice(0, 2000);
@@ -264,33 +278,32 @@ function startTshark() {
                  query: `INSERT INTO raw_logs (time, src, sport, dst, dport, proto, len, domain, info, alerts) VALUES (?,?,?,?,?,?,?,?,?,?)`,
                  params: [pkt.time || 0, pkt.src || '-', pkt.sport || '-', pkt.dst || '-', pkt.dport || '-', pkt.proto || '-', pkt.len || 0, pkt.domain || '', pkt.info || '', JSON.stringify(pkt.alerts || [])]
              });
+             
+             // Función helper para agregación ultra-rápida en RAM (Evita colapso SQL)
+             const addStat = (id, type) => {
+                 if (!statsAggregator.has(id)) {
+                     statsAggregator.set(id, { type, count: 0 });
+                 }
+                 statsAggregator.get(id).count++;
+             };
 
              // Update Stats Connections
              if (pkt.src && pkt.dst && pkt.dst !== '-') {
-                const connId = `${pkt.src} -> ${pkt.dst} : ${pkt.dport}`;
-                dbQueue.push({
-                    query: `INSERT INTO stats_agg (id, type, count) VALUES (?, 'CONNECTION', 1) ON CONFLICT(id) DO UPDATE SET count = count + 1`,
-                    params: [connId]
-                });
+                 const connId = `${pkt.src} -> ${pkt.dst} : ${pkt.dport}`;
+                 addStat(connId, 'CONNECTION');
              }
              
              // Update Stats Alerts
              if (pkt.alerts && pkt.alerts.length > 0) {
                 pkt.alerts.forEach(alert => {
-                    dbQueue.push({
-                        query: `INSERT INTO stats_agg (id, type, count) VALUES (?, 'ALERT', 1) ON CONFLICT(id) DO UPDATE SET count = count + 1`,
-                        params: [alert]
-                    });
+                    addStat(alert, 'ALERT');
                 });
                 
                 // Extraer todos los dominios que dispararon alertas
-                if (pkt.alerts.length > 0 && pkt.domain) {
+                if (pkt.domain) {
                     pkt.alerts.forEach(alert => {
                         const domainAlert = `${pkt.domain}|${alert}`;
-                        dbQueue.push({
-                            query: `INSERT INTO stats_agg (id, type, count) VALUES (?, 'THREAT_DOMAIN', 1) ON CONFLICT(id) DO UPDATE SET count = count + 1`,
-                            params: [domainAlert]
-                        });
+                        addStat(domainAlert, 'THREAT_DOMAIN');
                     });
                 }
              }
