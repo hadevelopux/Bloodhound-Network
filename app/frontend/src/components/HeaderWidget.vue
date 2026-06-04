@@ -32,14 +32,14 @@
       </UiInput>
       <div class="flex gap-6 text-sm font-mono items-center whitespace-nowrap">
         <span :class="['font-bold', connClass]">{{ connStatus }}</span>
-        <div class="flex items-center gap-2 text-neon-cyan drop-shadow-[0_0_2px_rgba(0,240,255,0.8)]"><span>{{ $t('pkts') }}</span><span>{{ totalPackets }}</span></div>
-        <div class="flex items-center gap-2 text-neon-purple drop-shadow-[0_0_2px_rgba(176,38,255,0.8)]"><span>{{ $t('data_used') }}</span><span>{{ formattedTotalBytes }}</span></div>
-        <div v-if="timeRemaining !== null" class="flex items-center gap-1.5 text-orange-400 drop-shadow-[0_0_2px_rgba(251,146,60,0.8)]">
+        <div class="flex items-center gap-2 text-neon-cyan"><span>{{ $t('pkts') }}</span><span>{{ totalPackets }}</span></div>
+        <div class="flex items-center gap-2 text-neon-purple"><span>{{ $t('data_used') }}</span><span>{{ formattedTotalBytes }}</span></div>
+        <div v-if="timeRemaining !== null" class="flex items-center gap-1.5 text-orange-400">
           <svg class="w-4 h-4 animate-pulse" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
           </svg>
           <span class="text-stone-400 dark:text-stone-500 font-sans text-xs uppercase tracking-wider">{{ $t('reset_in') }}</span>
-          <span :class="['font-bold', timeRemaining <= (5 * 24 * 60 * 60 * 1000) ? 'text-red-500 animate-pulse drop-shadow-[0_0_2px_rgba(239,68,68,0.8)]' : 'text-orange-400']">
+          <span :class="['font-bold', timeRemaining <= (5 * 24 * 60 * 60 * 1000) ? 'text-red-500 animate-pulse' : 'text-orange-400']">
             {{ formattedTimeRemaining }}
           </span>
         </div>
