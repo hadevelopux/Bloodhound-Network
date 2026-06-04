@@ -1,0 +1,36 @@
+services:
+  redlocal-sniffer:
+    build: 
+      context: .
+      dockerfile: redlocal.Dockerfile
+    container_name: wifi-redlocal-sniffer
+    network_mode: host
+    privileged: true
+    env_file:
+      - ../../.env
+    volumes:
+      - shared_pipes:/tmp_pipes
+    restart: unless-stopped
+
+  auditor-backend:
+    build: ../../app/backend
+    container_name: wifi-auditor-backend
+    env_file:
+      - ../../.env
+    volumes:
+      - shared_pipes:/tmp_pipes
+      - ./logs:/logs
+    expose:
+      - "3000" # Proxy interno, no expuesto al host
+    restart: unless-stopped
+
+  auditor-frontend:
+    build: ../../app/frontend
+    container_name: wifi-auditor-frontend
+    ports:
+      - "80:80"
+      - "443:443"
+    restart: unless-stopped
+
+volumes:
+  shared_pipes:

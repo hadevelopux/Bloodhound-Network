@@ -1,0 +1,99 @@
+# ==============================================================================
+# ARCHIVO DE IDIOMAS: ESPAÑOL (ES)
+# ==============================================================================
+# Centraliza todos los textos de la suite Bloodhound Network para mantener
+# una arquitectura limpia y escalable. Cada módulo tiene su prefijo.
+# ==============================================================================
+
+# ------------------------------------------------------------------------------
+# MÓDULO: SETUP REDLOCAL (Bridge Transparente)
+# ------------------------------------------------------------------------------
+SETUP_REDLOCAL_TITLE="ASISTENTE DE INSTALACIÓN: NODO RED LOCAL (BRIDGE)"
+SETUP_REDLOCAL_ROOT_ERR="[ERROR] Por favor, ejecuta este script como root (sudo ./setup_redlocal_64.sh)"
+SETUP_REDLOCAL_ROOT_OK="[+] Privilegios de administrador verificados."
+SETUP_REDLOCAL_DEPS="[+] Actualizando repositorios e instalando dependencias núcleo..."
+SETUP_REDLOCAL_NET_TITLE="Configuración del Puente Transparente (Bridge)"
+SETUP_REDLOCAL_NET_INFO="Se necesitan las dos tarjetas de red físicas de este servidor."
+SETUP_REDLOCAL_NET_DETECT="Tarjetas detectadas actualmente en el sistema:"
+SETUP_REDLOCAL_PROMPT_IF1="Ingresa el nombre de tu PRIMERA tarjeta (Ej: ens18) [Por defecto: ens18]: "
+SETUP_REDLOCAL_PROMPT_IF2="Ingresa el nombre de tu SEGUNDA tarjeta (Ej: ens19) [Por defecto: ens19]: "
+SETUP_REDLOCAL_NET_BACKUP="[+] Respaldando configuración de red actual..."
+SETUP_REDLOCAL_NET_CREATING="[+] Creando puente de red (br0) uniendo"
+SETUP_REDLOCAL_FW_TITLE="Sellando el servidor (Configuración de Firewall)..."
+SETUP_REDLOCAL_FW_SSH="SSH Administrativo"
+SETUP_REDLOCAL_FW_HTTP="Dashboard Forense HTTP"
+SETUP_REDLOCAL_FW_HTTPS="Dashboard Forense HTTPS"
+SETUP_REDLOCAL_FW_OK="[+] Firewall sellado con éxito. Solo puertos 22, 80 y 443 expuestos."
+SETUP_REDLOCAL_DONE_TITLE="¡INSTALACIÓN COMPLETADA!"
+SETUP_REDLOCAL_DONE_1="El servidor ha sido endurecido y el puente ha sido configurado."
+SETUP_REDLOCAL_DONE_2="IMPORTANTE: Al reiniciar, la máquina solicitará una nueva IP por DHCP para el puente 'br0'."
+SETUP_REDLOCAL_DONE_3="Revisa tu router o Hipervisor para descubrir la nueva IP si pierdes la conexión SSH."
+SETUP_REDLOCAL_PROMPT_REBOOT="¿Deseas reiniciar el servidor AHORA para aplicar los cambios de red? (s/n): "
+SETUP_REDLOCAL_REBOOTING="Reiniciando en 3 segundos..."
+SETUP_REDLOCAL_NO_REBOOT="Recuerda reiniciar manualmente con 'sudo reboot' antes de iniciar el entorno Docker."
+
+# ------------------------------------------------------------------------------
+# MÓDULO: SETUP SENSOR (Rogue AP)
+# ------------------------------------------------------------------------------
+SETUP_SENSOR_TITLE="ASISTENTE DE INSTALACIÓN: NODO SENSOR (ROGUE AP)"
+SETUP_SENSOR_ROOT_ERR="[ERROR] Por favor, ejecuta este script como root (sudo ./setup_sensor_64.sh)"
+SETUP_SENSOR_ROOT_OK="[+] Privilegios de administrador verificados."
+SETUP_SENSOR_DEPS="[+] Actualizando e instalando dependencias (Docker, UFW, RFKill)..."
+SETUP_SENSOR_NET_TITLE="Detección de Interfaces de Red"
+SETUP_SENSOR_NET_INFO="Necesitamos saber por dónde entra Internet y cuál antena WiFi usaremos."
+SETUP_SENSOR_NET_DETECT="Tarjetas detectadas actualmente:"
+SETUP_SENSOR_PROMPT_CABLE="Ingresa el nombre de la tarjeta con INTERNET (Ej: enp0s10): "
+SETUP_SENSOR_PROMPT_WIFI="Ingresa el nombre de la antena WIFI (Ej: wlp3s0b1): "
+SETUP_SENSOR_SYS_TITLE="[+] Configurando el Núcleo del Sistema (Sysctl & RFKill)..."
+SETUP_SENSOR_RFKILL="[+] Desbloqueando la antena WiFi a nivel hardware..."
+SETUP_SENSOR_NWMGR="[+] Evadiendo NetworkManager para evitar colisiones en la antena WiFi..."
+SETUP_SENSOR_ENV_SYNC="[+] Sincronizando automáticamente el archivo .env con tus tarjetas..."
+SETUP_SENSOR_FW_TITLE="Configurando Enrutamiento y Firewall (UFW)..."
+SETUP_SENSOR_FW_OK="[+] Firewall sellado con ruteo habilitado (FORWARD_POLICY=ACCEPT)."
+SETUP_SENSOR_DONE_TITLE="¡INSTALACIÓN COMPLETADA!"
+SETUP_SENSOR_DONE_1="La máquina está preparada para actuar como Router Malicioso."
+SETUP_SENSOR_DONE_2="RECOMENDACIÓN: Reinicia el servidor antes de iniciar Docker para asegurar que NetworkManager suelte la antena WiFi."
+SETUP_SENSOR_PROMPT_REBOOT="¿Deseas reiniciar el servidor AHORA? (s/n): "
+SETUP_SENSOR_REBOOTING="Reiniciando en 3 segundos..."
+SETUP_SENSOR_NO_REBOOT="Recuerda reiniciar manualmente."
+
+# ------------------------------------------------------------------------------
+# MÓDULO: ORQUESTADOR MAESTRO (Menú Principal)
+# ------------------------------------------------------------------------------
+MENU_TITLE="BLOODHOUND NETWORK - ORQUESTADOR MAESTRO"
+MENU_ACTIVE_MODE="Modo Activo:"
+MENU_NOT_INSTALLED="(No hay instalación detectada)"
+MENU_DYN_START="Iniciar / Reiniciar Servicio"
+MENU_DYN_STOP="Detener Servicio"
+MENU_DYN_REINSTALL="Reinstalar / Cambiar Modo"
+
+MENU_OPTION_1="Instalar Suite (Aprovisionamiento Bare-Metal)"
+MENU_OPTION_2="Encender Suite"
+MENU_OPTION_3="Detener Suite"
+MENU_OPTION_4="Salir"
+MENU_PROMPT="Selecciona una opción: "
+
+MENU_INSTALL_TITLE="Selecciona la Modalidad a Instalar:"
+MENU_INSTALL_OPT_1="Modo Red Local (Sin necesidad de WiFi - 64 bit)"
+MENU_INSTALL_OPT_2="Modo Sensor (Rogue AP con WiFi - 64 bit)"
+MENU_INSTALL_OPT_4="Salir"
+
+MENU_START_TITLE="BLOODHOUND - INICIAR SERVICIO"
+MENU_START_OPT_1="Modo Red Local (64-bit)"
+MENU_START_OPT_2="Modo Sensor (64-bit)"
+MENU_START_OPT_4="Salir"
+
+MENU_STOP_TITLE="Selecciona el Entorno a Detener:"
+MENU_STOP_MSG="[+] Deteniendo todos los contenedores de forma segura..."
+MENU_PAUSE_PROMPT="[Presione Enter para volver al menú principal...] "
+
+# ------------------------------------------------------------------------------
+# MÓDULO: START SCRIPTS (Arranque de contenedores)
+# ------------------------------------------------------------------------------
+START_SCRIPT_TITLE="[+] Iniciando entorno Bloodhound Forensics"
+START_SCRIPT_STOPPING="[+] Deteniendo contenedores en ejecución..."
+START_SCRIPT_STARTING="[+] Levantando contenedores..."
+START_SCRIPT_DONE="[+] Servicio iniciado con éxito."
+START_SCRIPT_DASHBOARD="[+] Accede al Dashboard Forense seguro en: https://localhost o https://IP"
+START_SCRIPT_DOCKER_STATUS="[+] Estado de los contenedores Docker:"
+START_SCRIPT_DOCKER_STATS="[+] Consumo de Memoria y CPU actual:"

@@ -1,0 +1,17 @@
+### AL ###
+# OS generated files
+.DS_Store
+Thumbs.db
+
+# IDEs
+.vscode/
+backup/
+
+# Node artifact files
+node_modules/
+
+# Production Data
+database.sqlite
+database.sqlite-journal
+logs/
+dist/

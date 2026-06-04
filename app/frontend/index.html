@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="es" class="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bloodhound Network Forensics | Powered by HADEVELOPUX</title>
+    <!-- Tailwind CSS (via CDN with strict security) -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Vue.js 3 CDN (Reemplazo Oficial de Vanilla JS) -->
+    <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
+    <!-- Socket.IO -->
+    <script src="/socket.io/socket.io.js"></script>
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    colors: {
+                        neon: {
+                            cyan: '#00f0ff',
+                            green: '#39ff14',
+                            red: '#ff003c',
+                            yellow: '#fcee0a',
+                            purple: '#b026ff'
+                        }
+                    },
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                        mono: ['Fira Code', 'monospace']
+                    }
+                }
+            }
+        }
+    </script>
+    <!-- Core Styles -->
+    <link rel="stylesheet" href="/style.css">
+</head>
+<body class="bg-stone-100 dark:bg-[#111] text-stone-800 dark:text-stone-300 font-sans h-screen flex flex-col overflow-hidden transition-colors duration-200" id="app">
+    <div class="h-full w-full flex">
+        
+        <div class="flex-1 h-full flex flex-col overflow-hidden min-w-0">
+            <header-widget 
+            :conn-status="connStatus"
+            :conn-class="connClass"
+            :total-bytes="totalBytes"
+            :total-packets="totalPackets"
+            :time-remaining="timeRemaining"
+            :is-dark="isDark"
+            :filter-text="filterText"
+            @update-filter="applyTextFilter"
+            @toggle-legend="showLegend = true"
+            @toggle-lang="toggleLang"
+            @toggle-theme="toggleTheme"
+            @factory-reset="factoryReset"
+        ></header-widget>
+
+        <div class="flex flex-col lg:flex-row flex-1 overflow-hidden">
+            <!-- Left Column (Widgets) -->
+            <aside class="flex flex-col lg:w-[400px] xl:w-[450px] h-full shrink-0 border-r border-stone-300 dark:border-stone-800 bg-stone-50 dark:bg-stone-900/50">
+                <alerts-widget 
+                    :alerts="stats.alerts" 
+                    @clear-stats="socket.emit('request_clear_stats')">
+                </alerts-widget>
+
+                <connections-widget 
+                    :connections="stats.connections" 
+                    :escape-h-t-m-l="escapeHTML"
+                    @clear-stats="socket.emit('request_clear_stats')">
+                </connections-widget>
+
+                <domains-widget
+                    :domains="stats.trackingDomains"
+                    :escape-h-t-m-l="escapeHTML"
+                    @clear-stats="socket.emit('request_clear_stats')">
+                </domains-widget>
+            </aside>
+
+            <!-- Main Packet Stream Table -->
+            <main-table
+                :packets="filteredPackets"
+                :current-category-filter="currentCategoryFilter"
+                :escape-h-t-m-l="escapeHTML"
+                :get-proto-class="getProtoClass"
+                @set-category="setCategory"
+                @clear-filters="clearFilters"
+            ></main-table>
+
+        </div>
+
+        </div>
+
+        <legend-sidebar
+            :show="showLegend"
+            @close="showLegend = false"
+        ></legend-sidebar>
+
+    </div>
+
+    <!-- Vite Entry Point -->
+    <script type="module" src="/src/main.js"></script>
+</body>
+</html>
