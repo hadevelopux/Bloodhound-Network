@@ -479,6 +479,9 @@ function processPacket(layers) {
 io.on('connection', (socket) => {
   logger.info('Cliente Web conectado vía WebSocket.');
   
+  // Enviar configuración de logs centralizada al frontend
+  socket.emit('app_config', { debug: DEBUG_MODE });
+  
   // Send the last 500 packets immediately on connect
   db.all(`SELECT * FROM raw_logs ORDER BY time DESC LIMIT 500`, [], (err, rows) => {
       if (!err && rows && rows.length > 0) {

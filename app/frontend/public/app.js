@@ -4,6 +4,18 @@ const i18nState = reactive({
     lang: localStorage.getItem('bloodhound_lang') || 'es'
 });
 
+const appConfig = reactive({
+    debug: false
+});
+
+const logger = {
+    info: (...args) => { if (appConfig.debug) console.log('[INFO]', ...args); },
+    error: (...args) => { if (appConfig.debug) console.error('[ERROR]', ...args); },
+    warn: (...args) => { if (appConfig.debug) console.warn('[WARN]', ...args); },
+    debug: (...args) => { if (appConfig.debug) console.log('[DEBUG]', ...args); }
+};
+window.logger = logger; // Para acceso global si se necesita
+
 const app = createApp({
     data() {
         return {
@@ -47,18 +59,21 @@ const app = createApp({
     },
     methods: {
         applyTextFilter(text) {
+            logger.debug('Filtro de texto aplicado:', text);
             this.filterText = text;
             if (this.socket) {
                 this.socket.emit('request_filter_history', this.filterText);
             }
         },
         setCategory(cat) {
+            logger.debug('Filtro de categoría aplicado:', cat);
             this.currentCategoryFilter = cat;
             if (this.socket) {
                 this.socket.emit('request_filter_history', cat);
             }
         },
         clearFilters() {
+            logger.debug('Limpiando todos los filtros.');
             this.filterText = '';
             this.currentCategoryFilter = '';
             if (this.socket) {
@@ -66,20 +81,22 @@ const app = createApp({
             }
         },
         factoryReset() {
-            if(confirm("DANGER: Are you sure you want to completely erase the database and factory reset?")) {
-                this.socket.emit('factory_reset');
-                this.packets = [];
-                this.stats = { alerts: [], connections: [] };
-                this.totalBytes = 0;
-            }
+            logger.info("Boton presionado, enviando señal de reseteo al servidor...");
+            this.socket.emit('factory_reset');
+            this.packets = [];
+            this.stats = { alerts: [], connections: [] };
+            this.totalBytes = 0;
+            logger.info("Señal de reseteo enviada exitosamente.");
         },
         toggleLang() {
             i18nState.lang = i18nState.lang === 'es' ? 'en' : 'es';
             localStorage.setItem('bloodhound_lang', i18nState.lang);
+            logger.debug('Idioma cambiado a:', i18nState.lang);
         },
         toggleTheme() {
             this.isDark = !this.isDark;
             localStorage.setItem('bloodhound_theme', this.isDark ? 'dark' : 'light');
+            logger.debug('Tema cambiado. isDark:', this.isDark);
             if (this.isDark) {
                 document.documentElement.classList.add('dark');
             } else {
@@ -112,22 +129,31 @@ const app = createApp({
         // Setup WebSocket
         this.socket = io();
 
+        this.socket.on('app_config', (config) => {
+            appConfig.debug = config.debug;
+            logger.info('Configuración de logs recibida del backend:', config);
+        });
+
         this.socket.on('connect', () => {
+            logger.info('Conectado al servidor WebSocket con éxito.');
             this.connStatus = i18nState.lang === 'es' ? 'En Vivo' : 'Live';
             this.connClass = 'text-neon-green drop-shadow-[0_0_5px_rgba(57,255,20,0.4)]';
         });
 
         this.socket.on('disconnect', () => {
+            logger.warn('Desconectado del servidor WebSocket.');
             this.connStatus = i18nState.lang === 'es' ? 'Desconectado' : 'Disconnected';
             this.connClass = 'text-neon-red';
         });
 
         this.socket.on('connect_error', (err) => {
+            logger.error('Error de conexión WebSocket:', err.message);
             this.connStatus = 'Error';
             this.connClass = 'text-neon-red font-bold animate-pulse';
         });
 
         this.socket.on('packet', (pkt) => {
+            logger.debug('Paquete en vivo recibido:', pkt.src, '->', pkt.dst);
             this.packets.unshift(pkt);
             if (this.packets.length > 1000) {
                 this.packets.length = 1000;
@@ -136,6 +162,7 @@ const app = createApp({
         });
 
         this.socket.on('stats_update', (data) => {
+            logger.debug('Actualización de estadísticas recibida:', data);
             if (data.alerts) this.stats.alerts = data.alerts;
             if (data.connections) this.stats.connections = data.connections;
             if (data.totalBytes !== undefined) this.totalBytes = data.totalBytes;
@@ -143,6 +170,7 @@ const app = createApp({
         });
 
         this.socket.on('historical_logs', (rows) => {
+            logger.info(`Cargados ${rows.length} paquetes históricos.`);
             this.packets = rows;
         });
     }
