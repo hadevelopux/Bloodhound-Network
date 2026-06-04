@@ -532,18 +532,25 @@ io.on('connection', (socket) => {
   });
 
   socket.on('factory_reset', () => {
-      logger.warn('Ejecutando FACTORY RESET de la base de datos completa!');
-      dbQueue.length = 0; // Purge memory queue
-      cycleStartMs = Date.now(); // Reset lifecycle variable
-      db.serialize(() => {
-          db.run("DELETE FROM stats_agg");
-          db.run("DELETE FROM raw_logs");
-          db.run(`INSERT INTO stats_agg (id, type, count) VALUES ('CYCLE_START', 'GLOBAL', ?)`, [cycleStartMs]);
-          db.run("VACUUM"); // Reclaim space
-      });
-      // Broadcast to ALL clients to reset their UI
+      logger.warn('Ejecutando FACTORY RESET NUCLEAR de la base de datos completa!');
+      // Broadcast to ALL clients to reset their UI immediately
       io.emit('historical_logs', []);
       io.emit('stats_update', { connections: [], alerts: [], totalBytes: 0, timeRemaining: LIFECYCLE_MS });
+      
+      dbQueue.length = 0; // Purge memory queue
+      
+      // Destrucción total física de los archivos de la base de datos
+      db.close((err) => {
+          if (err) logger.error('Error cerrando DB:', err.message);
+          
+          try { fs.unlinkSync(dbPath); } catch(e) {}
+          try { fs.unlinkSync(dbPath + '-wal'); } catch(e) {}
+          try { fs.unlinkSync(dbPath + '-shm'); } catch(e) {}
+          
+          logger.warn('Base de datos eliminada físicamente del disco. Forzando reinicio del backend...');
+          // Salir del proceso. Docker o el script de inicio lo levantará de nuevo limpio.
+          process.exit(0); 
+      });
   });
 });
 
