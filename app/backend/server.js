@@ -288,6 +288,13 @@ function startTshark() {
                  statsAggregator.get(id).count++;
              };
 
+             const addStatValue = (id, type, value) => {
+                 if (!statsAggregator.has(id)) {
+                     statsAggregator.set(id, { type, count: 0 });
+                 }
+                 statsAggregator.get(id).count += value;
+             };
+
              // Update Stats Connections
              if (pkt.src && pkt.dst && pkt.dst !== '-') {
                  const connId = `${pkt.src} -> ${pkt.dst} : ${pkt.dport}`;
@@ -316,10 +323,7 @@ function startTshark() {
              }
              
              if (packetLen > 0) {
-                 dbQueue.push({
-                     query: `INSERT INTO stats_agg (id, type, count) VALUES ('TOTAL_BYTES', 'GLOBAL', ?) ON CONFLICT(id) DO UPDATE SET count = count + ?`,
-                     params: [packetLen, packetLen]
-                 });
+                 addStatValue('TOTAL_BYTES', 'GLOBAL', packetLen);
              }
              
              // Prevenir desbordamiento absoluto (Drop packets if disk is too slow)
