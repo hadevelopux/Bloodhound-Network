@@ -10,8 +10,8 @@
  */
 -->
 <template>
-  <div v-if="show" class="fixed inset-y-0 right-0 w-80 bg-[#111] border-l border-stone-300 dark:border-stone-800 shadow-2xl z-50 transform transition-transform duration-300 flex flex-col">
-    <div class="p-4 border-b border-stone-200 dark:border-stone-800 flex justify-between items-center bg-[#111]">
+  <div v-if="show" class="fixed inset-y-0 right-0 w-80 bg-white dark:bg-[#111] border-l border-stone-300 dark:border-stone-800 shadow-2xl z-50 transform transition-transform duration-300 flex flex-col">
+    <div class="p-4 border-b border-stone-200 dark:border-stone-800 flex justify-between items-center bg-stone-100 dark:bg-[#111]">
       <h2 class="font-bold text-stone-800 dark:text-stone-200 text-lg flex items-center gap-2">
         <svg class="w-5 h-5 text-neon-cyan" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
         {{ $t('legend_title') }}
@@ -21,7 +21,7 @@
       </UiButton>
     </div>
     
-    <div class="p-4 flex-1 overflow-y-auto space-y-4 custom-scrollbar bg-[#1a1a1a]">
+    <div class="p-4 flex-1 overflow-y-auto space-y-4 custom-scrollbar bg-stone-50 dark:bg-[#1a1a1a]">
       <LegendItem 
         name="⚠️ DNS SECUESTRADO" 
         severity="CRÍTICO" 

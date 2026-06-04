@@ -11,7 +11,7 @@
  */
 -->
 <template>
-  <div class="flex-1 flex flex-col min-h-0 border-b border-stone-300 dark:border-stone-800 bg-[#111]">
+  <div class="flex-1 flex flex-col min-h-0 border-b border-stone-300 dark:border-stone-800 bg-white dark:bg-[#111]">
     <div class="bg-stone-200 dark:bg-stone-900 px-4 py-3 font-bold text-sm text-stone-800 dark:text-stone-200 border-b border-stone-300 dark:border-stone-800 flex justify-between items-center shrink-0">
       <span class="tracking-wide">{{ title }}</span>
       <slot name="header-actions"></slot>
