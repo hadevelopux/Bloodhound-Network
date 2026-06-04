@@ -11,19 +11,25 @@
  */
 -->
 <template>
-  <div class="flex flex-col border-b border-stone-300 dark:border-stone-800">
-    <div class="p-3 bg-stone-100 dark:bg-stone-900/80 border-b border-stone-200 dark:border-stone-800 flex justify-between items-center">
-      <h2 class="text-sm font-bold text-stone-700 dark:text-stone-300">{{ title }}</h2>
+  <div class="flex-1 flex flex-col min-h-0 border-b border-stone-300 dark:border-stone-800 bg-[#111]">
+    <div class="bg-stone-200 dark:bg-stone-900 px-4 py-3 font-bold text-sm text-stone-800 dark:text-stone-200 border-b border-stone-300 dark:border-stone-800 flex justify-between items-center shrink-0">
+      <span class="tracking-wide">{{ title }}</span>
       <slot name="header-actions"></slot>
     </div>
-    <div class="p-3 flex-1 overflow-y-auto bg-white dark:bg-stone-950">
-      <slot></slot>
+    <div v-if="colLeft || colRight" class="flex justify-between px-4 py-1.5 text-[10px] uppercase font-bold tracking-wider text-stone-600 dark:text-orange-500 border-b border-stone-300 dark:border-stone-800 bg-stone-100 dark:bg-stone-900/80 font-mono shrink-0">
+      <span>{{ colLeft }}</span>
+      <span>{{ colRight }}</span>
     </div>
+    <ul class="flex-1 overflow-y-auto p-2.5 font-mono text-xs custom-scrollbar">
+      <slot></slot>
+    </ul>
   </div>
 </template>
 
 <script setup>
 defineProps({
-  title: { type: String, required: true }
+  title: { type: String, required: true },
+  colLeft: { type: String, default: '' },
+  colRight: { type: String, default: '' }
 });
 </script>

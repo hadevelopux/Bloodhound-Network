@@ -32,7 +32,7 @@ const styleObj = computed(() => {
   }
   
   if (alertName.includes('🔓') || alertName.includes('SYN-SCAN') || alertName.includes('EXFILTRACIÓN') || alertName.includes('👁️') || alertName.includes('🔎') || alertName.includes('EXFILTRATION') || alertName.includes('TRACKING')) {
-    return { badgeClass: 'border-orange-500 text-orange-600 dark:text-orange-400 bg-orange-100 dark:bg-orange-900/30', isCritical: false };
+    return { badgeClass: 'border-orange-500 text-orange-600 dark:text-orange-500 bg-orange-100 dark:bg-transparent', isCritical: false };
   }
   
   if (alertName === 'CNN') return { badgeClass: 'border-stone-400 text-stone-600 dark:text-stone-300 bg-stone-200 dark:bg-stone-800', isCritical: false };
